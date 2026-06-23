@@ -196,6 +196,31 @@ export function getProtocolDefaultConfig(proto: ProtocolType) {
         down_mbps: null,
         ratio: 1,
       } as any;
+    case "mx":
+      return {
+        type: "mx",
+        enable: false,
+        host: null,
+        port: 443,
+        transport: "tcp",
+        security: "tls",
+        path: null,
+        service_name: null,
+        sni: null,
+        allow_insecure: false,
+        fingerprint: "chrome",
+        reality_server_addr: null,
+        reality_server_port: null,
+        reality_private_key: null,
+        reality_public_key: null,
+        reality_short_id: null,
+        cert_mode: "none",
+        cert_dns_provider: null,
+        cert_dns_env: null,
+        up_mbps: null,
+        down_mbps: null,
+        ratio: 1,
+      } as any;
     case "hysteria":
       return {
         type: "hysteria",

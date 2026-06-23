@@ -359,8 +359,15 @@ function isLikelyDomainAddress(address?: string) {
 
 function normalizeProtocolForSubmit(protocol: any, serverAddress?: string) {
   if (!protocol) return protocol;
-  if (protocol.type === "omniflow") {
-    const next = { ...protocol };
+  const nextProtocol = { ...protocol };
+  if (nextProtocol.type === "mx") {
+    if (!Number(nextProtocol.port)) nextProtocol.port = 443;
+    if (!nextProtocol.transport) nextProtocol.transport = "tcp";
+    if (!nextProtocol.security) nextProtocol.security = "tls";
+    return nextProtocol;
+  }
+  if (nextProtocol.type === "omniflow") {
+    const next = nextProtocol;
     if (!Number(next.port)) next.port = 443;
     if (!next.omniflow_carrier) next.omniflow_carrier = "h2";
     if (!next.omniflow_af_path_mode) next.omniflow_af_path_mode = "random";
@@ -388,8 +395,8 @@ function normalizeProtocolForSubmit(protocol: any, serverAddress?: string) {
     }
     return next;
   }
-  if (protocol.type !== "simnet") return protocol;
-  const next = { ...protocol };
+  if (nextProtocol.type !== "simnet") return nextProtocol;
+  const next = nextProtocol;
   if (!Number(next.port)) next.port = 443;
   if (!next.simnet_carrier || next.simnet_carrier === "grpc")
     next.simnet_carrier = "h2";
@@ -644,7 +651,7 @@ export default function ServerForm(props: {
                           <div className="flex flex-col items-start gap-1">
                             <div className="flex items-center gap-1">
                               <span className="font-medium capitalize">
-                                {type}
+                                {getLabel(type)}
                               </span>
                               {current.transport && (
                                 <Badge className="text-xs" variant="secondary">

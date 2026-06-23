@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { useNode } from "@/stores/node";
 import { useServer } from "@/stores/server";
 import DynamicMultiplier from "./dynamic-multiplier";
+import { getLabel } from "./form-schema";
 import OnlineUsersCell from "./online-users-cell";
 import ServerConfig from "./server-config";
 import ServerForm from "./server-form";
@@ -244,7 +245,7 @@ export default function Servers() {
                     return (
                       <div className="flex items-center gap-2" key={idx}>
                         <Badge variant="outline">{ratio.toFixed(2)}x</Badge>
-                        <Badge variant="secondary">{p.type}</Badge>
+                        <Badge variant="secondary">{getLabel(p.type)}</Badge>
                         <Badge variant="secondary">{p.port}</Badge>
                       </div>
                     );

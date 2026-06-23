@@ -5141,6 +5141,15 @@
           },
           "omniflowFallbackWssEnabled": {
             "type": "boolean"
+          },
+          "mc1Mode": {
+            "type": "string"
+          },
+          "mc1CidrSegments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "description": "Protocol represents a server protocol configuration with all fields"
@@ -13177,6 +13186,15 @@
           },
           "omniflowFallbackWssEnabled": {
             "type": "boolean"
+          },
+          "mc1Mode": {
+            "type": "string"
+          },
+          "mc1CidrSegments": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         },
         "description": "Protocol 协议配置"

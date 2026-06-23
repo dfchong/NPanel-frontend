@@ -221,6 +221,31 @@ const anytls = z.object({
   down_mbps: z.number().nullish(),
 });
 
+const mx = z.object({
+  ratio: nullableRatio,
+  type: z.literal("mx"),
+  enable: nullableBool,
+  host: nullableString,
+  port: nullablePort,
+  transport: z.enum(TRANSPORTS.mx).nullish(),
+  security: z.enum(SECURITY.mx).nullish(),
+  path: nullableString,
+  service_name: nullableString,
+  sni: nullableString,
+  allow_insecure: nullableBool,
+  fingerprint: nullableString,
+  reality_server_addr: nullableString,
+  reality_server_port: nullablePort,
+  reality_private_key: nullableString,
+  reality_public_key: nullableString,
+  reality_short_id: nullableString,
+  cert_mode: z.enum(CERT_MODES).nullish(),
+  cert_dns_provider: nullableString,
+  cert_dns_env: nullableString,
+  up_mbps: z.number().nullish(),
+  down_mbps: z.number().nullish(),
+});
+
 const socks = z.object({
   ratio: nullableRatio,
   type: z.literal("socks"),
@@ -337,6 +362,7 @@ export const protocolApiScheme = z.discriminatedUnion("type", [
   vmess,
   vless,
   trojan,
+  mx,
   hysteria,
   tuic,
   anytls,
