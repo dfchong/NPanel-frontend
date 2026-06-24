@@ -25,6 +25,8 @@ export const LABELS = {
   mkcp: "mKCP",
   httpupgrade: "HTTP Upgrade",
   xhttp: "XHTTP",
+  mundordp: "Mundo RDP",
+  mundosql: "Mundo SQL",
   mx: "Mundo X",
   // security
   none: "NONE",
@@ -69,7 +71,14 @@ export const TRANSPORTS = {
   vmess: ["tcp", "websocket", "grpc"] as const,
   vless: ["tcp", "websocket", "grpc", "mkcp", "httpupgrade", "xhttp"] as const,
   trojan: ["tcp", "websocket", "grpc"] as const,
-  mx: ["tcp", "websocket", "grpc", "httpupgrade"] as const,
+  mx: [
+    "tcp",
+    "websocket",
+    "grpc",
+    "httpupgrade",
+    "mundordp",
+    "mundosql",
+  ] as const,
   mieru: ["tcp", "udp"] as const,
 } as const;
 

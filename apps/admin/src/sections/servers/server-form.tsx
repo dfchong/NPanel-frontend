@@ -364,6 +364,12 @@ function normalizeProtocolForSubmit(protocol: any, serverAddress?: string) {
     if (!Number(nextProtocol.port)) nextProtocol.port = 443;
     if (!nextProtocol.transport) nextProtocol.transport = "tcp";
     if (!nextProtocol.security) nextProtocol.security = "tls";
+    if (
+      ["mundordp", "mundosql"].includes(nextProtocol.transport) &&
+      !nextProtocol.mundo_username
+    ) {
+      nextProtocol.mundo_username = "MundoUser";
+    }
     return nextProtocol;
   }
   if (nextProtocol.type === "omniflow") {

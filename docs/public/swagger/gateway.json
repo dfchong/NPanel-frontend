@@ -5150,6 +5150,24 @@
             "items": {
               "type": "string"
             }
+          },
+          "mundoUsername": {
+            "type": "string"
+          },
+          "mundoCertificateFingerprint": {
+            "type": "string"
+          },
+          "mundoFakeTitle": {
+            "type": "string"
+          },
+          "mundoFakeMessage": {
+            "type": "string"
+          },
+          "mundoAcceptProxyProtocol": {
+            "type": "boolean"
+          },
+          "mundoUseTlsCertificate": {
+            "type": "boolean"
           }
         },
         "description": "Protocol represents a server protocol configuration with all fields"
@@ -13195,6 +13213,24 @@
             "items": {
               "type": "string"
             }
+          },
+          "mundoUsername": {
+            "type": "string"
+          },
+          "mundoCertificateFingerprint": {
+            "type": "string"
+          },
+          "mundoFakeTitle": {
+            "type": "string"
+          },
+          "mundoFakeMessage": {
+            "type": "string"
+          },
+          "mundoAcceptProxyProtocol": {
+            "type": "boolean"
+          },
+          "mundoUseTlsCertificate": {
+            "type": "boolean"
           }
         },
         "description": "Protocol 协议配置"
