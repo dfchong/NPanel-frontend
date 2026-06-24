@@ -29,6 +29,7 @@ const nullableString = z.string().nullish();
 const nullableBool = z.boolean().nullish();
 const nullablePort = z.number().int().min(0).max(65_535).nullish();
 const nullableRatio = z.number().min(0).nullish();
+const nullableNonNegativeInt = z.number().int().min(0).nullish();
 
 const simnet = z.object({
   ratio: nullableRatio,
@@ -66,6 +67,26 @@ const simnet = z.object({
   simnet_fallback_target_port: nullablePort,
   simnet_fallback_host_header: nullableString,
   simnet_fallback_tls_sni: nullableString,
+  simnet_inbound_max_streams_per_session: nullableNonNegativeInt,
+  simnet_inbound_max_udp_streams_per_session: nullableNonNegativeInt,
+  simnet_inbound_max_handler_tasks_per_session: nullableNonNegativeInt,
+  simnet_stream_event_channel_capacity: nullableNonNegativeInt,
+  simnet_stream_data_channel_capacity: nullableNonNegativeInt,
+  simnet_target_dial_timeout_ms: nullableNonNegativeInt,
+  simnet_target_max_concurrent_dials: nullableNonNegativeInt,
+  simnet_egress_block_loopback: nullableBool,
+  simnet_egress_block_private: nullableBool,
+  simnet_egress_block_link_local: nullableBool,
+  simnet_egress_block_metadata: nullableBool,
+  simnet_send_window: nullableNonNegativeInt,
+  simnet_recv_window: nullableNonNegativeInt,
+  simnet_max_concurrent_streams: nullableNonNegativeInt,
+  simnet_initial_window_size: nullableNonNegativeInt,
+  simnet_max_frame_size: nullableNonNegativeInt,
+  simnet_client_max_concurrent_streams: nullableNonNegativeInt,
+  simnet_client_max_streams_per_session: nullableNonNegativeInt,
+  simnet_client_session_idle_timeout_secs: nullableNonNegativeInt,
+  simnet_client_max_udp_sessions: nullableNonNegativeInt,
   up_mbps: z.number().nullish(),
   down_mbps: z.number().nullish(),
 });

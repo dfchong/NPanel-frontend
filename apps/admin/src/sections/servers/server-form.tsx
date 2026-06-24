@@ -403,6 +403,9 @@ function normalizeProtocolForSubmit(protocol: any, serverAddress?: string) {
   }
   if (nextProtocol.type !== "simnet") return nextProtocol;
   const next = nextProtocol;
+  const defaultPositiveNumber = (key: string, value: number) => {
+    if (!Number(next[key])) next[key] = value;
+  };
   if (!Number(next.port)) next.port = 443;
   if (!next.simnet_carrier || next.simnet_carrier === "grpc")
     next.simnet_carrier = "h2";
@@ -429,6 +432,26 @@ function normalizeProtocolForSubmit(protocol: any, serverAddress?: string) {
     next.simnet_fallback_host_header = null;
     next.simnet_fallback_tls_sni = null;
   }
+  defaultPositiveNumber("simnet_inbound_max_streams_per_session", 128);
+  defaultPositiveNumber("simnet_inbound_max_udp_streams_per_session", 64);
+  defaultPositiveNumber("simnet_inbound_max_handler_tasks_per_session", 128);
+  defaultPositiveNumber("simnet_stream_event_channel_capacity", 256);
+  defaultPositiveNumber("simnet_stream_data_channel_capacity", 128);
+  defaultPositiveNumber("simnet_target_dial_timeout_ms", 12_000);
+  defaultPositiveNumber("simnet_target_max_concurrent_dials", 256);
+  defaultPositiveNumber("simnet_send_window", 4_194_304);
+  defaultPositiveNumber("simnet_recv_window", 4_194_304);
+  defaultPositiveNumber("simnet_max_concurrent_streams", 100);
+  defaultPositiveNumber("simnet_initial_window_size", 65_535);
+  defaultPositiveNumber("simnet_max_frame_size", 16_384);
+  defaultPositiveNumber("simnet_client_max_concurrent_streams", 32);
+  defaultPositiveNumber("simnet_client_max_streams_per_session", 512);
+  defaultPositiveNumber("simnet_client_session_idle_timeout_secs", 90);
+  defaultPositiveNumber("simnet_client_max_udp_sessions", 64);
+  next.simnet_egress_block_loopback = !!next.simnet_egress_block_loopback;
+  next.simnet_egress_block_private = !!next.simnet_egress_block_private;
+  next.simnet_egress_block_link_local = !!next.simnet_egress_block_link_local;
+  next.simnet_egress_block_metadata = !!next.simnet_egress_block_metadata;
   if (
     (next.cert_mode === "http" || next.cert_mode === "dns") &&
     !next.sni &&

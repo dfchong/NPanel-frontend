@@ -346,6 +346,191 @@ export function useProtocolFields() {
           group: "simnet",
           condition: (p) => !!p.simnet_fallback_enabled,
         },
+        {
+          name: "simnet_inbound_max_streams_per_session",
+          type: "number",
+          label: t(
+            "simnet_inbound_max_streams_per_session",
+            "Inbound Streams / Session"
+          ),
+          min: 1,
+          defaultValue: 128,
+          group: "simnet",
+        },
+        {
+          name: "simnet_inbound_max_udp_streams_per_session",
+          type: "number",
+          label: t(
+            "simnet_inbound_max_udp_streams_per_session",
+            "Inbound UDP Streams / Session"
+          ),
+          min: 1,
+          defaultValue: 64,
+          group: "simnet",
+        },
+        {
+          name: "simnet_inbound_max_handler_tasks_per_session",
+          type: "number",
+          label: t(
+            "simnet_inbound_max_handler_tasks_per_session",
+            "Handler Tasks / Session"
+          ),
+          min: 1,
+          defaultValue: 128,
+          group: "simnet",
+        },
+        {
+          name: "simnet_stream_event_channel_capacity",
+          type: "number",
+          label: t(
+            "simnet_stream_event_channel_capacity",
+            "Stream Event Channel"
+          ),
+          min: 1,
+          defaultValue: 256,
+          group: "simnet",
+        },
+        {
+          name: "simnet_stream_data_channel_capacity",
+          type: "number",
+          label: t(
+            "simnet_stream_data_channel_capacity",
+            "Stream Data Channel"
+          ),
+          min: 1,
+          defaultValue: 128,
+          group: "simnet",
+        },
+        {
+          name: "simnet_target_dial_timeout_ms",
+          type: "number",
+          label: t("simnet_target_dial_timeout_ms", "Target Dial Timeout"),
+          min: 1,
+          suffix: "ms",
+          defaultValue: 12_000,
+          group: "simnet",
+        },
+        {
+          name: "simnet_target_max_concurrent_dials",
+          type: "number",
+          label: t(
+            "simnet_target_max_concurrent_dials",
+            "Concurrent Target Dials"
+          ),
+          min: 1,
+          defaultValue: 256,
+          group: "simnet",
+        },
+        {
+          name: "simnet_send_window",
+          type: "number",
+          label: t("simnet_send_window", "Send Window"),
+          min: 1,
+          suffix: "bytes",
+          defaultValue: 4_194_304,
+          group: "simnet",
+        },
+        {
+          name: "simnet_recv_window",
+          type: "number",
+          label: t("simnet_recv_window", "Receive Window"),
+          min: 1,
+          suffix: "bytes",
+          defaultValue: 4_194_304,
+          group: "simnet",
+        },
+        {
+          name: "simnet_max_concurrent_streams",
+          type: "number",
+          label: t("simnet_max_concurrent_streams", "H2 Concurrent Streams"),
+          min: 1,
+          defaultValue: 100,
+          group: "simnet",
+        },
+        {
+          name: "simnet_initial_window_size",
+          type: "number",
+          label: t("simnet_initial_window_size", "H2 Initial Window"),
+          min: 1,
+          suffix: "bytes",
+          defaultValue: 65_535,
+          group: "simnet",
+        },
+        {
+          name: "simnet_max_frame_size",
+          type: "number",
+          label: t("simnet_max_frame_size", "H2 Max Frame Size"),
+          min: 1,
+          suffix: "bytes",
+          defaultValue: 16_384,
+          group: "simnet",
+        },
+        {
+          name: "simnet_client_max_concurrent_streams",
+          type: "number",
+          label: t(
+            "simnet_client_max_concurrent_streams",
+            "Client Concurrent Streams"
+          ),
+          min: 1,
+          defaultValue: 32,
+          group: "simnet",
+        },
+        {
+          name: "simnet_client_max_streams_per_session",
+          type: "number",
+          label: t(
+            "simnet_client_max_streams_per_session",
+            "Client Streams / Session"
+          ),
+          min: 1,
+          defaultValue: 512,
+          group: "simnet",
+        },
+        {
+          name: "simnet_client_session_idle_timeout_secs",
+          type: "number",
+          label: t(
+            "simnet_client_session_idle_timeout_secs",
+            "Client Session Idle Timeout"
+          ),
+          min: 1,
+          suffix: "s",
+          defaultValue: 90,
+          group: "simnet",
+        },
+        {
+          name: "simnet_client_max_udp_sessions",
+          type: "number",
+          label: t("simnet_client_max_udp_sessions", "Client UDP Sessions"),
+          min: 1,
+          defaultValue: 64,
+          group: "simnet",
+        },
+        {
+          name: "simnet_egress_block_loopback",
+          type: "switch",
+          label: t("simnet_egress_block_loopback", "Block Loopback Egress"),
+          group: "simnet",
+        },
+        {
+          name: "simnet_egress_block_private",
+          type: "switch",
+          label: t("simnet_egress_block_private", "Block Private Egress"),
+          group: "simnet",
+        },
+        {
+          name: "simnet_egress_block_link_local",
+          type: "switch",
+          label: t("simnet_egress_block_link_local", "Block Link-Local Egress"),
+          group: "simnet",
+        },
+        {
+          name: "simnet_egress_block_metadata",
+          type: "switch",
+          label: t("simnet_egress_block_metadata", "Block Metadata Egress"),
+          group: "simnet",
+        },
       ],
       omniflow: [
         // Group 1: basic
@@ -791,7 +976,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
@@ -922,7 +1107,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
@@ -1056,7 +1241,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
@@ -1190,7 +1375,7 @@ export function useProtocolFields() {
           label: t("security_server_port", "Reality Server Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "reality",
           condition: (p) => p.security === "reality",
         },
@@ -1369,7 +1554,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
@@ -1656,7 +1841,7 @@ export function useProtocolFields() {
           label: t("security_server_port", "Reality Server Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "reality",
           condition: (p) => p.security === "reality",
         },
@@ -1739,14 +1924,14 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
           name: "hop_ports",
           type: "input",
           label: t("hop_ports", "Hop Ports"),
-          placeholder: t("hop_ports_placeholder", "e.g. 1-65535"),
+          placeholder: t("hop_ports_placeholder", "e.g. 1-65_535"),
           group: "basic",
         },
         {
@@ -1866,7 +2051,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
@@ -1983,7 +2168,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
@@ -2027,7 +2212,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
@@ -2128,7 +2313,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
@@ -2229,7 +2414,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
@@ -2289,7 +2474,7 @@ export function useProtocolFields() {
           label: t("port", "Port"),
           min: 1,
           max: 65_535,
-          placeholder: "1-65535",
+          placeholder: "1-65_535",
           group: "basic",
         },
         {
