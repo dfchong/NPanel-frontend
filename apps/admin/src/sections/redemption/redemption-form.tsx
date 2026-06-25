@@ -26,15 +26,24 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { useSubscribe } from "@/stores/subscribe";
 
-const getFormSchema = (t: (key: string, defaultValue: string) => string) => z.object({
-  id: z.string().optional(),
-  code: z.string().optional(),
-  batch_count: z.number().optional(),
-  total_count: z.number().min(1, t("form.totalCountRequired", "Total count is required")),
-  subscribe_plan: z.string().min(1, t("form.subscribePlanRequired", "Subscribe plan is required")),
-  unit_time: z.string().min(1, t("form.unitTimeRequired", "Unit time is required")),
-  quantity: z.number().min(1, t("form.quantityRequired", "Quantity is required")),
-});
+const getFormSchema = (t: (key: string, defaultValue: string) => string) =>
+  z.object({
+    id: z.string().optional(),
+    code: z.string().optional(),
+    batch_count: z.number().optional(),
+    total_count: z
+      .number()
+      .min(1, t("form.totalCountRequired", "Total count is required")),
+    subscribe_plan: z
+      .string()
+      .min(1, t("form.subscribePlanRequired", "Subscribe plan is required")),
+    unit_time: z
+      .string()
+      .min(1, t("form.unitTimeRequired", "Unit time is required")),
+    quantity: z
+      .number()
+      .min(1, t("form.quantityRequired", "Quantity is required")),
+  });
 
 interface RedemptionFormProps<T> {
   onSubmit: (data: T) => Promise<boolean> | boolean;
@@ -184,9 +193,7 @@ export default function RedemptionForm<T extends Record<string, any>>({
                 name="unit_time"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      {t("form.unitTime", "Unit Time")}
-                    </FormLabel>
+                    <FormLabel>{t("form.unitTime", "Unit Time")}</FormLabel>
                     <FormControl>
                       <Combobox<string, false>
                         onChange={(value) => {
@@ -195,8 +202,14 @@ export default function RedemptionForm<T extends Record<string, any>>({
                         options={[
                           { value: "day", label: t("form.day", "Day") },
                           { value: "month", label: t("form.month", "Month") },
-                          { value: "quarter", label: t("form.quarter", "Quarter") },
-                          { value: "half_year", label: t("form.halfYear", "Half Year") },
+                          {
+                            value: "quarter",
+                            label: t("form.quarter", "Quarter"),
+                          },
+                          {
+                            value: "half_year",
+                            label: t("form.halfYear", "Half Year"),
+                          },
                           { value: "year", label: t("form.year", "Year") },
                         ]}
                         placeholder={t(
@@ -215,16 +228,11 @@ export default function RedemptionForm<T extends Record<string, any>>({
                 name="quantity"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      {t("form.duration", "Duration")}
-                    </FormLabel>
+                    <FormLabel>{t("form.duration", "Duration")}</FormLabel>
                     <FormControl>
                       <EnhancedInput
                         min={1}
-                        placeholder={t(
-                          "form.durationPlaceholder",
-                          "Duration"
-                        )}
+                        placeholder={t("form.durationPlaceholder", "Duration")}
                         step={1}
                         type="number"
                         {...field}
@@ -242,9 +250,7 @@ export default function RedemptionForm<T extends Record<string, any>>({
                 name="total_count"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>
-                      {t("form.totalCount", "Total Count")}
-                    </FormLabel>
+                    <FormLabel>{t("form.totalCount", "Total Count")}</FormLabel>
                     <FormControl>
                       <EnhancedInput
                         min={1}

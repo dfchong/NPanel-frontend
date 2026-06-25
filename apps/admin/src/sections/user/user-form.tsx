@@ -79,11 +79,11 @@ export default function UserForm<T extends Record<string, any>>({
     form?.reset(
       initialValues
         ? {
-          ...initialValues,
-          balance: toNumber(initialValues.balance),
-          gift_amount: toNumber(initialValues.gift_amount),
-          commission: toNumber(initialValues.commission),
-        }
+            ...initialValues,
+            balance: toNumber(initialValues.balance),
+            gift_amount: toNumber(initialValues.gift_amount),
+            commission: toNumber(initialValues.commission),
+          }
         : initialValues
     );
   }, [form, initialValues]);

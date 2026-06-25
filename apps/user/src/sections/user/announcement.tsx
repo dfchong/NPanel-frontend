@@ -51,7 +51,7 @@ export default function Announcement({ type }: { type: "popup" | "pinned" }) {
           <DialogHeader>
             <DialogTitle>{data.title}</DialogTitle>
           </DialogHeader>
-          <div className="prose prose-sm max-w-none dark:prose-invert">
+          <div className="prose prose-sm dark:prose-invert max-w-none">
             <Markdown>{data.content}</Markdown>
           </div>
         </DialogContent>
@@ -68,7 +68,7 @@ export default function Announcement({ type }: { type: "popup" | "pinned" }) {
         </h2>
         <Card className="p-6">
           {data.content ? (
-            <div className="prose prose-sm max-w-none dark:prose-invert">
+            <div className="prose prose-sm dark:prose-invert max-w-none">
               <Markdown>{data.content}</Markdown>
             </div>
           ) : (

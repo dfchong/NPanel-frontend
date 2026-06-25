@@ -31,6 +31,8 @@ export const prePurchaseOrder: (...args: any[]) => Promise<any> =
 export const purchase: (...args: any[]) => Promise<any> = portalPurchase as any;
 export const getSubscription: (...args: any[]) => Promise<any> =
   portalGetSubscription as any;
+export const getSubscriptionCatalog: (...args: any[]) => Promise<any> =
+  portalGetSubscriptionCatalog as any;
 
 /** 此处后端没有提供注释 GET /v1/public/portal/order/status */
 export async function portalQueryPurchaseOrder(
@@ -107,6 +109,25 @@ export async function portalGetSubscription(
 ) {
   return request<API.GetSubscriptionReply>(
     `${import.meta.env.VITE_API_PREFIX || ""}/v1/public/portal/subscribe`,
+    {
+      method: "GET",
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    }
+  );
+}
+
+/** 此处后端没有提供注释 GET /v1/public/portal/subscribe/catalog */
+export async function portalGetSubscriptionCatalog(
+  params: API.GetSubscriptionCatalogRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.GetSubscriptionCatalogReply>(
+    `${
+      import.meta.env.VITE_API_PREFIX || ""
+    }/v1/public/portal/subscribe/catalog`,
     {
       method: "GET",
       params: {

@@ -63,10 +63,7 @@ export default function Main() {
               <div className="flex flex-col justify-center lg:flex-auto">
                 <p className="mb-6 text-center font-semibold text-2xl text-foreground tracking-tight">
                   {formType === "register"
-                    ? t(
-                        "registerToContinue",
-                        "Please register to continue"
-                      )
+                    ? t("registerToContinue", "Please register to continue")
                     : formType === "reset"
                       ? t("resetPasswordPrompt", "Please reset your password")
                       : t("loginToContinue", "Please login to continue")}

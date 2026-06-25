@@ -1,26 +1,38 @@
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@workspace/ui/components/select";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@workspace/ui/components/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 import { Tabs, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 import { Icon } from "@workspace/ui/composed/icon";
-import { queryUserSubscribe } from "@workspace/ui/services/user/user";
 import { getUserTrafficStats } from "@workspace/ui/services/user/traffic";
+import { queryUserSubscribe } from "@workspace/ui/services/user/user";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import TrafficTrendChart from "./traffic-trend-chart";
 import TrafficRatioChart from "./traffic-ratio-chart";
 import TrafficStatsCards from "./traffic-stats-cards";
+import TrafficTrendChart from "./traffic-trend-chart";
 
 function toNumber(value?: number | string | null) {
-  const parsed =
-    typeof value === "string" ? Number(value) : Number(value ?? 0);
+  const parsed = typeof value === "string" ? Number(value) : Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
 export default function TrafficStatistics() {
   const { t } = useTranslation("traffic");
   const [days, setDays] = useState<7 | 30>(7);
-  const [selectedSubscribeId, setSelectedSubscribeId] = useState<string | null>(null);
+  const [selectedSubscribeId, setSelectedSubscribeId] = useState<string | null>(
+    null
+  );
 
   // 查询用户订阅列表
   const { data: userSubscribe = [] } = useQuery({
@@ -32,7 +44,8 @@ export default function TrafficStatistics() {
   });
 
   // 使用 id_str 字段，避免 JavaScript 精度丢失
-  const activeSubscribeId = selectedSubscribeId || (userSubscribe[0]?.id_str || null);
+  const activeSubscribeId =
+    selectedSubscribeId || userSubscribe[0]?.id_str || null;
 
   // 查询流量统计数据
   const { data: trafficStats, isLoading } = useQuery({
@@ -60,11 +73,13 @@ export default function TrafficStatistics() {
           {/* 订阅选择 */}
           {userSubscribe.length > 1 && (
             <Select
-              value={activeSubscribeId || undefined}
               onValueChange={(value) => setSelectedSubscribeId(value)}
+              value={activeSubscribeId || undefined}
             >
               <SelectTrigger className="w-full md:w-[200px]">
-                <SelectValue placeholder={t("selectSubscription", "Select Subscription")} />
+                <SelectValue
+                  placeholder={t("selectSubscription", "Select Subscription")}
+                />
               </SelectTrigger>
               <SelectContent>
                 {userSubscribe.map((sub) => (
@@ -76,7 +91,10 @@ export default function TrafficStatistics() {
             </Select>
           )}
           {/* 时间范围切换 */}
-          <Tabs value={String(days)} onValueChange={(value) => setDays(Number(value) as 7 | 30)}>
+          <Tabs
+            onValueChange={(value) => setDays(Number(value) as 7 | 30)}
+            value={String(days)}
+          >
             <TabsList>
               <TabsTrigger value="7">{t("days7", "7 Days")}</TabsTrigger>
               <TabsTrigger value="30">{t("days30", "30 Days")}</TabsTrigger>
@@ -93,7 +111,9 @@ export default function TrafficStatistics() {
         {/* 流量趋势图 */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">{t("trafficTrend", "Traffic Trend")}</CardTitle>
+            <CardTitle className="text-base">
+              {t("trafficTrend", "Traffic Trend")}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -113,7 +133,9 @@ export default function TrafficStatistics() {
         {/* 流量占比图 */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-base">{t("trafficRatio", "Upload/Download Ratio")}</CardTitle>
+            <CardTitle className="text-base">
+              {t("trafficRatio", "Upload/Download Ratio")}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {isLoading ? (
@@ -124,8 +146,8 @@ export default function TrafficStatistics() {
               (toNumber(trafficStats.total_upload) > 0 ||
                 toNumber(trafficStats.total_download) > 0) ? (
               <TrafficRatioChart
-                upload={trafficStats.total_upload}
                 download={trafficStats.total_download}
+                upload={trafficStats.total_upload}
               />
             ) : (
               <div className="flex h-[300px] items-center justify-center text-muted-foreground">

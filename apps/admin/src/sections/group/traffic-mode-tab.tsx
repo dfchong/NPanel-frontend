@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -9,17 +10,16 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
+import {
+  getNodeGroupList,
+  getRecalculationStatus,
+  recalculateGroup,
+  updateNodeGroup,
+} from "@workspace/ui/services/admin/group";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
-import {
-  getNodeGroupList,
-  updateNodeGroup,
-  getRecalculationStatus,
-  recalculateGroup,
-} from "@workspace/ui/services/admin/group";
 import TrafficRangeConfig from "./traffic-ranges-config";
 
 export default function TrafficModeTab() {
@@ -34,7 +34,11 @@ export default function TrafficModeTab() {
   } | null>(null);
 
   // Fetch node groups
-  const { data: nodeGroupsData, isLoading: isLoadingNodeGroups, refetch: refetchNodeGroups } = useQuery({
+  const {
+    data: nodeGroupsData,
+    isLoading: isLoadingNodeGroups,
+    refetch: refetchNodeGroups,
+  } = useQuery({
     queryKey: ["nodeGroups"],
     queryFn: async () => {
       const { data } = await getNodeGroupList({ page: 1, size: 1000 });
@@ -119,7 +123,9 @@ export default function TrafficModeTab() {
       {/* Node Groups Traffic Configuration Card */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("trafficModeConfig", "Traffic Mode Configuration")}</CardTitle>
+          <CardTitle>
+            {t("trafficModeConfig", "Traffic Mode Configuration")}
+          </CardTitle>
           <CardDescription>
             {t(
               "trafficModeDescription",
@@ -131,7 +137,7 @@ export default function TrafficModeTab() {
           {isLoadingNodeGroups ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-              <span className="ml-2 text-sm text-muted-foreground">
+              <span className="ml-2 text-muted-foreground text-sm">
                 {t("loading", "Loading...")}
               </span>
             </div>
@@ -147,7 +153,9 @@ export default function TrafficModeTab() {
       {/* Recalculation Card */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("groupRecalculation", "Group Recalculation")}</CardTitle>
+          <CardTitle>
+            {t("groupRecalculation", "Group Recalculation")}
+          </CardTitle>
           <CardDescription>
             {t(
               "groupRecalculationDescription",
@@ -159,7 +167,7 @@ export default function TrafficModeTab() {
           {/* Current Status */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">
+              <span className="font-medium text-sm">
                 {t("currentStatus", "Current Status")}
               </span>
               {loadingStatus ? (
@@ -191,14 +199,20 @@ export default function TrafficModeTab() {
             )}
 
             {status?.state === "completed" && (
-              <div className="text-sm text-muted-foreground">
-                {t("recalculationCompleted", "Recalculation completed successfully")}
+              <div className="text-muted-foreground text-sm">
+                {t(
+                  "recalculationCompleted",
+                  "Recalculation completed successfully"
+                )}
               </div>
             )}
 
             {status?.state === "failed" && (
-              <div className="text-sm text-destructive">
-                {t("recalculationFailed", "Recalculation failed. Please try again.")}
+              <div className="text-destructive text-sm">
+                {t(
+                  "recalculationFailed",
+                  "Recalculation failed. Please try again."
+                )}
               </div>
             )}
           </div>
@@ -206,8 +220,8 @@ export default function TrafficModeTab() {
           {/* Recalculate Button */}
           <div className="flex justify-end">
             <Button
-              onClick={handleRecalculate}
               disabled={recalculating || status?.state === "running"}
+              onClick={handleRecalculate}
             >
               {recalculating && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

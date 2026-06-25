@@ -225,8 +225,7 @@ export default function EmailTaskManager() {
                     const task = row.original as API.BatchSendEmailTask;
                     const current = toNumber(task.current);
                     const total = toNumber(task.total);
-                    const progress =
-                      total > 0 ? (current / total) * 100 : 0;
+                    const progress = total > 0 ? (current / total) * 100 : 0;
                     return (
                       <div className="space-y-1">
                         <div className="flex justify-between text-sm">

@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -22,11 +23,14 @@ import {
   TableHeader,
   TableRow,
 } from "@workspace/ui/components/table";
+import {
+  getGroupHistory,
+  getGroupHistoryDetail,
+  getNodeGroupList,
+} from "@workspace/ui/services/admin/group";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
-import { getGroupHistory, getGroupHistoryDetail, getNodeGroupList } from "@workspace/ui/services/admin/group";
 
 export default function CurrentGroupResults() {
   const { t } = useTranslation("group");
@@ -37,7 +41,8 @@ export default function CurrentGroupResults() {
 
   // User list dialog state
   const [userListOpen, setUserListOpen] = useState(false);
-  const [selectedNodeGroupName, setSelectedNodeGroupName] = useState<string>("");
+  const [selectedNodeGroupName, setSelectedNodeGroupName] =
+    useState<string>("");
   const [userList, setUserList] = useState<any[]>([]);
   const [userListLoading, setUserListLoading] = useState(false);
   const [userListTotal, setUserListTotal] = useState(0);
@@ -94,7 +99,10 @@ export default function CurrentGroupResults() {
     loadData();
   }, []);
 
-  const handleShowUserList = async (nodeGroupId: string, nodeGroupName: string) => {
+  const handleShowUserList = async (
+    nodeGroupId: string,
+    nodeGroupName: string
+  ) => {
     setSelectedNodeGroupName(nodeGroupName);
     setUserListOpen(true);
     setUserListLoading(true);
@@ -132,10 +140,10 @@ export default function CurrentGroupResults() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>{t("currentGroupingResult", "Current Grouping Result")}</CardTitle>
-          <CardDescription>
-            {t("loading", "Loading...")}
-          </CardDescription>
+          <CardTitle>
+            {t("currentGroupingResult", "Current Grouping Result")}
+          </CardTitle>
+          <CardDescription>{t("loading", "Loading...")}</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -144,110 +152,144 @@ export default function CurrentGroupResults() {
   return (
     <div className="space-y-4">
       {/* Latest Result Card */}
-      {!latestResult ? (
+      {latestResult ? (
         <Card>
           <CardHeader>
-            <CardTitle>{t("currentGroupingResult", "Current Grouping Result")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8 text-sm text-muted-foreground">
-              {t("noDetails", "No details available")}
-            </div>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("currentGroupingResult", "Current Grouping Result")}</CardTitle>
+            <CardTitle>
+              {t("currentGroupingResult", "Current Grouping Result")}
+            </CardTitle>
             <CardDescription>
-              {t("latestGroupingCalculation", "Latest grouping calculation details")}
+              {t(
+                "latestGroupingCalculation",
+                "Latest grouping calculation details"
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {/* Calculation Info */}
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">{t("calculationInfo", "Calculation Information")}</h3>
+              <h3 className="font-medium text-sm">
+                {t("calculationInfo", "Calculation Information")}
+              </h3>
               <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted/50 p-4">
-              <div>
-                <div className="text-xs text-muted-foreground">{t("groupMode", "Group Mode")}</div>
-                <div className="font-medium">
-                  {(latestResult.GroupMode || latestResult.group_mode) === "average"
-                    ? t("averageMode", "Average Mode")
-                    : (latestResult.GroupMode || latestResult.group_mode) === "subscribe"
-                    ? t("subscribeMode", "Subscribe Mode")
-                    : t("trafficMode", "Traffic Mode")}
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t("groupMode", "Group Mode")}
+                  </div>
+                  <div className="font-medium">
+                    {(latestResult.GroupMode || latestResult.group_mode) ===
+                    "average"
+                      ? t("averageMode", "Average Mode")
+                      : (latestResult.GroupMode || latestResult.group_mode) ===
+                          "subscribe"
+                        ? t("subscribeMode", "Subscribe Mode")
+                        : t("trafficMode", "Traffic Mode")}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t("state", "State")}
+                  </div>
+                  <div className="font-medium">
+                    {(latestResult.State || latestResult.state) === "completed"
+                      ? t("completed", "Completed")
+                      : (latestResult.State || latestResult.state) === "running"
+                        ? t("running", "Running")
+                        : (latestResult.State || latestResult.state) ===
+                            "failed"
+                          ? t("failed", "Failed")
+                          : t("idle", "Idle")}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t("triggerType", "Trigger Type")}
+                  </div>
+                  <div className="font-medium">
+                    {(latestResult.TriggerType || latestResult.trigger_type) ===
+                    "manual"
+                      ? t("manualTrigger", "Manual")
+                      : (latestResult.TriggerType ||
+                            latestResult.trigger_type) === "auto"
+                        ? t("autoTrigger", "Auto")
+                        : t("scheduleTrigger", "Schedule")}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t("successFailedCount", "Success/Failed")}
+                  </div>
+                  <div className="font-medium">
+                    {latestResult.SuccessCount ||
+                      latestResult.success_count ||
+                      0}{" "}
+                    /{" "}
+                    {latestResult.FailedCount || latestResult.failed_count || 0}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t("startTime", "Start Time")}
+                  </div>
+                  <div className="font-medium">
+                    {latestResult.StartTime || latestResult.start_time
+                      ? new Date(
+                          (latestResult.StartTime || latestResult.start_time) *
+                            1000
+                        ).toLocaleString()
+                      : "-"}
+                  </div>
+                </div>
+                <div>
+                  <div className="text-muted-foreground text-xs">
+                    {t("endTime", "End Time")}
+                  </div>
+                  <div className="font-medium">
+                    {latestResult.EndTime || latestResult.end_time
+                      ? new Date(
+                          (latestResult.EndTime || latestResult.end_time) * 1000
+                        ).toLocaleString()
+                      : "-"}
+                  </div>
                 </div>
               </div>
-              <div>
-                <div className="text-xs text-muted-foreground">{t("state", "State")}</div>
-                <div className="font-medium">
-                  {(latestResult.State || latestResult.state) === "completed"
-                    ? t("completed", "Completed")
-                    : (latestResult.State || latestResult.state) === "running"
-                    ? t("running", "Running")
-                    : (latestResult.State || latestResult.state) === "failed"
-                    ? t("failed", "Failed")
-                    : t("idle", "Idle")}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">{t("triggerType", "Trigger Type")}</div>
-                <div className="font-medium">
-                  {(latestResult.TriggerType || latestResult.trigger_type) === "manual"
-                    ? t("manualTrigger", "Manual")
-                    : (latestResult.TriggerType || latestResult.trigger_type) === "auto"
-                    ? t("autoTrigger", "Auto")
-                    : t("scheduleTrigger", "Schedule")}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">{t("successFailedCount", "Success/Failed")}</div>
-                <div className="font-medium">
-                  {latestResult.SuccessCount || latestResult.success_count || 0} / {latestResult.FailedCount || latestResult.failed_count || 0}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">{t("startTime", "Start Time")}</div>
-                <div className="font-medium">
-                  {latestResult.StartTime || latestResult.start_time
-                    ? new Date((latestResult.StartTime || latestResult.start_time) * 1000).toLocaleString()
-                    : "-"}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs text-muted-foreground">{t("endTime", "End Time")}</div>
-                <div className="font-medium">
-                  {latestResult.EndTime || latestResult.end_time
-                    ? new Date((latestResult.EndTime || latestResult.end_time) * 1000).toLocaleString()
-                    : "-"}
-                </div>
-              </div>
-            </div>
             </div>
 
             {/* Grouping Details */}
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">{t("groupingDetailsStatistics", "Grouping Details Statistics")}</h3>
+              <h3 className="font-medium text-sm">
+                {t("groupingDetailsStatistics", "Grouping Details Statistics")}
+              </h3>
               <div className="grid grid-cols-3 gap-4 rounded-lg bg-muted/50 p-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {latestDetails.reduce((sum: number, d: any) => sum + (d.UserCount || d.user_count || 0), 0)}
+                  <div className="font-bold text-2xl">
+                    {latestDetails.reduce(
+                      (sum: number, d: any) =>
+                        sum + (d.UserCount || d.user_count || 0),
+                      0
+                    )}
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-muted-foreground text-xs">
                     {t("totalUsers", "Total Users")}
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {latestDetails.reduce((sum: number, d: any) => sum + (d.NodeCount || d.node_count || 0), 0)}
+                  <div className="font-bold text-2xl">
+                    {latestDetails.reduce(
+                      (sum: number, d: any) =>
+                        sum + (d.NodeCount || d.node_count || 0),
+                      0
+                    )}
                   </div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-muted-foreground text-xs">
                     {t("totalNodes", "Total Nodes")}
                   </div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">{latestDetails.length}</div>
-                  <div className="text-xs text-muted-foreground">
+                  <div className="font-bold text-2xl">
+                    {latestDetails.length}
+                  </div>
+                  <div className="text-muted-foreground text-xs">
                     {t("totalNodeGroups", "Total Node Groups")}
                   </div>
                 </div>
@@ -257,7 +299,7 @@ export default function CurrentGroupResults() {
             {detailsLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                <span className="ml-2 text-sm text-muted-foreground">
+                <span className="ml-2 text-muted-foreground text-sm">
                   {t("loading", "Loading...")}
                 </span>
               </div>
@@ -281,28 +323,41 @@ export default function CurrentGroupResults() {
                     </thead>
                     <tbody>
                       {latestDetails.map((detail: any, index: number) => {
-                        const nodeGroupId = detail.NodeGroupId || detail.node_group_id;
+                        const nodeGroupId =
+                          detail.NodeGroupId || detail.node_group_id;
                         const nodeGroup = nodeGroups?.find(
                           (ng) => String(ng.id) === String(nodeGroupId)
                         );
-                        const nodeGroupName = nodeGroup?.name || `${t("idPrefix", "#")}${nodeGroupId}`;
-                        const userCount = detail.UserCount || detail.user_count || 0;
+                        const nodeGroupName =
+                          nodeGroup?.name ||
+                          `${t("idPrefix", "#")}${nodeGroupId}`;
+                        const userCount =
+                          detail.UserCount || detail.user_count || 0;
 
                         return (
                           <tr key={index}>
                             <td className="border-b px-4 py-2">
                               <div>
-                                <div className="font-medium">{nodeGroupName}</div>
-                                <div className="text-xs text-muted-foreground">{t("id", "ID")}: {nodeGroupId}</div>
+                                <div className="font-medium">
+                                  {nodeGroupName}
+                                </div>
+                                <div className="text-muted-foreground text-xs">
+                                  {t("id", "ID")}: {nodeGroupId}
+                                </div>
                               </div>
                             </td>
                             <td className="border-b px-4 py-2 text-right">
                               <button
                                 className={`font-semibold hover:underline ${
-                                  userCount === 0 ? 'text-muted-foreground cursor-not-allowed' : 'cursor-pointer'
+                                  userCount === 0
+                                    ? "cursor-not-allowed text-muted-foreground"
+                                    : "cursor-pointer"
                                 }`}
-                                onClick={() => handleShowUserList(nodeGroupId, nodeGroupName)}
                                 disabled={userCount === 0}
+                                onClick={() =>
+                                  handleShowUserList(nodeGroupId, nodeGroupName)
+                                }
+                                type="button"
                               >
                                 {userCount}
                               </button>
@@ -318,17 +373,30 @@ export default function CurrentGroupResults() {
                 </div>
               </>
             ) : (
-              <div className="text-center py-8 text-sm text-muted-foreground">
+              <div className="py-8 text-center text-muted-foreground text-sm">
                 {t("noDetails", "No details available")}
               </div>
             )}
           </CardContent>
         </Card>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              {t("currentGroupingResult", "Current Grouping Result")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="py-8 text-center text-muted-foreground text-sm">
+              {t("noDetails", "No details available")}
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       {/* User List Dialog */}
-      <Dialog open={userListOpen} onOpenChange={setUserListOpen}>
-        <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+      <Dialog onOpenChange={setUserListOpen} open={userListOpen}>
+        <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>
               {selectedNodeGroupName} - {t("userList", "User List")}
@@ -341,7 +409,7 @@ export default function CurrentGroupResults() {
             {userListLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                <span className="ml-2 text-sm text-muted-foreground">
+                <span className="ml-2 text-muted-foreground text-sm">
                   {t("loading", "Loading...")}
                 </span>
               </div>
@@ -357,15 +425,13 @@ export default function CurrentGroupResults() {
                   {userList.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.id}</TableCell>
-                      <TableCell>
-                        {user.email || "-"}
-                      </TableCell>
+                      <TableCell>{user.email || "-"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             ) : (
-              <div className="text-center py-8 text-sm text-muted-foreground">
+              <div className="py-8 text-center text-muted-foreground text-sm">
                 {t("noUsers", "No users found")}
               </div>
             )}

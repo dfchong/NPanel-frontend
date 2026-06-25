@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import { Switch } from "@workspace/ui/components/switch";
@@ -8,28 +9,74 @@ import {
   ProTable,
   type ProTableActions,
 } from "@workspace/ui/composed/pro-table/pro-table";
+import { getNodeGroupList } from "@workspace/ui/services/admin/group";
 import {
   batchDeleteSubscribe,
   createSubscribe,
   deleteSubscribe,
+  getSubscribeCategoryList,
   getSubscribeList,
   subscribeSort,
   updateSubscribe,
 } from "@workspace/ui/services/admin/subscribe";
-import { getNodeGroupList } from "@workspace/ui/services/admin/group";
-import { useQuery } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Display } from "@/components/display";
 import { useSubscribe } from "@/stores/subscribe";
+import CategoryManager from "./category-manager";
 import SubscribeForm from "./subscribe-form";
 
+function buildCategoryOptions(categories: API.SubscribeCategoryInfo[] = []) {
+  const childrenMap = new Map<string, API.SubscribeCategoryInfo[]>();
+  const roots: API.SubscribeCategoryInfo[] = [];
+
+  for (const category of categories) {
+    const parentID = String(category.parent_id || "");
+    if (!parentID || parentID === "0") {
+      roots.push(category);
+      continue;
+    }
+    const children = childrenMap.get(parentID) || [];
+    children.push(category);
+    childrenMap.set(parentID, children);
+  }
+
+  const options: { label: string; value: string }[] = [];
+  const walk = (items: API.SubscribeCategoryInfo[], depth: number) => {
+    for (const item of items) {
+      options.push({
+        label: `${"　".repeat(depth)}${item.name}`,
+        value: String(item.id),
+      });
+      walk(childrenMap.get(String(item.id)) || [], depth + 1);
+    }
+  };
+
+  walk(roots, 0);
+  return options;
+}
+
 export default function SubscribeTable() {
-  const { t } = useTranslation("product");
+  const { i18n, t } = useTranslation("product");
   const [loading, setLoading] = useState(false);
   const ref = useRef<ProTableActions>(null);
   const { fetchSubscribes } = useSubscribe();
+  const isZh = i18n.resolvedLanguage?.startsWith("zh");
+  const categoryText = useMemo(
+    () => ({
+      filter: t("category.filter", {
+        defaultValue: isZh ? "商品分类" : "Product Category",
+      }),
+      none: t("category.none", {
+        defaultValue: isZh ? "暂无分类" : "Uncategorized",
+      }),
+      title: t("category.title", {
+        defaultValue: isZh ? "商品分类" : "Product Category",
+      }),
+    }),
+    [isZh, t]
+  );
 
   const getNodeGroupSpecialLabel = (nodeGroup?: API.NodeGroup) => {
     switch (nodeGroup?.type) {
@@ -44,7 +91,9 @@ export default function SubscribeTable() {
 
   const formatNodeGroupOptionLabel = (nodeGroup: API.NodeGroup) => {
     const specialLabel = getNodeGroupSpecialLabel(nodeGroup);
-    return specialLabel ? `${nodeGroup.name} (${specialLabel})` : nodeGroup.name;
+    return specialLabel
+      ? `${nodeGroup.name} (${specialLabel})`
+      : nodeGroup.name;
   };
 
   // Fetch node groups for filtering (exclude expired groups)
@@ -62,19 +111,47 @@ export default function SubscribeTable() {
   const { data: groupConfigData } = useQuery({
     queryKey: ["groupConfig"],
     queryFn: async () => {
-      const { data } = await (await import("@workspace/ui/services/admin/group")).getGroupConfig();
+      const { data } = await (
+        await import("@workspace/ui/services/admin/group")
+      ).getGroupConfig();
       return data.data;
     },
   });
 
-  const isGroupEnabled = groupConfigData?.enabled || false;
+  const isGroupEnabled = groupConfigData?.enabled;
   const normalizedNodeGroups = useMemo(
-    () => (nodeGroupsData || []).map((group) => ({ ...group, id: String(group.id) })),
+    () =>
+      (nodeGroupsData || []).map((group) => ({
+        ...group,
+        id: String(group.id),
+      })),
     [nodeGroupsData]
+  );
+  const { data: subscribeCategories = [] } = useQuery({
+    queryKey: ["subscribeCategories"],
+    queryFn: async () => {
+      const { data } = await getSubscribeCategoryList({});
+      return data.data?.list || [];
+    },
+  });
+  const categoryOptions = useMemo(
+    () => [
+      { label: t("all", "All"), value: "" },
+      ...buildCategoryOptions(subscribeCategories),
+    ],
+    [subscribeCategories, t]
   );
 
   return (
-    <ProTable<API.SubscribeItem, { group_id: string; query: string; node_group_id?: string }>
+    <ProTable<
+      API.SubscribeItem,
+      {
+        group_id: string;
+        query: string;
+        node_group_id?: string;
+        category_id?: string;
+      }
+    >
       action={ref}
       actions={{
         render: (row) => [
@@ -220,6 +297,18 @@ export default function SubscribeTable() {
           header: t("name"),
         },
         {
+          accessorKey: "category_name",
+          header: categoryText.title,
+          cell: ({ row }) => {
+            const categoryName = row.getValue("category_name") as string;
+            return categoryName ? (
+              <Badge variant="secondary">{categoryName}</Badge>
+            ) : (
+              <span className="text-muted-foreground">{categoryText.none}</span>
+            );
+          },
+        },
+        {
           accessorKey: "unit_price",
           header: t("unitPrice"),
           cell: ({ row }) => (
@@ -328,8 +417,15 @@ export default function SubscribeTable() {
           : []),
       ]}
       header={{
-        toolbar: (
+        toolbar: [
+          <CategoryManager
+            key="category"
+            onChanged={() => {
+              ref.current?.refresh();
+            }}
+          />,
           <SubscribeForm<API.CreateSubscribeRequest>
+            key="create"
             loading={loading}
             onSubmit={async (values) => {
               setLoading(true);
@@ -359,8 +455,8 @@ export default function SubscribeTable() {
             }}
             title={t("createSubscribe")}
             trigger={t("create")}
-          />
-        ),
+          />,
+        ],
       }}
       onSort={async (source, target, items) => {
         const sourceIndex = items.findIndex(
@@ -416,12 +512,18 @@ export default function SubscribeTable() {
               },
             ]
           : []),
+        {
+          key: "category_id",
+          placeholder: categoryText.filter,
+          options: categoryOptions,
+        },
       ]}
       request={async (pagination, filters) => {
         const params = {
           ...pagination,
           ...filters,
           node_group_id: filters?.node_group_id || undefined,
+          category_id: filters?.category_id || undefined,
         } as any;
 
         const { data } = await getSubscribeList(params);

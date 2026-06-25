@@ -2,9 +2,10 @@
 
 import { useNavigate } from "@tanstack/react-router";
 import {
-  userRegister,
-} from "@workspace/ui/services/common/auth";
-import { adminLogin, adminResetPassword } from "@workspace/ui/services/admin/auth";
+  adminLogin,
+  adminResetPassword,
+} from "@workspace/ui/services/admin/auth";
+import { userRegister } from "@workspace/ui/services/common/auth";
 import type { ReactNode } from "react";
 import { useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";

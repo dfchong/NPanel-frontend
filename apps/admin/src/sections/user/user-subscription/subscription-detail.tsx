@@ -10,12 +10,12 @@ import {
 import { Switch } from "@workspace/ui/components/switch";
 import { ConfirmButton } from "@workspace/ui/composed/confirm-button";
 import { ProTable } from "@workspace/ui/composed/pro-table/pro-table";
+import { getNodeConfig } from "@workspace/ui/services/admin/system";
 import {
   getUserSubscribeDevices,
   kickOfflineByUserDevice,
 } from "@workspace/ui/services/admin/user";
-import { getNodeConfig } from "@workspace/ui/services/admin/system";
-import { type ReactNode, useState, useEffect } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { IpLink } from "@/components/ip-link";
@@ -41,11 +41,15 @@ export function SubscriptionDetail({
 
   useEffect(() => {
     if (open) {
-      getNodeConfig().then(({ data }) => {
-        if (data.data?.device_count_mode) {
-          setDeviceCountMode(data.data.device_count_mode);
-        }
-      }).catch(() => {});
+      getNodeConfig()
+        .then(({ data }) => {
+          if (data.data?.device_count_mode) {
+            setDeviceCountMode(data.data.device_count_mode);
+          }
+        })
+        .catch(() => {
+          // Keep the default display mode when config loading fails.
+        });
     }
   }, [open]);
 
@@ -74,7 +78,10 @@ export function SubscriptionDetail({
           <div className="mt-1">
             <Badge variant="outline">
               {deviceCountMode === "connection"
-                ? t("deviceCountModeConnection", "Current Mode: Count by Connection")
+                ? t(
+                    "deviceCountModeConnection",
+                    "Current Mode: Count by Connection"
+                  )
                 : t("deviceCountModeIp", "Current Mode: Count by IP")}
             </Badge>
           </div>

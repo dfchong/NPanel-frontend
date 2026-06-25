@@ -1,17 +1,21 @@
-import { getSubscription } from "@workspace/ui/services/user/portal";
+import { getSubscriptionCatalog } from "@workspace/ui/services/user/portal";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import {
+  buildSubscribeSections,
+  type SubscribeCategorySection,
+} from "@/sections/subscribe/catalog";
 import { Content } from "./content";
 
 export function ProductShowcase() {
-  const { i18n } = useTranslation();
-  const [subscriptionList, setSubscriptionList] = useState<API.Subscribe[]>([]);
+  const { i18n, t } = useTranslation("main");
+  const [sections, setSections] = useState<SubscribeCategorySection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchSubscriptions = async () => {
       try {
-        const { data } = await getSubscription(
+        const { data } = await getSubscriptionCatalog(
           {
             language: i18n.language,
           },
@@ -19,7 +23,9 @@ export function ProductShowcase() {
             skipErrorHandler: true,
           }
         );
-        setSubscriptionList(data.data?.list || []);
+        setSections(
+          buildSubscribeSections(data, t("uncategorized", "Uncategorized"))
+        );
       } catch (error) {
         console.error("Failed to fetch subscriptions:", error);
       } finally {
@@ -28,9 +34,9 @@ export function ProductShowcase() {
     };
 
     fetchSubscriptions();
-  }, [i18n.language]);
+  }, [i18n.language, t]);
 
-  if (isLoading || subscriptionList.length === 0) return null;
+  if (isLoading || sections.length === 0) return null;
 
-  return <Content subscriptionData={subscriptionList} />;
+  return <Content sections={sections} />;
 }

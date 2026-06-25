@@ -26,6 +26,11 @@ export {
   subscribeDeleteSubscribe as deleteSubscribe,
   subscribeBatchDeleteSubscribe as batchDeleteSubscribe,
   subscribeGetSubscribeDetails as getSubscribeDetails,
+  subscribeCreateSubscribeCategory as createSubscribeCategory,
+  subscribeUpdateSubscribeCategory as updateSubscribeCategory,
+  subscribeDeleteSubscribeCategory as deleteSubscribeCategory,
+  subscribeBatchDeleteSubscribeCategory as batchDeleteSubscribeCategory,
+  subscribeGetSubscribeCategoryList as getSubscribeCategoryList,
   subscribeUpdateSubscribeGroup as updateSubscribeGroup,
   subscribeCreateSubscribeGroup as createSubscribeGroup,
   subscribeDeleteSubscribeGroup as deleteSubscribeGroup,
@@ -102,6 +107,97 @@ export async function subscribeGetSubscribeDetails(
       method: "GET",
       params: {
         ...params,
+      },
+      ...(options || {}),
+    }
+  );
+}
+
+/** CreateSubscribeCategory 创建商品分类 POST /v1/admin/subscribe/category */
+export async function subscribeCreateSubscribeCategory(
+  body: API.CreateSubscribeCategoryRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.CreateSubscribeCategoryReply>(
+    `${import.meta.env.VITE_API_PREFIX || ""}/v1/admin/subscribe/category`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: body,
+      ...(options || {}),
+    }
+  );
+}
+
+/** UpdateSubscribeCategory 更新商品分类 PUT /v1/admin/subscribe/category */
+export async function subscribeUpdateSubscribeCategory(
+  body: API.UpdateSubscribeCategoryRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.UpdateSubscribeCategoryReply>(
+    `${import.meta.env.VITE_API_PREFIX || ""}/v1/admin/subscribe/category`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: body,
+      ...(options || {}),
+    }
+  );
+}
+
+/** DeleteSubscribeCategory 删除商品分类 DELETE /v1/admin/subscribe/category */
+export async function subscribeDeleteSubscribeCategory(
+  body: API.DeleteSubscribeCategoryRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.DeleteSubscribeCategoryReply>(
+    `${import.meta.env.VITE_API_PREFIX || ""}/v1/admin/subscribe/category`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: body,
+      ...(options || {}),
+    }
+  );
+}
+
+/** BatchDeleteSubscribeCategory 批量删除商品分类 DELETE /v1/admin/subscribe/category/batch */
+export async function subscribeBatchDeleteSubscribeCategory(
+  body: API.BatchDeleteSubscribeCategoryRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.BatchDeleteSubscribeCategoryReply>(
+    `${
+      import.meta.env.VITE_API_PREFIX || ""
+    }/v1/admin/subscribe/category/batch`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: body,
+      ...(options || {}),
+    }
+  );
+}
+
+/** GetSubscribeCategoryList 获取商品分类列表 GET /v1/admin/subscribe/category/list */
+export async function subscribeGetSubscribeCategoryList(
+  params?: API.SubscribeGetSubscribeCategoryListParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.GetSubscribeCategoryListReply>(
+    `${import.meta.env.VITE_API_PREFIX || ""}/v1/admin/subscribe/category/list`,
+    {
+      method: "GET",
+      params: {
+        ...(params || {}),
       },
       ...(options || {}),
     }

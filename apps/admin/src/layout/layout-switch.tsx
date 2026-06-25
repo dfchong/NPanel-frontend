@@ -58,7 +58,6 @@ export function LayoutSwitch() {
   const { mode, setMode } = useLayoutStore();
   const { t } = useTranslation("components");
 
-
   return (
     <Sheet>
       <TooltipProvider>
@@ -94,7 +93,7 @@ export function LayoutSwitch() {
                 className={cn(
                   "flex items-center gap-3 rounded-xl p-3 text-left text-sm transition-colors",
                   isActive
-                    ? "bg-primary/10 text-primary font-medium"
+                    ? "bg-primary/10 font-medium text-primary"
                     : "bg-muted/50 hover:bg-accent hover:text-accent-foreground"
                 )}
                 key={item.mode}

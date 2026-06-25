@@ -41,6 +41,9 @@ declare namespace API {
   type BatchDeleteRedemptionCodeReply = any;
   type BatchDeleteRedemptionCodeRequest = any;
   type BatchDeleteSubscribeData = any;
+  type BatchDeleteSubscribeCategoryData = any;
+  type BatchDeleteSubscribeCategoryReply = any;
+  type BatchDeleteSubscribeCategoryRequest = any;
   type BatchDeleteSubscribeGroupData = any;
   type BatchDeleteSubscribeGroupReply = any;
   type BatchDeleteSubscribeGroupRequest = any;
@@ -97,6 +100,9 @@ declare namespace API {
   type CreateServerReply = any;
   type CreateServerRequest = any;
   type CreateSubscribeApplicationRequest = any;
+  type CreateSubscribeCategoryData = any;
+  type CreateSubscribeCategoryReply = any;
+  type CreateSubscribeCategoryRequest = any;
   type CreateSubscribeData = any;
   type CreateSubscribeGroupData = any;
   type CreateSubscribeGroupReply = any;
@@ -142,6 +148,9 @@ declare namespace API {
   type DeleteSubscribeApplicationData = any;
   type DeleteSubscribeApplicationReply = any;
   type DeleteSubscribeApplicationRequest = any;
+  type DeleteSubscribeCategoryData = any;
+  type DeleteSubscribeCategoryReply = any;
+  type DeleteSubscribeCategoryRequest = any;
   type DeleteSubscribeData = any;
   type DeleteSubscribeGroupData = any;
   type DeleteSubscribeGroupReply = any;
@@ -264,6 +273,8 @@ declare namespace API {
   type GetSubscribeConfigReply = any;
   type GetSubscribeDetailsData = any;
   type GetSubscribeDetailsReply = any;
+  type GetSubscribeCategoryListData = any;
+  type GetSubscribeCategoryListReply = any;
   type GetSubscribeGroupListData = any;
   type GetSubscribeGroupListReply = any;
   type GetSubscribeGroupMappingData = any;
@@ -534,6 +545,8 @@ declare namespace API {
   type SubscribeClient = any;
   type SubscribeConfig = any;
   type SubscribeDiscount = any;
+  type SubscribeCategoryInfo = any;
+  type SubscribeGetSubscribeCategoryListParams = any;
   type SubscribeGetSubscribeDetailsParams = any;
   type SubscribeGetSubscribeListParams = any;
   type SubscribeGroupInfo = any;
@@ -634,6 +647,9 @@ declare namespace API {
   type UpdateSubscribeConfigReply = any;
   type UpdateSubscribeConfigRequest = any;
   type UpdateSubscribeData = any;
+  type UpdateSubscribeCategoryData = any;
+  type UpdateSubscribeCategoryReply = any;
+  type UpdateSubscribeCategoryRequest = any;
   type UpdateSubscribeGroupData = any;
   type UpdateSubscribeGroupReply = any;
   type UpdateSubscribeGroupRequest = any;

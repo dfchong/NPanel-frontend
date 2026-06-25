@@ -94,11 +94,6 @@ function DynamicField({
                   {...fieldProps}
                   onValueChange={(v) => fieldProps.onChange(v)}
                   placeholder={field.placeholder}
-                  value={
-                    Array.isArray(fieldProps.value)
-                      ? fieldProps.value.join(", ")
-                      : (fieldProps.value ?? "")
-                  }
                   suffix={
                     field.generate ? (
                       field.generate.functions &&
@@ -169,6 +164,11 @@ function DynamicField({
                     )
                   }
                   type="text"
+                  value={
+                    Array.isArray(fieldProps.value)
+                      ? fieldProps.value.join(", ")
+                      : (fieldProps.value ?? "")
+                  }
                 />
               </FormControl>
               <FormMessage />

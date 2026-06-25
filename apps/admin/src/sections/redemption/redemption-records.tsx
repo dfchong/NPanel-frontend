@@ -59,12 +59,10 @@ export default function RedemptionRecords({
   }, [open, codeId, pagination]);
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+    <Dialog onOpenChange={onOpenChange} open={open}>
+      <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>
-            {t("records", "Redemption Records")}
-          </DialogTitle>
+          <DialogTitle>{t("records", "Redemption Records")}</DialogTitle>
         </DialogHeader>
         <div className="mt-4">
           {loading ? (
@@ -72,7 +70,7 @@ export default function RedemptionRecords({
               <span>{t("loading", "Loading...")}</span>
             </div>
           ) : records.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="py-8 text-center text-muted-foreground">
               {t("noRecords", "No records found")}
             </div>
           ) : (
@@ -102,7 +100,9 @@ export default function RedemptionRecords({
                         <TableCell>{record.id}</TableCell>
                         <TableCell>{record.user_id}</TableCell>
                         <TableCell>{record.subscribe_id}</TableCell>
-                        <TableCell>{unitTimeMap[record.unit_time] || record.unit_time}</TableCell>
+                        <TableCell>
+                          {unitTimeMap[record.unit_time] || record.unit_time}
+                        </TableCell>
                         <TableCell>{record.quantity}</TableCell>
                         <TableCell>
                           {record.redeemed_at
@@ -115,26 +115,28 @@ export default function RedemptionRecords({
                 </TableBody>
               </Table>
               {total > pagination.size && (
-                <div className="flex justify-between items-center mt-4">
-                  <span className="text-sm text-muted-foreground">
+                <div className="mt-4 flex items-center justify-between">
+                  <span className="text-muted-foreground text-sm">
                     {t("total", "Total")}: {total}
                   </span>
                   <div className="flex gap-2">
                     <button
-                      className="px-3 py-1 text-sm border rounded hover:bg-accent disabled:opacity-50"
+                      className="rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50"
                       disabled={pagination.page === 1}
                       onClick={() =>
                         setPagination((p) => ({ ...p, page: p.page - 1 }))
                       }
+                      type="button"
                     >
                       {t("previous", "Previous")}
                     </button>
                     <button
-                      className="px-3 py-1 text-sm border rounded hover:bg-accent disabled:opacity-50"
+                      className="rounded border px-3 py-1 text-sm hover:bg-accent disabled:opacity-50"
                       disabled={pagination.page * pagination.size >= total}
                       onClick={() =>
                         setPagination((p) => ({ ...p, page: p.page + 1 }))
                       }
+                      type="button"
                     >
                       {t("next", "Next")}
                     </button>

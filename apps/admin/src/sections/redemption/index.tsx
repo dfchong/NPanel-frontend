@@ -112,80 +112,81 @@ export default function Redemption() {
           ],
         }}
         columns={[
-        {
-          accessorKey: "code",
-          header: t("code", "Code"),
-        },
-        {
-          accessorKey: "subscribe_plan",
-          header: t("subscribePlan", "Subscribe Plan"),
-          cell: ({ row }) => {
-            const plan = subscribes?.find(
-              (s) => String(s.id) === String(row.getValue("subscribe_plan"))
-            );
-            return plan?.name || "--";
+          {
+            accessorKey: "code",
+            header: t("code", "Code"),
           },
-        },
-        {
-          accessorKey: "unit_time",
-          header: t("unitTime", "Unit Time"),
-          cell: ({ row }) => {
-            const unitTime = row.getValue("unit_time") as string;
-            const unitTimeMap: Record<string, string> = {
-              day: t("form.day", "Day"),
-              month: t("form.month", "Month"),
-              quarter: t("form.quarter", "Quarter"),
-              half_year: t("form.halfYear", "Half Year"),
-              year: t("form.year", "Year"),
-            };
-            return unitTimeMap[unitTime] || unitTime;
+          {
+            accessorKey: "subscribe_plan",
+            header: t("subscribePlan", "Subscribe Plan"),
+            cell: ({ row }) => {
+              const plan = subscribes?.find(
+                (s) => String(s.id) === String(row.getValue("subscribe_plan"))
+              );
+              return plan?.name || "--";
+            },
           },
-        },
-        {
-          accessorKey: "quantity",
-          header: t("duration", "Duration"),
-          cell: ({ row }) => `${toNumber(row.original.quantity)}`,
-        },
-        {
-          accessorKey: "total_count",
-          header: t("totalCount", "Total Count"),
-          cell: ({ row }) => (
-            <div className="flex flex-col">
-              <span>
-                {t("totalCount", "Total")}: {toNumber(row.original.total_count)}
-              </span>
-              <span>
-                {t("remainingCount", "Remaining")}:{" "}
-                {toNumber(row.original.total_count) -
-                  toNumber(row.original.used_count)}
-              </span>
-              <span>
-                {t("usedCount", "Used")}: {toNumber(row.original.used_count)}
-              </span>
-            </div>
-          ),
-        },
-        {
-          accessorKey: "status",
-          header: t("status", "Status"),
-          cell: ({ row }) => (
-            <Switch
-              defaultChecked={toNumber(row.getValue("status")) === 1}
-              onCheckedChange={async (checked) => {
-                await toggleRedemptionCodeStatus({
-                  id: row.original.id,
-                  status: checked ? 1 : 0,
-                });
-                toast.success(
-                  checked
-                    ? t("updateSuccess", "Update Success")
-                    : t("updateSuccess", "Update Success")
-                );
-                ref.current?.refresh();
-              }}
-            />
-          ),
-        },
+          {
+            accessorKey: "unit_time",
+            header: t("unitTime", "Unit Time"),
+            cell: ({ row }) => {
+              const unitTime = row.getValue("unit_time") as string;
+              const unitTimeMap: Record<string, string> = {
+                day: t("form.day", "Day"),
+                month: t("form.month", "Month"),
+                quarter: t("form.quarter", "Quarter"),
+                half_year: t("form.halfYear", "Half Year"),
+                year: t("form.year", "Year"),
+              };
+              return unitTimeMap[unitTime] || unitTime;
+            },
+          },
+          {
+            accessorKey: "quantity",
+            header: t("duration", "Duration"),
+            cell: ({ row }) => `${toNumber(row.original.quantity)}`,
+          },
+          {
+            accessorKey: "total_count",
+            header: t("totalCount", "Total Count"),
+            cell: ({ row }) => (
+              <div className="flex flex-col">
+                <span>
+                  {t("totalCount", "Total")}:{" "}
+                  {toNumber(row.original.total_count)}
+                </span>
+                <span>
+                  {t("remainingCount", "Remaining")}:{" "}
+                  {toNumber(row.original.total_count) -
+                    toNumber(row.original.used_count)}
+                </span>
+                <span>
+                  {t("usedCount", "Used")}: {toNumber(row.original.used_count)}
+                </span>
+              </div>
+            ),
+          },
+          {
+            accessorKey: "status",
+            header: t("status", "Status"),
+            cell: ({ row }) => (
+              <Switch
+                defaultChecked={toNumber(row.getValue("status")) === 1}
+                onCheckedChange={async (checked) => {
+                  await toggleRedemptionCodeStatus({
+                    id: row.original.id,
+                    status: checked ? 1 : 0,
+                  });
+                  toast.success(
+                    checked
+                      ? t("updateSuccess", "Update Success")
+                      : t("updateSuccess", "Update Success")
+                  );
+                  ref.current?.refresh();
+                }}
+              />
+            ),
+          },
         ]}
         header={{
           toolbar: (
@@ -210,28 +211,28 @@ export default function Redemption() {
           ),
         }}
         params={[
-        {
-          key: "subscribe_plan",
-          placeholder: t("subscribePlan", "Subscribe Plan"),
-          options: subscribes?.map((item) => ({
-            label: item.name!,
-            value: String(item.id),
-          })),
-        },
-        {
-          key: "unit_time",
-          placeholder: t("unitTime", "Unit Time"),
-          options: [
-            { label: t("form.day", "Day"), value: "day" },
-            { label: t("form.month", "Month"), value: "month" },
-            { label: t("form.quarter", "Quarter"), value: "quarter" },
-            { label: t("form.halfYear", "Half Year"), value: "half_year" },
-            { label: t("form.year", "Year"), value: "year" },
-          ],
-        },
-        {
-          key: "code",
-        },
+          {
+            key: "subscribe_plan",
+            placeholder: t("subscribePlan", "Subscribe Plan"),
+            options: subscribes?.map((item) => ({
+              label: item.name!,
+              value: String(item.id),
+            })),
+          },
+          {
+            key: "unit_time",
+            placeholder: t("unitTime", "Unit Time"),
+            options: [
+              { label: t("form.day", "Day"), value: "day" },
+              { label: t("form.month", "Month"), value: "month" },
+              { label: t("form.quarter", "Quarter"), value: "quarter" },
+              { label: t("form.halfYear", "Half Year"), value: "half_year" },
+              { label: t("form.year", "Year"), value: "year" },
+            ],
+          },
+          {
+            key: "code",
+          },
         ]}
         request={async (pagination, filters) => {
           const { data } = await getRedemptionCodeList({

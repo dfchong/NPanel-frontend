@@ -59,8 +59,7 @@ const platforms: (keyof API.DownloadLink)[] = [
 ];
 
 function toNumber(value?: number | string | null) {
-  const parsed =
-    typeof value === "string" ? Number(value) : Number(value ?? 0);
+  const parsed = typeof value === "string" ? Number(value) : Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
@@ -274,7 +273,11 @@ export default function Content() {
                               left: `${left}%`,
                             }}
                           >
-                            {statusWatermarks[status as keyof typeof statusWatermarks]}
+                            {
+                              statusWatermarks[
+                                status as keyof typeof statusWatermarks
+                              ]
+                            }
                           </span>
                         );
                       })}

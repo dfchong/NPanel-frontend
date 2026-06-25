@@ -9,14 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@workspace/ui/components/card";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 import {
   getRecalculationStatus,
   recalculateGroup,
 } from "@workspace/ui/services/admin/group";
+import { Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 export default function GroupRecalculate() {
   const { t } = useTranslation("group");
@@ -54,7 +54,9 @@ export default function GroupRecalculate() {
     return () => clearInterval(interval);
   }, [status?.state]);
 
-  const handleRecalculate = async (mode: "average" | "subscribe" | "traffic") => {
+  const handleRecalculate = async (
+    mode: "average" | "subscribe" | "traffic"
+  ) => {
     setRecalculating(mode);
     try {
       await recalculateGroup({ mode });
@@ -98,7 +100,9 @@ export default function GroupRecalculate() {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>{t("groupRecalculation", "Group Recalculation")}</CardTitle>
+          <CardTitle>
+            {t("groupRecalculation", "Group Recalculation")}
+          </CardTitle>
           <CardDescription>
             {t(
               "groupRecalculationDescription",
@@ -110,7 +114,7 @@ export default function GroupRecalculate() {
           {/* Current Status */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">
+              <span className="font-medium text-sm">
                 {t("currentStatus", "Current Status")}
               </span>
               {loadingStatus ? (
@@ -142,14 +146,20 @@ export default function GroupRecalculate() {
             )}
 
             {status?.state === "completed" && (
-              <div className="text-sm text-muted-foreground">
-                {t("recalculationCompleted", "Recalculation completed successfully")}
+              <div className="text-muted-foreground text-sm">
+                {t(
+                  "recalculationCompleted",
+                  "Recalculation completed successfully"
+                )}
               </div>
             )}
 
             {status?.state === "failed" && (
-              <div className="text-sm text-destructive">
-                {t("recalculationFailed", "Recalculation failed. Please try again.")}
+              <div className="text-destructive text-sm">
+                {t(
+                  "recalculationFailed",
+                  "Recalculation failed. Please try again."
+                )}
               </div>
             )}
           </div>
@@ -163,9 +173,11 @@ export default function GroupRecalculate() {
                   {t("averageMode", "Average Mode")}
                 </div>
                 <Button
-                  onClick={() => handleRecalculate("average")}
-                  disabled={recalculating === "average" || status?.state === "running"}
                   className="w-full"
+                  disabled={
+                    recalculating === "average" || status?.state === "running"
+                  }
+                  onClick={() => handleRecalculate("average")}
                   variant="outline"
                 >
                   {recalculating === "average" && (
@@ -181,9 +193,11 @@ export default function GroupRecalculate() {
                   {t("subscribeMode", "Subscribe Mode")}
                 </div>
                 <Button
-                  onClick={() => handleRecalculate("subscribe")}
-                  disabled={recalculating === "subscribe" || status?.state === "running"}
                   className="w-full"
+                  disabled={
+                    recalculating === "subscribe" || status?.state === "running"
+                  }
+                  onClick={() => handleRecalculate("subscribe")}
                   variant="outline"
                 >
                   {recalculating === "subscribe" && (
@@ -199,9 +213,11 @@ export default function GroupRecalculate() {
                   {t("trafficMode", "Traffic Mode")}
                 </div>
                 <Button
-                  onClick={() => handleRecalculate("traffic")}
-                  disabled={recalculating === "traffic" || status?.state === "running"}
                   className="w-full"
+                  disabled={
+                    recalculating === "traffic" || status?.state === "running"
+                  }
+                  onClick={() => handleRecalculate("traffic")}
                   variant="outline"
                 >
                   {recalculating === "traffic" && (

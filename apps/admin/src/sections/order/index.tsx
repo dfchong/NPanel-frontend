@@ -1,3 +1,4 @@
+import { useSearch } from "@tanstack/react-router";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -16,7 +17,6 @@ import {
   getOrderList,
   updateOrderStatus,
 } from "@workspace/ui/services/admin/order";
-import { useSearch } from "@tanstack/react-router";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Display } from "@/components/display";
@@ -36,18 +36,13 @@ export default function Order() {
       label: t("status.1", "Pending"),
       className: "bg-orange-500",
     },
-    { value: 2, 
-      label: t("status.2", "Paid"), 
-      className: "bg-green-500" },
+    { value: 2, label: t("status.2", "Paid"), className: "bg-green-500" },
     {
       value: 3,
       label: t("status.3", "Cancelled"),
       className: "bg-gray-500",
     },
-    { value: 4, 
-      label: t("status.4", "Closed"), 
-      className: "bg-red-500" 
-    },
+    { value: 4, label: t("status.4", "Closed"), className: "bg-red-500" },
     {
       value: 5,
       label: t("status.5", "Completed"),
@@ -229,9 +224,7 @@ export default function Order() {
           cell: ({ row }) => {
             const order = row.original as API.Order;
             const status = toNumber(order.status);
-            const option = statusOptions.find(
-              (opt) => opt.value === status
-            );
+            const option = statusOptions.find((opt) => opt.value === status);
             if ([1, 3, 4].includes(toNumber(row.getValue("status")))) {
               return (
                 <Combobox<number, false>
@@ -251,13 +244,15 @@ export default function Order() {
             }
             return (
               <Badge>
-                {option?.label || t(`status.${toNumber(row.getValue("status"))}`)}
+                {option?.label ||
+                  t(`status.${toNumber(row.getValue("status"))}`)}
               </Badge>
             );
           },
         },
       ]}
       initialFilters={initialFilters}
+      key={JSON.stringify(initialFilters)}
       params={[
         {
           key: "status",
@@ -282,7 +277,6 @@ export default function Order() {
           options: undefined,
         },
       ]}
-      key={JSON.stringify(initialFilters)}
       request={async (pagination, filter) => {
         const { data } = await getOrderList({ ...pagination, ...filter });
         return {

@@ -13,7 +13,7 @@ function toSafeNumber(value?: Date | number | string | null) {
 }
 
 function normalizeTimestamp(value: number) {
-  return value > 0 && value < 10000000000 ? value * 1000 : value;
+  return value > 0 && value < 10_000_000_000 ? value * 1000 : value;
 }
 
 export function getPlatform(): string {
@@ -39,7 +39,8 @@ export function differenceInDays(date1: Date, date2: Date): number {
 export function formatDate(date?: Date | number | string, showTime = true) {
   if (date === undefined || date === null || date === "") return;
 
-  let dateValue: Date | number = date instanceof Date ? date : normalizeTimestamp(toSafeNumber(date));
+  const dateValue: Date | number =
+    date instanceof Date ? date : normalizeTimestamp(toSafeNumber(date));
   if (!dateValue) return;
 
   const timeZone = localStorage.getItem("timezone") || "UTC";

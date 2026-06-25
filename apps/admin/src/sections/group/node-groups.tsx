@@ -70,28 +70,91 @@ export default function NodeGroups() {
         <CardHeader>
           <CardTitle>{t("nodeGroups", "Node Groups")}</CardTitle>
           <CardDescription>
-            {t("nodeGroupsDescription", "Manage node groups for user access control")}
+            {t(
+              "nodeGroupsDescription",
+              "Manage node groups for user access control"
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <ProTable<API.NodeGroup, API.GetNodeGroupListRequest>
             action={ref}
-            request={async (params) => {
-              const { data } = await getNodeGroupList({
-                page: params.page || 1,
-                size: params.size || 10,
-              });
-              return {
-                list: data.data?.list || [],
-                total: data.data?.total || 0,
-              };
+            actions={{
+              render: (row: any) => [
+                <NodeGroupForm
+                  allNodeGroups={allNodeGroups}
+                  currentGroupId={row.id}
+                  initialValues={row}
+                  key={`edit-${row.id}`}
+                  loading={loading}
+                  onSubmit={async (values) => {
+                    setLoading(true);
+                    try {
+                      await updateNodeGroup({
+                        id: row.id,
+                        ...values,
+                      } as API.UpdateNodeGroupRequest);
+                      toast.success(t("updated", "Updated successfully"));
+                      // 刷新节点组列表
+                      const { data } = await getNodeGroupList({
+                        page: 1,
+                        size: 1000,
+                      });
+                      setAllNodeGroups(data.data?.list || []);
+                      ref.current?.refresh();
+                      setLoading(false);
+                      return true;
+                    } catch {
+                      setLoading(false);
+                      return false;
+                    }
+                  }}
+                  title={t("editNodeGroup", "Edit Node Group")}
+                  trigger={
+                    <Button size="sm" variant="outline">
+                      {t("edit", "Edit")}
+                    </Button>
+                  }
+                />,
+                <ConfirmButton
+                  cancelText={t("cancel", "Cancel")}
+                  confirmText={t("confirm", "Confirm")}
+                  description={t(
+                    "deleteNodeGroupConfirm",
+                    "This will delete the node group. Nodes in this group will be reassigned."
+                  )}
+                  key="delete"
+                  onConfirm={async () => {
+                    await deleteNodeGroup({ id: row.id });
+                    toast.success(t("deleted", "Deleted successfully"));
+                    // 刷新节点组列表
+                    const { data } = await getNodeGroupList({
+                      page: 1,
+                      size: 1000,
+                    });
+                    setAllNodeGroups(data.data?.list || []);
+                    ref.current?.refresh();
+                    setLoading(false);
+                  }}
+                  title={t("confirmDelete", "Confirm Delete")}
+                  trigger={
+                    <Button size="sm" variant="destructive">
+                      {t("delete", "Delete")}
+                    </Button>
+                  }
+                />,
+              ],
             }}
             columns={[
               {
                 id: "id",
                 accessorKey: "id",
                 header: t("id", "ID"),
-                cell: ({ row }: { row: any }) => <span className="text-muted-foreground">#{row.getValue("id")}</span>,
+                cell: ({ row }: { row: any }) => (
+                  <span className="text-muted-foreground">
+                    #{row.getValue("id")}
+                  </span>
+                ),
               },
               {
                 id: "name",
@@ -115,7 +178,8 @@ export default function NodeGroups() {
                 id: "description",
                 accessorKey: "description",
                 header: t("description", "Description"),
-                cell: ({ row }: { row: any }) => row.getValue("description") || "--",
+                cell: ({ row }: { row: any }) =>
+                  row.getValue("description") || "--",
               },
               {
                 id: "type",
@@ -123,7 +187,9 @@ export default function NodeGroups() {
                 header: t("type"),
                 cell: ({ row }: { row: any }) => {
                   const typeInfo = getNodeGroupTypeLabel(row.original.type);
-                  return <Badge variant={typeInfo.variant}>{typeInfo.text}</Badge>;
+                  return (
+                    <Badge variant={typeInfo.variant}>{typeInfo.text}</Badge>
+                  );
                 },
               },
               {
@@ -163,82 +229,27 @@ export default function NodeGroups() {
                 header: t("sort", "Sort"),
               },
             ]}
-            actions={{
-              render: (row: any) => [
-                <NodeGroupForm
-                  key={`edit-${row.id}`}
-                  initialValues={row}
-                  allNodeGroups={allNodeGroups}
-                  currentGroupId={row.id}
-                  loading={loading}
-                  onSubmit={async (values) => {
-                    setLoading(true);
-                    try {
-                      await updateNodeGroup({
-                        id: row.id,
-                        ...values,
-                      } as API.UpdateNodeGroupRequest);
-                      toast.success(t("updated", "Updated successfully"));
-                      // 刷新节点组列表
-                      const { data } = await getNodeGroupList({ page: 1, size: 1000 });
-                      setAllNodeGroups(data.data?.list || []);
-                      ref.current?.refresh();
-                      setLoading(false);
-                      return true;
-                    } catch {
-                      setLoading(false);
-                      return false;
-                    }
-                  }}
-                  title={t("editNodeGroup", "Edit Node Group")}
-                  trigger={
-                    <Button variant="outline" size="sm">
-                      {t("edit", "Edit")}
-                    </Button>
-                  }
-                />,
-                <ConfirmButton
-                  key="delete"
-                  cancelText={t("cancel", "Cancel")}
-                  confirmText={t("confirm", "Confirm")}
-                  description={t(
-                    "deleteNodeGroupConfirm",
-                    "This will delete the node group. Nodes in this group will be reassigned."
-                  )}
-                  onConfirm={async () => {
-                    await deleteNodeGroup({ id: row.id });
-                    toast.success(t("deleted", "Deleted successfully"));
-                    // 刷新节点组列表
-                    const { data } = await getNodeGroupList({ page: 1, size: 1000 });
-                    setAllNodeGroups(data.data?.list || []);
-                    ref.current?.refresh();
-                    setLoading(false);
-                  }}
-                  title={t("confirmDelete", "Confirm Delete")}
-                  trigger={
-                    <Button variant="destructive" size="sm">
-                      {t("delete", "Delete")}
-                    </Button>
-                  }
-                />,
-              ],
-            }}
             header={{
               title: t("nodeGroups", "Node Groups"),
               toolbar: (
                 <NodeGroupForm
-                  key="create"
-                  initialValues={undefined}
                   allNodeGroups={allNodeGroups}
                   currentGroupId={undefined}
+                  initialValues={undefined}
+                  key="create"
                   loading={loading}
                   onSubmit={async (values) => {
                     setLoading(true);
                     try {
-                      await createNodeGroup(values as API.CreateNodeGroupRequest);
+                      await createNodeGroup(
+                        values as API.CreateNodeGroupRequest
+                      );
                       toast.success(t("created", "Created successfully"));
                       // 刷新节点组列表
-                      const { data } = await getNodeGroupList({ page: 1, size: 1000 });
+                      const { data } = await getNodeGroupList({
+                        page: 1,
+                        size: 1000,
+                      });
                       setAllNodeGroups(data.data?.list || []);
                       ref.current?.refresh();
                       setLoading(false);
@@ -249,13 +260,19 @@ export default function NodeGroups() {
                     }
                   }}
                   title={t("createNodeGroup", "Create Node Group")}
-                  trigger={
-                    <Button>
-                      {t("create", "Create")}
-                    </Button>
-                  }
+                  trigger={<Button>{t("create", "Create")}</Button>}
                 />
               ),
+            }}
+            request={async (params) => {
+              const { data } = await getNodeGroupList({
+                page: params.page || 1,
+                size: params.size || 10,
+              });
+              return {
+                list: data.data?.list || [],
+                total: data.data?.total || 0,
+              };
             }}
           />
         </CardContent>

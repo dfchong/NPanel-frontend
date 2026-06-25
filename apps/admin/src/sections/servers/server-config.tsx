@@ -54,7 +54,7 @@ import { z } from "zod";
 import { SS_CIPHERS } from "./form-schema";
 
 function toNumber(value: unknown): number | undefined {
-  if (value === undefined || value === null || value === "") return undefined;
+  if (value === undefined || value === null || value === "") return;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : undefined;
 }

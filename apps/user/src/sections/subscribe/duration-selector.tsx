@@ -19,8 +19,7 @@ interface DurationSelectorProps {
 }
 
 function toNumber(value?: number | string | null) {
-  const parsed =
-    typeof value === "string" ? Number(value) : Number(value ?? 0);
+  const parsed = typeof value === "string" ? Number(value) : Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
@@ -57,7 +56,9 @@ const DurationSelector: React.FC<DurationSelectorProps> = ({
   const currentDiscount = discounts?.find(
     (item) => toNumber(item.quantity) === quantity
   )?.discount;
-  const discountPercentage = currentDiscount ? 100 - toNumber(currentDiscount) : 0;
+  const discountPercentage = currentDiscount
+    ? 100 - toNumber(currentDiscount)
+    : 0;
 
   return (
     <>

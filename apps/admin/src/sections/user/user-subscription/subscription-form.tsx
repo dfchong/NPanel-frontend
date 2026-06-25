@@ -36,13 +36,13 @@ function toNumber(value: number | string | null | undefined) {
 function toMilliseconds(value: number | string | null | undefined) {
   const parsed = toNumber(value);
   if (!parsed) return 0;
-  return parsed < 10000000000 ? parsed * 1000 : parsed;
+  return parsed < 10_000_000_000 ? parsed * 1000 : parsed;
 }
 
 function toSeconds(value: number | null | undefined) {
   const parsed = toNumber(value);
   if (!parsed) return 0;
-  return parsed >= 10000000000 ? Math.floor(parsed / 1000) : parsed;
+  return parsed >= 10_000_000_000 ? Math.floor(parsed / 1000) : parsed;
 }
 
 interface Props {

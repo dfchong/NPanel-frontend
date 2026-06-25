@@ -26,7 +26,10 @@ export default function SubscribeLogPage() {
     user_subscribe_id: sp.user_subscribe_id || undefined,
   };
   return (
-    <ProTable<API.SubscribeLog, { date?: string; user_id?: string; user_subscribe_id?: string }>
+    <ProTable<
+      API.SubscribeLog,
+      { date?: string; user_id?: string; user_subscribe_id?: string }
+    >
       columns={[
         {
           accessorKey: "user",

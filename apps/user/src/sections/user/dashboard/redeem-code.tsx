@@ -25,7 +25,9 @@ export default function RedeemCode({ onSuccess }: RedeemCodeProps) {
   const redeemMutation = useMutation({
     mutationFn: (code: string) => redeemCode({ code }),
     onSuccess: (response) => {
-      const message = (response.data as { message?: string })?.message || t("redeemSuccess", "兑换成功");
+      const message =
+        (response.data as { message?: string })?.message ||
+        t("redeemSuccess", "兑换成功");
       toast.success(message);
       setCode("");
       onSuccess?.();
@@ -64,10 +66,7 @@ export default function RedeemCode({ onSuccess }: RedeemCodeProps) {
               <Input
                 id="redemption-code"
                 onChange={(e) => setCode(e.target.value)}
-                placeholder={t(
-                  "enterRedemptionCode",
-                  "请输入兑换码"
-                )}
+                placeholder={t("enterRedemptionCode", "请输入兑换码")}
                 value={code}
               />
               <Button

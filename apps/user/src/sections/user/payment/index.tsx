@@ -30,15 +30,14 @@ import StripePayment from "./stripe";
 const routeApi = getRouteApi("/(main)/payment");
 
 function toNumber(value?: number | string | null) {
-  const parsed =
-    typeof value === "string" ? Number(value) : Number(value ?? 0);
+  const parsed = typeof value === "string" ? Number(value) : Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function toTimestampMs(value?: number | string | null) {
   const numericValue = toNumber(value);
   if (!numericValue) return 0;
-  return numericValue < 10000000000 ? numericValue * 1000 : numericValue;
+  return numericValue < 10_000_000_000 ? numericValue * 1000 : numericValue;
 }
 
 export default function Page() {
@@ -130,13 +129,13 @@ export default function Page() {
             {t("paymentMethod", "Payment Method")}
           </div>
           <dl className="grid gap-3">
-              <div className="flex items-center justify-between">
-                <dt className="text-muted-foreground">
-                  <Badge>
-                    {data?.payment?.name || data?.payment?.platform || "--"}
-                  </Badge>
-                </dt>
-              </div>
+            <div className="flex items-center justify-between">
+              <dt className="text-muted-foreground">
+                <Badge>
+                  {data?.payment?.name || data?.payment?.platform || "--"}
+                </Badge>
+              </dt>
+            </div>
           </dl>
           <Separator />
 
@@ -195,29 +194,30 @@ export default function Page() {
       </Card>
       <Card className="order-1 flex flex-auto items-center justify-center xl:order-2">
         <CardContent className="py-16">
-          {toNumber(data?.status) && [2, 5].includes(toNumber(data?.status)) && (
-            <div className="flex flex-col items-center gap-8 text-center">
-              <h3 className="font-bold text-2xl tracking-tight">
-                {t("paymentSuccess", "Payment Success")}
-              </h3>
-              <Icon
-                className="text-7xl text-green-500"
-                icon="mdi:success-circle-outline"
-              />
-              <div className="flex gap-4">
-                <Button asChild>
-                  <Link to="/dashboard">
-                    {t("subscribeNow", "Subscribe Now")}
-                  </Link>
-                </Button>
-                <Button variant="outline">
-                  <Link to="/document">
-                    {t("viewDocument", "View Document")}
-                  </Link>
-                </Button>
+          {toNumber(data?.status) &&
+            [2, 5].includes(toNumber(data?.status)) && (
+              <div className="flex flex-col items-center gap-8 text-center">
+                <h3 className="font-bold text-2xl tracking-tight">
+                  {t("paymentSuccess", "Payment Success")}
+                </h3>
+                <Icon
+                  className="text-7xl text-green-500"
+                  icon="mdi:success-circle-outline"
+                />
+                <div className="flex gap-4">
+                  <Button asChild>
+                    <Link to="/dashboard">
+                      {t("subscribeNow", "Subscribe Now")}
+                    </Link>
+                  </Button>
+                  <Button variant="outline">
+                    <Link to="/document">
+                      {t("viewDocument", "View Document")}
+                    </Link>
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
           {toNumber(data?.status) === 1 && payment?.type === "url" && (
             <div className="flex flex-col items-center gap-8 text-center">
               <h3 className="font-bold text-2xl tracking-tight">
@@ -300,24 +300,25 @@ export default function Page() {
             </div>
           )}
 
-          {toNumber(data?.status) && [3, 4].includes(toNumber(data?.status)) && (
-            <div className="flex flex-col items-center gap-8 text-center">
-              <h3 className="font-bold text-2xl tracking-tight">
-                {t("orderClosed", "Order Closed")}
-              </h3>
-              <Icon className="text-7xl text-red-500" icon="mdi:cancel" />
-              <div className="flex gap-4">
-                <Button asChild>
-                  <Link to="/subscribe">
-                    {t("productList", "Product List")}
-                  </Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link to="/order">{t("orderList", "Order List")}</Link>
-                </Button>
+          {toNumber(data?.status) &&
+            [3, 4].includes(toNumber(data?.status)) && (
+              <div className="flex flex-col items-center gap-8 text-center">
+                <h3 className="font-bold text-2xl tracking-tight">
+                  {t("orderClosed", "Order Closed")}
+                </h3>
+                <Icon className="text-7xl text-red-500" icon="mdi:cancel" />
+                <div className="flex gap-4">
+                  <Button asChild>
+                    <Link to="/subscribe">
+                      {t("productList", "Product List")}
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline">
+                    <Link to="/order">{t("orderList", "Order List")}</Link>
+                  </Button>
+                </div>
               </div>
-            </div>
-          )}
+            )}
         </CardContent>
       </Card>
     </div>

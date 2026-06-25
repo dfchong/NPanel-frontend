@@ -38,7 +38,9 @@ export default function TrafficStatsCards({ stats }: TrafficStatsCardsProps) {
         <Card key={card.title}>
           <CardContent className="flex items-center justify-between p-6">
             <div className="flex flex-col gap-1">
-              <span className="text-muted-foreground text-sm">{card.title}</span>
+              <span className="text-muted-foreground text-sm">
+                {card.title}
+              </span>
               <span className="font-bold text-2xl">
                 <Display type="traffic" value={card.value} />
               </span>

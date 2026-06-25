@@ -41,7 +41,9 @@ export function UserNav() {
         <DropdownMenuContent align="end" className="w-56" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
-              <p className="font-medium text-sm leading-none">{primaryIdentifier}</p>
+              <p className="font-medium text-sm leading-none">
+                {primaryIdentifier}
+              </p>
               {/* <p className='text-xs leading-none text-muted-foreground'>ID: {user?.id}</p> */}
             </div>
           </DropdownMenuLabel>

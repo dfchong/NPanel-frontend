@@ -28,7 +28,9 @@ const PaymentMethods: React.FC<PaymentMethodsProps> = ({
   const { data } = useQuery({
     queryKey: ["getAvailablePaymentMethods", { balance }],
     queryFn: async () => {
-      const { data } = await getAvailablePaymentMethods({ params: { balance } });
+      const { data } = await getAvailablePaymentMethods({
+        params: { balance },
+      });
       const methods = data.data?.methods || [];
       return balance
         ? methods

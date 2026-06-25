@@ -51,10 +51,10 @@ const LocalCaptcha = forwardRef<LocalCaptchaRef, LocalCaptchaProps>(
     return (
       <div className="flex gap-2">
         <Input
+          className="flex-1"
+          onChange={(e) => onChange?.(e.target.value)}
           placeholder={t("captcha.placeholder", "Enter captcha code...")}
           value={value || ""}
-          onChange={(e) => onChange?.(e.target.value)}
-          className="flex-1"
         />
         <div className="relative h-10 w-32 flex-shrink-0">
           {loading ? (
@@ -63,25 +63,27 @@ const LocalCaptcha = forwardRef<LocalCaptchaRef, LocalCaptchaProps>(
             </div>
           ) : captchaImage ? (
             <img
-              src={captchaImage}
               alt="captcha"
               className="h-full w-full cursor-pointer object-contain"
+              height={40}
               onClick={fetchCaptcha}
+              src={captchaImage}
               title={t("captcha.clickToRefresh", "Click to refresh")}
+              width={128}
             />
           ) : (
-            <div className="flex h-full items-center justify-center bg-muted text-xs text-muted-foreground">
+            <div className="flex h-full items-center justify-center bg-muted text-muted-foreground text-xs">
               {t("captcha.noImage", "No Image")}
             </div>
           )}
         </div>
         <Button
+          disabled={loading}
+          onClick={fetchCaptcha}
+          size="icon"
+          title={t("captcha.refresh", "Refresh captcha")}
           type="button"
           variant="outline"
-          size="icon"
-          onClick={fetchCaptcha}
-          disabled={loading}
-          title={t("captcha.refresh", "Refresh captcha")}
         >
           <Icon icon="mdi:refresh" />
         </Button>

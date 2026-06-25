@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -11,17 +12,16 @@ import {
 } from "@workspace/ui/components/card";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
-import { Loader2 } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
-import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 import {
   getGroupConfig,
   getNodeGroupList,
   getRecalculationStatus,
   recalculateGroup,
 } from "@workspace/ui/services/admin/group";
+import { Loader2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 export default function AverageModeTab() {
   const { t } = useTranslation("group");
@@ -147,7 +147,9 @@ export default function AverageModeTab() {
       {/* Configuration Card */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("averageModeConfig", "Average Mode Configuration")}</CardTitle>
+          <CardTitle>
+            {t("averageModeConfig", "Average Mode Configuration")}
+          </CardTitle>
           <CardDescription>
             {t(
               "averageModeDescription",
@@ -162,15 +164,18 @@ export default function AverageModeTab() {
                 {t("availableNodeGroups", "Available Node Groups")}
               </Label>
               <Input
-                id="node_group_count"
-                type="number"
-                min={1}
-                value={averageConfig.node_group_count}
-                readOnly
                 className="bg-muted"
+                id="node_group_count"
+                min={1}
+                readOnly
+                type="number"
+                value={averageConfig.node_group_count}
               />
-              <p className="text-xs text-muted-foreground">
-                {t("nodeGroupCountAutoCalculated", "Auto-calculated from actual node groups")}
+              <p className="text-muted-foreground text-xs">
+                {t(
+                  "nodeGroupCountAutoCalculated",
+                  "Auto-calculated from actual node groups"
+                )}
               </p>
             </div>
           </div>
@@ -180,7 +185,9 @@ export default function AverageModeTab() {
       {/* Recalculation Card */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("groupRecalculation", "Group Recalculation")}</CardTitle>
+          <CardTitle>
+            {t("groupRecalculation", "Group Recalculation")}
+          </CardTitle>
           <CardDescription>
             {t(
               "groupRecalculationDescription",
@@ -192,7 +199,7 @@ export default function AverageModeTab() {
           {/* Current Status */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">
+              <span className="font-medium text-sm">
                 {t("currentStatus", "Current Status")}
               </span>
               {loadingStatus ? (
@@ -224,14 +231,20 @@ export default function AverageModeTab() {
             )}
 
             {status?.state === "completed" && (
-              <div className="text-sm text-muted-foreground">
-                {t("recalculationCompleted", "Recalculation completed successfully")}
+              <div className="text-muted-foreground text-sm">
+                {t(
+                  "recalculationCompleted",
+                  "Recalculation completed successfully"
+                )}
               </div>
             )}
 
             {status?.state === "failed" && (
-              <div className="text-sm text-destructive">
-                {t("recalculationFailed", "Recalculation failed. Please try again.")}
+              <div className="text-destructive text-sm">
+                {t(
+                  "recalculationFailed",
+                  "Recalculation failed. Please try again."
+                )}
               </div>
             )}
           </div>
@@ -239,8 +252,8 @@ export default function AverageModeTab() {
           {/* Recalculate Button */}
           <div className="flex justify-end">
             <Button
-              onClick={handleRecalculate}
               disabled={recalculating || status?.state === "running"}
+              onClick={handleRecalculate}
             >
               {recalculating && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

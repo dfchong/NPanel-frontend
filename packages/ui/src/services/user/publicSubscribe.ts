@@ -20,6 +20,23 @@ export async function publicSubscribeQuerySubscribeList(
   );
 }
 
+/** 此处后端没有提供注释 GET /v1/public/subscribe/catalog */
+export async function publicSubscribeQuerySubscribeCatalog(
+  params: API.QuerySubscribeCatalogRequest,
+  options?: { [key: string]: any }
+) {
+  return request<API.QuerySubscribeCatalogReply>(
+    `${import.meta.env.VITE_API_PREFIX || ""}/v1/public/subscribe/catalog`,
+    {
+      method: "GET",
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    }
+  );
+}
+
 /** 此处后端没有提供注释 GET /v1/public/subscribe/node/list */
 export async function publicSubscribeQueryUserSubscribeNodeList(options?: {
   [key: string]: any;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -33,24 +34,27 @@ import {
   getGroupHistoryDetail,
   getNodeGroupList,
 } from "@workspace/ui/services/admin/group";
+import { Loader2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { formatDate } from "@/utils/common";
-import { Loader2 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 
 export default function GroupHistory() {
   const { t } = useTranslation("group");
   const ref = useRef<ProTableActions>(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
-  const [selectedHistory, setSelectedHistory] = useState<API.GroupHistory | null>(null);
+  const [selectedHistory, setSelectedHistory] =
+    useState<API.GroupHistory | null>(null);
   const [details, setDetails] = useState<any[]>([]);
-  const [nodeGroupMap, setNodeGroupMap] = useState<Map<string, string>>(new Map());
+  const [nodeGroupMap, setNodeGroupMap] = useState<Map<string, string>>(
+    new Map()
+  );
 
   // User list dialog state
   const [userListOpen, setUserListOpen] = useState(false);
-  const [selectedNodeGroupName, setSelectedNodeGroupName] = useState<string>("");
+  const [selectedNodeGroupName, setSelectedNodeGroupName] =
+    useState<string>("");
   const [userList, setUserList] = useState<any[]>([]);
   const [userListTotal, setUserListTotal] = useState(0);
 
@@ -130,7 +134,10 @@ export default function GroupHistory() {
     }
   };
 
-  const handleShowUserList = async (nodeGroupId: string, nodeGroupName: string) => {
+  const handleShowUserList = async (
+    nodeGroupId: string,
+    nodeGroupName: string
+  ) => {
     setSelectedNodeGroupName(nodeGroupName);
     setUserListOpen(true);
 
@@ -166,23 +173,30 @@ export default function GroupHistory() {
     <div className="space-y-4">
       <Card>
         <CardHeader>
-          <CardTitle>{t("groupHistory", "Group Calculation History")}</CardTitle>
+          <CardTitle>
+            {t("groupHistory", "Group Calculation History")}
+          </CardTitle>
           <CardDescription>
-            {t("groupHistoryDescription", "View group recalculation history and results")}
+            {t(
+              "groupHistoryDescription",
+              "View group recalculation history and results"
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <ProTable<API.GroupHistory, API.GetGroupHistoryRequest>
             action={ref}
-            request={async (params) => {
-              const { data } = await getGroupHistory({
-                page: params.page || 1,
-                size: params.size || 10,
-              });
-              return {
-                list: data.data?.list || [],
-                total: data.data?.total || 0,
-              };
+            actions={{
+              render: (row: any) => [
+                <Button
+                  key="detail"
+                  onClick={() => handleViewDetail(row)}
+                  size="sm"
+                  variant="outline"
+                >
+                  {t("viewDetail", "View Detail")}
+                </Button>,
+              ],
             }}
             columns={[
               {
@@ -191,7 +205,8 @@ export default function GroupHistory() {
                 header: t("id", "ID"),
                 cell: ({ row }: { row: any }) => (
                   <span className="text-muted-foreground">
-                    {t("idPrefix", "#")}{row.getValue("id")}
+                    {t("idPrefix", "#")}
+                    {row.getValue("id")}
                   </span>
                 ),
               },
@@ -220,7 +235,9 @@ export default function GroupHistory() {
                 accessorKey: "total_users",
                 header: t("totalUsers", "Total Users"),
                 cell: ({ row }: { row: any }) => (
-                  <span className="font-semibold">{row.getValue("total_users")}</span>
+                  <span className="font-semibold">
+                    {row.getValue("total_users")}
+                  </span>
                 ),
               },
               {
@@ -231,10 +248,10 @@ export default function GroupHistory() {
                   const record = row.original;
                   return (
                     <div className="space-y-1">
-                      <div className="text-xs text-muted-foreground">
-                        {t("successCount", "Success")}: {record.success_count}
-                        {" "}{t("separator", "/")}{" "}
-                        {t("failedCount", "Failed")}: {record.failed_count}
+                      <div className="text-muted-foreground text-xs">
+                        {t("successCount", "Success")}: {record.success_count}{" "}
+                        {t("separator", "/")} {t("failedCount", "Failed")}:{" "}
+                        {record.failed_count}
                       </div>
                       {record.error_log && (
                         <Badge variant="destructive">
@@ -254,31 +271,30 @@ export default function GroupHistory() {
                 id: "created_at",
                 accessorKey: "created_at",
                 header: t("createdAt", "Created At"),
-                cell: ({ row }: { row: any }) => formatDate(row.getValue("created_at")),
+                cell: ({ row }: { row: any }) =>
+                  formatDate(row.getValue("created_at")),
               },
             ]}
-            actions={{
-              render: (row: any) => [
-                <Button
-                  key="detail"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleViewDetail(row)}
-                >
-                  {t("viewDetail", "View Detail")}
-                </Button>,
-              ],
-            }}
             header={{
               title: t("groupHistory", "Group Calculation History"),
+            }}
+            request={async (params) => {
+              const { data } = await getGroupHistory({
+                page: params.page || 1,
+                size: params.size || 10,
+              });
+              return {
+                list: data.data?.list || [],
+                total: data.data?.total || 0,
+              };
             }}
           />
         </CardContent>
       </Card>
 
       {/* Detail Dialog */}
-      <Dialog open={detailOpen} onOpenChange={setDetailOpen}>
-        <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+      <Dialog onOpenChange={setDetailOpen} open={detailOpen}>
+        <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>
               {t("groupHistoryDetail", "Group Calculation Detail")}
@@ -292,7 +308,7 @@ export default function GroupHistory() {
               <>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-muted-foreground text-sm">
                       {t("groupMode", "Group Mode")}
                     </div>
                     <div className="font-medium">
@@ -300,7 +316,7 @@ export default function GroupHistory() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-muted-foreground text-sm">
                       {t("triggerType", "Trigger Type")}
                     </div>
                     <div className="font-medium">
@@ -308,24 +324,27 @@ export default function GroupHistory() {
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-muted-foreground text-sm">
                       {t("totalUsers", "Total Users")}
                     </div>
-                    <div className="font-medium">{selectedHistory.total_users}</div>
+                    <div className="font-medium">
+                      {selectedHistory.total_users}
+                    </div>
                   </div>
                   <div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-muted-foreground text-sm">
                       {t("result", "Result")}
                     </div>
                     <div className="font-medium">
-                      {t("successCount", "Success")}: {selectedHistory.success_count}
-                      {" "}{t("separator", "/")}{" "}
-                      {t("failedCount", "Failed")}: {selectedHistory.failed_count}
+                      {t("successCount", "Success")}:{" "}
+                      {selectedHistory.success_count} {t("separator", "/")}{" "}
+                      {t("failedCount", "Failed")}:{" "}
+                      {selectedHistory.failed_count}
                     </div>
                   </div>
                   {selectedHistory.start_time && (
                     <div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-muted-foreground text-sm">
                         {t("startTime", "Start Time")}
                       </div>
                       <div className="font-medium">
@@ -335,7 +354,7 @@ export default function GroupHistory() {
                   )}
                   {selectedHistory.end_time && (
                     <div>
-                      <div className="text-sm text-muted-foreground">
+                      <div className="text-muted-foreground text-sm">
                         {t("endTime", "End Time")}
                       </div>
                       <div className="font-medium">
@@ -347,10 +366,10 @@ export default function GroupHistory() {
 
                 {selectedHistory.error_log && (
                   <div>
-                    <div className="text-sm text-muted-foreground">
+                    <div className="text-muted-foreground text-sm">
                       {t("errorMessage", "Error Message")}
                     </div>
-                    <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">
+                    <div className="rounded-md bg-destructive/10 p-3 text-destructive text-sm">
                       {selectedHistory.error_log}
                     </div>
                   </div>
@@ -359,13 +378,13 @@ export default function GroupHistory() {
             )}
 
             <div>
-              <div className="mb-2 text-sm font-medium">
+              <div className="mb-2 font-medium text-sm">
                 {t("groupDetails", "Group Details")}
               </div>
               {detailLoading ? (
                 <div className="flex items-center justify-center py-8">
                   <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                  <span className="ml-2 text-sm text-muted-foreground">
+                  <span className="ml-2 text-muted-foreground text-sm">
                     {t("loading", "Loading...")}
                   </span>
                 </div>
@@ -374,24 +393,32 @@ export default function GroupHistory() {
                   {/* 统计信息 */}
                   <div className="mb-4 grid grid-cols-3 gap-4 rounded-lg bg-muted/50 p-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold">
-                        {details.reduce((sum: number, d: any) => sum + (d.UserCount || d.user_count || 0), 0)}
+                      <div className="font-bold text-2xl">
+                        {details.reduce(
+                          (sum: number, d: any) =>
+                            sum + (d.UserCount || d.user_count || 0),
+                          0
+                        )}
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-muted-foreground text-xs">
                         {t("totalUsers", "Total Users")}
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold">
-                        {details.reduce((sum: number, d: any) => sum + (d.NodeCount || d.node_count || 0), 0)}
+                      <div className="font-bold text-2xl">
+                        {details.reduce(
+                          (sum: number, d: any) =>
+                            sum + (d.NodeCount || d.node_count || 0),
+                          0
+                        )}
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="text-muted-foreground text-xs">
                         {t("totalNodes", "Total Nodes")}
                       </div>
                     </div>
                     <div className="text-center">
-                      <div className="text-2xl font-bold">{details.length}</div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className="font-bold text-2xl">{details.length}</div>
+                      <div className="text-muted-foreground text-xs">
                         {t("totalNodeGroups", "Total Node Groups")}
                       </div>
                     </div>
@@ -415,7 +442,8 @@ export default function GroupHistory() {
                       </thead>
                       <tbody>
                         {details.map((detail: any, index: number) => {
-                          const nodeGroupId = detail.NodeGroupId || detail.node_group_id;
+                          const nodeGroupId =
+                            detail.NodeGroupId || detail.node_group_id;
                           const nodeGroupName =
                             nodeGroupMap.get(String(nodeGroupId)) ||
                             `${t("idPrefix", "#")}${nodeGroupId}`;
@@ -424,15 +452,29 @@ export default function GroupHistory() {
                             <tr key={index}>
                               <td className="border-b px-4 py-2">
                                 <div>
-                                  <div className="font-medium">{nodeGroupName}</div>
-                                  <div className="text-xs text-muted-foreground">{t("id", "ID")}: {nodeGroupId}</div>
+                                  <div className="font-medium">
+                                    {nodeGroupName}
+                                  </div>
+                                  <div className="text-muted-foreground text-xs">
+                                    {t("id", "ID")}: {nodeGroupId}
+                                  </div>
                                 </div>
                               </td>
                               <td className="border-b px-4 py-2 text-right">
                                 <button
-                                  className="font-semibold hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
-                                  onClick={() => handleShowUserList(nodeGroupId, nodeGroupName)}
-                                  disabled={(detail.UserCount || detail.user_count || 0) === 0}
+                                  className="cursor-pointer font-semibold hover:underline disabled:cursor-not-allowed disabled:opacity-50"
+                                  disabled={
+                                    (detail.UserCount ||
+                                      detail.user_count ||
+                                      0) === 0
+                                  }
+                                  onClick={() =>
+                                    handleShowUserList(
+                                      nodeGroupId,
+                                      nodeGroupName
+                                    )
+                                  }
+                                  type="button"
                                 >
                                   {detail.UserCount || detail.user_count || 0}
                                 </button>
@@ -448,7 +490,7 @@ export default function GroupHistory() {
                   </div>
                 </>
               ) : (
-                <div className="text-center py-8 text-sm text-muted-foreground">
+                <div className="py-8 text-center text-muted-foreground text-sm">
                   {t("noDetails", "No details available")}
                 </div>
               )}
@@ -458,8 +500,8 @@ export default function GroupHistory() {
       </Dialog>
 
       {/* User List Dialog */}
-      <Dialog open={userListOpen} onOpenChange={setUserListOpen}>
-        <DialogContent className="sm:max-w-[700px] max-h-[80vh] overflow-y-auto">
+      <Dialog onOpenChange={setUserListOpen} open={userListOpen}>
+        <DialogContent className="max-h-[80vh] overflow-y-auto sm:max-w-[700px]">
           <DialogHeader>
             <DialogTitle>
               {selectedNodeGroupName} - {t("userList", "User List")}
@@ -481,15 +523,13 @@ export default function GroupHistory() {
                   {userList.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{user.id}</TableCell>
-                      <TableCell>
-                        {user.email || "-"}
-                      </TableCell>
+                      <TableCell>{user.email || "-"}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             ) : (
-              <div className="text-center py-8 text-sm text-muted-foreground">
+              <div className="py-8 text-center text-muted-foreground text-sm">
                 {t("noUsers", "No users found")}
               </div>
             )}

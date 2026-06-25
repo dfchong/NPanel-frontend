@@ -1,16 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
-import { getSubscription } from "@workspace/ui/services/user/portal";
+import { getSubscriptionCatalog } from "@workspace/ui/services/user/portal";
 import { useTranslation } from "react-i18next";
+import { flattenSubscribeCatalog } from "@/sections/subscribe/catalog";
 import Content from "./content";
 
 export default function Purchasing() {
   const { id } = useSearch({ from: "/(main)/purchasing/" }) as { id: string };
   const { i18n } = useTranslation();
   const { data } = useQuery({
-    queryKey: ["subscription", i18n.language],
+    queryKey: ["subscriptionCatalog", i18n.language],
     queryFn: async () => {
-      const { data } = await getSubscription(
+      const { data } = await getSubscriptionCatalog(
         {
           language: i18n.language,
         },
@@ -18,13 +19,11 @@ export default function Purchasing() {
           skipErrorHandler: true,
         }
       );
-      return data.data?.list || [];
+      return flattenSubscribeCatalog(data);
     },
   });
 
-  const subscription = data?.find(
-    (item: API.Subscribe) => item.id === id
-  );
+  const subscription = data?.find((item: API.Subscribe) => item.id === id);
 
   return (
     <main className="container space-y-16">

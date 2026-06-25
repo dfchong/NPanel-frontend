@@ -13,12 +13,12 @@ import {
   TabsList,
   TabsTrigger,
 } from "@workspace/ui/components/tabs";
+import { Icon } from "@workspace/ui/composed/icon";
+import { Markdown } from "@workspace/ui/composed/markdown";
 import {
   ProList,
   type ProListActions,
 } from "@workspace/ui/composed/pro-list/pro-list";
-import { Icon } from "@workspace/ui/composed/icon";
-import { Markdown } from "@workspace/ui/composed/markdown";
 import { queryAnnouncement } from "@workspace/ui/services/user/announcement";
 import { formatDate } from "@workspace/ui/utils/formatting";
 import { useRef, useState } from "react";
@@ -61,13 +61,13 @@ export default function Announcement() {
           <div className="flex items-center gap-2">
             <CardTitle className="text-lg">{item.title}</CardTitle>
             {item.pinned && (
-              <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-medium text-primary">
+              <span className="flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary text-xs">
                 <Icon className="size-3" icon="uil:pin" />
                 {t("pinned", "Pinned")}
               </span>
             )}
             {item.popup && (
-              <span className="flex items-center gap-1 rounded-full bg-orange-500/10 px-2 py-0.5 text-xs font-medium text-orange-500">
+              <span className="flex items-center gap-1 rounded-full bg-orange-500/10 px-2 py-0.5 font-medium text-orange-500 text-xs">
                 <Icon className="size-3" icon="uil:popcorn" />
                 {t("popup", "Popup")}
               </span>
@@ -81,7 +81,7 @@ export default function Announcement() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="prose prose-sm max-w-none dark:prose-invert">
+        <div className="prose prose-sm dark:prose-invert max-w-none">
           <Markdown>{item.content}</Markdown>
         </div>
       </CardContent>
@@ -96,9 +96,7 @@ export default function Announcement() {
       </h2>
       <Tabs defaultValue="all" onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="all">
-            {t("all", "All")}
-          </TabsTrigger>
+          <TabsTrigger value="all">{t("all", "All")}</TabsTrigger>
           <TabsTrigger value="pinned">
             {t("pinnedOnly", "Pinned Only")}
           </TabsTrigger>
@@ -111,9 +109,7 @@ export default function Announcement() {
           <ProList
             action={normalRef}
             renderItem={renderAnnouncement}
-            request={async (pagination) => {
-              return requestAnnouncements(pagination, {});
-            }}
+            request={async (pagination) => requestAnnouncements(pagination, {})}
           />
         </TabsContent>
 
@@ -121,9 +117,9 @@ export default function Announcement() {
           <ProList
             action={pinnedRef}
             renderItem={renderAnnouncement}
-            request={async (pagination) => {
-              return requestAnnouncements(pagination, { pinned: true });
-            }}
+            request={async (pagination) =>
+              requestAnnouncements(pagination, { pinned: true })
+            }
           />
         </TabsContent>
 
@@ -131,9 +127,9 @@ export default function Announcement() {
           <ProList
             action={popupRef}
             renderItem={renderAnnouncement}
-            request={async (pagination) => {
-              return requestAnnouncements(pagination, { popup: true });
-            }}
+            request={async (pagination) =>
+              requestAnnouncements(pagination, { popup: true })
+            }
           />
         </TabsContent>
       </Tabs>

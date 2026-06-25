@@ -27,7 +27,7 @@ function toTimestamp(value: Date | number | string): number {
         : Date.parse(value)
       : value;
   if (!Number.isFinite(numericValue)) return 0;
-  return numericValue > 0 && numericValue < 10000000000
+  return numericValue > 0 && numericValue < 10_000_000_000
     ? numericValue * 1000
     : numericValue;
 }

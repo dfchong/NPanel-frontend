@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import { Checkbox } from "@workspace/ui/components/checkbox";
 import {
@@ -25,8 +26,10 @@ import {
 import { Combobox } from "@workspace/ui/composed/combobox";
 import { EnhancedInput } from "@workspace/ui/composed/enhanced-input";
 import TagInput from "@workspace/ui/composed/tag-input";
-import { getGroupConfig, getNodeGroupList } from "@workspace/ui/services/admin/group";
-import { useQuery } from "@tanstack/react-query";
+import {
+  getGroupConfig,
+  getNodeGroupList,
+} from "@workspace/ui/services/admin/group";
 import type { TFunction } from "i18next";
 import { useEffect, useId, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -62,17 +65,17 @@ const buildSchema = (t: TFunction) =>
       address: z
         .string()
         .trim()
-        .min(1, t("errors.serverAddrRequired", "Please enter an entry address")),
+        .min(
+          1,
+          t("errors.serverAddrRequired", "Please enter an entry address")
+        ),
       port: z
         .number({
           message: t("errors.portRange", "Port must be between 1 and 65535"),
         })
         .int()
         .min(1, t("errors.portRange", "Port must be between 1 and 65535"))
-        .max(
-          65_535,
-          t("errors.portRange", "Port must be between 1 and 65535")
-        ),
+        .max(65_535, t("errors.portRange", "Port must be between 1 and 65535")),
       tags: z.array(z.string()),
       node_group_ids: z.optional(z.array(z.string()).default([])),
       node_type: z.enum(["landing", "front"]).default("landing"),
@@ -177,7 +180,7 @@ export default function NodeForm(props: {
     },
   });
 
-  const isGroupEnabled = groupConfigData?.enabled || false;
+  const isGroupEnabled = groupConfigData?.enabled;
 
   useEffect(() => {
     if (!isFrontNode) {
@@ -206,19 +209,26 @@ export default function NodeForm(props: {
 
       // Copy only the values we need from initialValues
       if (initialValues.name) resetValues.name = initialValues.name;
-      if (initialValues.server_id) resetValues.server_id = initialValues.server_id;
+      if (initialValues.server_id)
+        resetValues.server_id = initialValues.server_id;
       if (initialValues.protocol) resetValues.protocol = initialValues.protocol;
       if (initialValues.address) resetValues.address = initialValues.address;
       if (initialValues.port) resetValues.port = initialValues.port;
       if (initialValues.tags) resetValues.tags = initialValues.tags;
-      if (initialValues.node_type) resetValues.node_type = initialValues.node_type;
+      if (initialValues.node_type)
+        resetValues.node_type = initialValues.node_type;
       if (typeof initialValues.is_hidden === "boolean") {
         resetValues.is_hidden = initialValues.is_hidden;
       }
 
       // Convert node_group_ids from number[] to string[], ensure it's always an array
-      if (initialValues.node_group_ids && Array.isArray(initialValues.node_group_ids)) {
-        resetValues.node_group_ids = initialValues.node_group_ids.map((id: string | number) => String(id));
+      if (
+        initialValues.node_group_ids &&
+        Array.isArray(initialValues.node_group_ids)
+      ) {
+        resetValues.node_group_ids = initialValues.node_group_ids.map(
+          (id: string | number) => String(id)
+        );
       } else {
         resetValues.node_group_ids = [];
       }
@@ -540,16 +550,16 @@ export default function NodeForm(props: {
                         <div className="grid grid-cols-2 gap-2">
                           {nodeGroupsData?.map((g) => (
                             <div
-                              key={g.id}
                               className="flex items-center space-x-2"
+                              key={g.id}
                             >
                               <Checkbox
+                                checked={field.value?.includes(String(g.id))}
                                 id={`node-group-${g.id}`}
-                                checked={
-                                  field.value?.includes(String(g.id)) || false
-                                }
                                 onCheckedChange={(checked) => {
-                                  const currentValue = Array.isArray(field.value)
+                                  const currentValue = Array.isArray(
+                                    field.value
+                                  )
                                     ? field.value
                                     : [];
 
@@ -578,8 +588,8 @@ export default function NodeForm(props: {
                                 }}
                               />
                               <Label
-                                htmlFor={`node-group-${g.id}`}
                                 className="cursor-pointer"
+                                htmlFor={`node-group-${g.id}`}
                               >
                                 {g.name}
                               </Label>
@@ -606,14 +616,12 @@ export default function NodeForm(props: {
                   <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                     <FormControl>
                       <Checkbox
-                        checked={field.value || false}
+                        checked={field.value}
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
                     <div className="space-y-1 leading-none">
-                      <FormLabel>
-                        {t("is_hidden", "Hidden")}
-                      </FormLabel>
+                      <FormLabel>{t("is_hidden", "Hidden")}</FormLabel>
                       <FormDescription>
                         {t(
                           "is_hidden_description",
@@ -636,11 +644,7 @@ export default function NodeForm(props: {
           >
             {t("cancel", "Cancel")}
           </Button>
-          <Button
-            disabled={loading}
-            form={formId}
-            type="submit"
-          >
+          <Button disabled={loading} form={formId} type="submit">
             {t("confirm", "Confirm")}
           </Button>
         </SheetFooter>

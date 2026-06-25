@@ -35,7 +35,7 @@ import { z } from "zod";
 import { useSubscribe } from "@/stores/subscribe";
 
 function toNumber(value: unknown): number | undefined {
-  if (value === "" || value === null || value === undefined) return undefined;
+  if (value === "" || value === null || value === undefined) return;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : undefined;
 }

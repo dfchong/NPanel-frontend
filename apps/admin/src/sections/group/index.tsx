@@ -1,15 +1,20 @@
 "use client";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@workspace/ui/components/tabs";
 import { useTranslation } from "react-i18next";
+import AverageModeTab from "./average-mode-tab";
+import CurrentGroupResults from "./current-group-results";
+import GroupConfig from "./group-config";
+import GroupHistory from "./group-history";
 // import UserGroups from "./user-groups";
 import NodeGroups from "./node-groups";
-import GroupHistory from "./group-history";
-import GroupConfig from "./group-config";
-import AverageModeTab from "./average-mode-tab";
 import SubscribeModeTab from "./subscribe-mode-tab";
 import TrafficModeTab from "./traffic-mode-tab";
-import CurrentGroupResults from "./current-group-results";
 
 export default function Group() {
   const { t } = useTranslation("group");
@@ -22,9 +27,7 @@ export default function Group() {
 
       <Tabs defaultValue="config">
         <TabsList className="flex flex-wrap gap-2">
-          <TabsTrigger value="config">
-            {t("config", "Config")}
-          </TabsTrigger>
+          <TabsTrigger value="config">{t("config", "Config")}</TabsTrigger>
           {/* <TabsTrigger value="user">
             {t("userGroups", "User Groups")}
           </TabsTrigger> */}
@@ -43,12 +46,10 @@ export default function Group() {
           <TabsTrigger value="results">
             {t("currentGroupingResult", "Current Grouping Result")}
           </TabsTrigger>
-          <TabsTrigger value="history">
-            {t("history", "History")}
-          </TabsTrigger>
+          <TabsTrigger value="history">{t("history", "History")}</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="config" className="mt-4">
+        <TabsContent className="mt-4" value="config">
           <GroupConfig />
         </TabsContent>
 
@@ -56,27 +57,27 @@ export default function Group() {
           <UserGroups />
         </TabsContent> */}
 
-        <TabsContent value="node" className="mt-4">
+        <TabsContent className="mt-4" value="node">
           <NodeGroups />
         </TabsContent>
 
-        <TabsContent value="average" className="mt-4">
+        <TabsContent className="mt-4" value="average">
           <AverageModeTab />
         </TabsContent>
 
-        <TabsContent value="subscribe" className="mt-4">
+        <TabsContent className="mt-4" value="subscribe">
           <SubscribeModeTab />
         </TabsContent>
 
-        <TabsContent value="traffic" className="mt-4">
+        <TabsContent className="mt-4" value="traffic">
           <TrafficModeTab />
         </TabsContent>
 
-        <TabsContent value="results" className="mt-4">
+        <TabsContent className="mt-4" value="results">
           <CurrentGroupResults />
         </TabsContent>
 
-        <TabsContent value="history" className="mt-4">
+        <TabsContent className="mt-4" value="history">
           <GroupHistory />
         </TabsContent>
       </Tabs>

@@ -8,11 +8,11 @@ import {
 } from "@workspace/ui/services/common/auth";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
 import { useEffect, useState, useTransition } from "react";
-import type { AuthFormType } from "../types";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { useGlobalStore } from "@/stores/global";
 import { getRedirectUrl, setAuthorization } from "@/utils/common";
+import type { AuthFormType } from "../types";
 import LoginForm from "./login-form";
 import RegisterForm from "./register-form";
 import ResetForm from "./reset-form";

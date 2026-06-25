@@ -46,13 +46,15 @@ export function TopbarLayout({ children }: { children: React.ReactNode }) {
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
         <div className="flex h-14 items-center gap-3 px-4">
           {/* Logo */}
-          <Link className="flex shrink-0 items-center gap-2 mr-2" to="/">
+          <Link className="mr-2 flex shrink-0 items-center gap-2" to="/">
             <img
               alt="logo"
               className="size-6"
+              height={24}
               src={site.site_logo || "/favicon.svg"}
+              width={24}
             />
-            <span className="hidden font-semibold text-sm sm:block truncate max-w-[120px]">
+            <span className="hidden max-w-[120px] truncate font-semibold text-sm sm:block">
               {site.site_name}
             </span>
           </Link>
@@ -61,7 +63,7 @@ export function TopbarLayout({ children }: { children: React.ReactNode }) {
 
           {/* Navigation */}
           <NavigationMenu className="flex-1" viewport={false}>
-            <NavigationMenuList className="flex flex-wrap gap-1 justify-start">
+            <NavigationMenuList className="flex flex-wrap justify-start gap-1">
               {navs.map((nav) => {
                 if (hasChildren(nav)) {
                   const active = isGroupActive(nav);
@@ -69,8 +71,8 @@ export function TopbarLayout({ children }: { children: React.ReactNode }) {
                     <NavigationMenuItem key={nav.title}>
                       <NavigationMenuTrigger
                         className={cn(
-                          "h-8 px-3 text-sm rounded-md",
-                          active && "text-primary font-medium"
+                          "h-8 rounded-md px-3 text-sm",
+                          active && "font-medium text-primary"
                         )}
                       >
                         {"icon" in nav && (nav as any).icon && (
@@ -95,7 +97,10 @@ export function TopbarLayout({ children }: { children: React.ReactNode }) {
                                 to={item.url ?? "/dashboard"}
                               >
                                 {item.icon && (
-                                  <Icon className="size-4 shrink-0" icon={item.icon} />
+                                  <Icon
+                                    className="size-4 shrink-0"
+                                    icon={item.icon}
+                                  />
                                 )}
                                 <span className="truncate">{item.title}</span>
                               </Link>
@@ -113,13 +118,16 @@ export function TopbarLayout({ children }: { children: React.ReactNode }) {
                       className={cn(
                         "flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors",
                         "url" in nav && isActive((nav as any).url ?? "")
-                          ? "bg-primary/10 text-primary font-medium"
+                          ? "bg-primary/10 font-medium text-primary"
                           : "hover:bg-accent hover:text-accent-foreground"
                       )}
                       to={"url" in nav ? (nav as any).url : "/dashboard"}
                     >
                       {"icon" in nav && (nav as any).icon && (
-                        <Icon className="size-4 shrink-0" icon={(nav as any).icon} />
+                        <Icon
+                          className="size-4 shrink-0"
+                          icon={(nav as any).icon}
+                        />
                       )}
                       {nav.title}
                     </Link>

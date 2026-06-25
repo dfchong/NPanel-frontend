@@ -158,10 +158,16 @@ export default function VerifyConfig() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="local">
-                            {t("verify.captchaTypeLocal", "Local Image Captcha")}
+                            {t(
+                              "verify.captchaTypeLocal",
+                              "Local Image Captcha"
+                            )}
                           </SelectItem>
                           <SelectItem value="slider">
-                            {t("verify.captchaTypeSlider", "Local Slider Captcha")}
+                            {t(
+                              "verify.captchaTypeSlider",
+                              "Local Slider Captcha"
+                            )}
                           </SelectItem>
                           <SelectItem value="turnstile">
                             {t(

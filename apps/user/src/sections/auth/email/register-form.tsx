@@ -24,11 +24,11 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { useGlobalStore } from "@/stores/global";
+import LocalCaptcha, { type LocalCaptchaRef } from "../local-captcha";
 import SendCode from "../send-code";
+import SliderCaptcha, { type SliderCaptchaRef } from "../slider-captcha";
 import type { TurnstileRef } from "../turnstile";
 import CloudFlareTurnstile from "../turnstile";
-import LocalCaptcha, { type LocalCaptchaRef } from "../local-captcha";
-import SliderCaptcha, { type SliderCaptchaRef } from "../slider-captcha";
 
 function parseEmailSuffixes(list: string) {
   return [
@@ -42,7 +42,7 @@ function parseEmailSuffixes(list: string) {
 }
 
 function composeEmail(local: string, suffix: string) {
-  if (!local || !suffix) return "";
+  if (!(local && suffix)) return "";
   return `${local}@${suffix}`;
 }
 
@@ -121,7 +121,10 @@ export default function RegisterForm({
               .string()
               .min(
                 1,
-                t("register.emailSuffixRequired", "Please select an email suffix")
+                t(
+                  "register.emailSuffixRequired",
+                  "Please select an email suffix"
+                )
               )
               .refine((value) => suffixes.includes(value), {
                 message: t(
@@ -449,8 +452,8 @@ export default function RegisterForm({
                     <FormControl>
                       <LocalCaptcha
                         {...field}
-                        ref={localCaptcha}
                         onCaptchaIdChange={setCaptchaId}
+                        ref={localCaptcha}
                       />
                     </FormControl>
                     <FormMessage />

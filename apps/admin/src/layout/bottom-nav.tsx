@@ -44,9 +44,9 @@ function DockItem({
       {/* Tooltip label */}
       <span
         className={cn(
-          "pointer-events-none absolute -top-9 left-1/2 -translate-x-1/2 whitespace-nowrap",
-          "rounded-md bg-popover px-2 py-1 text-xs text-popover-foreground shadow-md ring-1 ring-border",
-          "opacity-0 scale-90 transition-all duration-150 group-hover:opacity-100 group-hover:scale-100",
+          "-top-9 -translate-x-1/2 pointer-events-none absolute left-1/2 whitespace-nowrap",
+          "rounded-md bg-popover px-2 py-1 text-popover-foreground text-xs shadow-md ring-1 ring-border",
+          "scale-90 opacity-0 transition-all duration-150 group-hover:scale-100 group-hover:opacity-100"
         )}
       >
         {label}
@@ -56,10 +56,10 @@ function DockItem({
       <div
         className={cn(
           "flex size-11 items-center justify-center rounded-xl transition-all duration-200",
-          "group-hover:scale-125 group-hover:-translate-y-1",
+          "group-hover:-translate-y-1 group-hover:scale-125",
           active
-            ? "bg-primary/15 text-primary shadow-sm shadow-primary/20"
-            : "text-muted-foreground hover:text-foreground",
+            ? "bg-primary/15 text-primary shadow-primary/20 shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
         )}
       >
         {children}
@@ -69,7 +69,7 @@ function DockItem({
       <span
         className={cn(
           "mt-0.5 size-1 rounded-full transition-all duration-200",
-          active ? "bg-primary opacity-100" : "opacity-0",
+          active ? "bg-primary opacity-100" : "opacity-0"
         )}
       />
     </div>
@@ -94,7 +94,10 @@ export function BottombarLayout({ children }: { children: React.ReactNode }) {
   const isGroupActive = (nav: NavItem) =>
     hasChildren(nav) && nav.items.some((i) => isActive(i.url ?? ""));
 
-  const breadcrumbs = useMemo(() => findNavByUrl(navs, pathname), [navs, pathname]);
+  const breadcrumbs = useMemo(
+    () => findNavByUrl(navs, pathname),
+    [navs, pathname]
+  );
 
   return (
     <div className="flex min-h-svh flex-col">
@@ -105,7 +108,9 @@ export function BottombarLayout({ children }: { children: React.ReactNode }) {
           <img
             alt="logo"
             className="size-6"
+            height={24}
             src={site.site_logo || "/favicon.svg"}
+            width={24}
           />
           <span className="hidden max-w-[120px] truncate font-semibold text-sm sm:block">
             {site.site_name}
@@ -123,7 +128,7 @@ export function BottombarLayout({ children }: { children: React.ReactNode }) {
                   <>
                     <BreadcrumbItem>
                       <Link
-                        className="text-sm text-muted-foreground hover:text-foreground"
+                        className="text-muted-foreground text-sm hover:text-foreground"
                         to={item?.url || "/dashboard"}
                       >
                         {item?.title}
@@ -133,7 +138,7 @@ export function BottombarLayout({ children }: { children: React.ReactNode }) {
                   </>
                 )}
                 {idx === breadcrumbs.length - 1 && (
-                  <BreadcrumbPage className="truncate text-sm font-medium">
+                  <BreadcrumbPage className="truncate font-medium text-sm">
                     {item?.title}
                   </BreadcrumbPage>
                 )}
@@ -156,14 +161,14 @@ export function BottombarLayout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 overflow-auto p-4 pb-28">{children}</main>
 
       {/* ── macOS Dock ── */}
-      <div className="fixed bottom-5 left-1/2 z-50 -translate-x-1/2">
+      <div className="-translate-x-1/2 fixed bottom-5 left-1/2 z-50">
         <nav
           className={cn(
             "flex items-end gap-1 px-3 py-2",
             "rounded-2xl border border-border/60",
             "bg-background/70 backdrop-blur-xl",
             "shadow-[0_8px_32px_rgba(0,0,0,0.12),0_2px_8px_rgba(0,0,0,0.08)]",
-            "dark:shadow-[0_8px_32px_rgba(0,0,0,0.4),0_2px_8px_rgba(0,0,0,0.3)]",
+            "dark:shadow-[0_8px_32px_rgba(0,0,0,0.4),0_2px_8px_rgba(0,0,0,0.3)]"
           )}
         >
           {navs.map((nav) => {
@@ -182,7 +187,7 @@ export function BottombarLayout({ children }: { children: React.ReactNode }) {
                   open={openPopover === nav.title}
                 >
                   <PopoverTrigger asChild>
-                    <button type="button" className="outline-none">
+                    <button className="outline-none" type="button">
                       <DockItem active={active} label={nav.title}>
                         {icon ? (
                           <Icon className="size-6" icon={icon} />
@@ -200,8 +205,13 @@ export function BottombarLayout({ children }: { children: React.ReactNode }) {
                   >
                     {/* Popover header */}
                     <div className="mb-1.5 flex items-center gap-2 px-1 py-0.5">
-                      {icon && <Icon className="size-4 text-muted-foreground" icon={icon} />}
-                      <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                      {icon && (
+                        <Icon
+                          className="size-4 text-muted-foreground"
+                          icon={icon}
+                        />
+                      )}
+                      <span className="font-semibold text-muted-foreground text-xs uppercase tracking-wider">
                         {nav.title}
                       </span>
                     </div>
@@ -213,15 +223,18 @@ export function BottombarLayout({ children }: { children: React.ReactNode }) {
                             className={cn(
                               "flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm transition-colors",
                               itemActive
-                                ? "bg-primary/10 text-primary font-medium"
-                                : "hover:bg-accent hover:text-accent-foreground text-foreground/80",
+                                ? "bg-primary/10 font-medium text-primary"
+                                : "text-foreground/80 hover:bg-accent hover:text-accent-foreground"
                             )}
                             key={item.title}
                             onClick={() => setOpenPopover(null)}
                             to={item.url ?? "/dashboard"}
                           >
                             {item.icon && (
-                              <Icon className="size-4 shrink-0" icon={item.icon} />
+                              <Icon
+                                className="size-4 shrink-0"
+                                icon={item.icon}
+                              />
                             )}
                             <span className="truncate">{item.title}</span>
                             {itemActive && (

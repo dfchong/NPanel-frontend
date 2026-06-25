@@ -64,13 +64,13 @@ const CloudFlareTurnstile = forwardRef<
     <>
       {/* Trigger button */}
       <button
-        type="button"
-        onClick={handleOpen}
         className={`relative flex w-full items-center gap-3 rounded-md border px-4 py-3 text-sm transition-colors ${
           verified
             ? "border-green-400 bg-green-50 text-green-700 dark:bg-green-950/30"
             : "border-input bg-background hover:bg-muted"
         }`}
+        onClick={handleOpen}
+        type="button"
       >
         <span
           className={`relative flex h-5 w-5 shrink-0 items-center justify-center rounded-full ${
@@ -78,7 +78,7 @@ const CloudFlareTurnstile = forwardRef<
           }`}
         >
           {verified ? (
-            <Icon className="text-xs text-white" icon="mdi:check" />
+            <Icon className="text-white text-xs" icon="mdi:check" />
           ) : (
             <>
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-60" />
@@ -91,14 +91,23 @@ const CloudFlareTurnstile = forwardRef<
             ? t("captcha.turnstile.success", "Verified")
             : t("captcha.turnstile.clickToVerify", "Click to verify")}
         </span>
-        {verified && <Icon className="ml-auto text-green-500" icon="mdi:check-circle" />}
+        {verified && (
+          <Icon className="ml-auto text-green-500" icon="mdi:check-circle" />
+        )}
       </button>
 
       {/* Turnstile dialog */}
-      <Dialog open={open} onOpenChange={(o) => { if (!o) setOpen(false); }}>
+      <Dialog
+        onOpenChange={(o) => {
+          if (!o) setOpen(false);
+        }}
+        open={open}
+      >
         <DialogContent className="flex w-auto flex-col items-center gap-4 p-6">
           <DialogHeader>
-            <DialogTitle>{t("captcha.turnstile.title", "Security Verification")}</DialogTitle>
+            <DialogTitle>
+              {t("captcha.turnstile.title", "Security Verification")}
+            </DialogTitle>
           </DialogHeader>
           <Turnstile
             fixedSize
@@ -121,11 +130,11 @@ const CloudFlareTurnstile = forwardRef<
             theme={resolvedTheme as "light" | "dark"}
           />
           <Button
-            type="button"
-            variant="ghost"
-            size="sm"
             className="w-full"
             onClick={() => setOpen(false)}
+            size="sm"
+            type="button"
+            variant="ghost"
           >
             {t("captcha.turnstile.cancel", "Cancel")}
           </Button>

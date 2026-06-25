@@ -47,8 +47,9 @@ export const useSubscribeStore = create<SubscribeState>((set, get) => ({
   // Getters
   getSubscribeName: (subscribeId?: string | number) => {
     if (!subscribeId) return "--";
-    const subscribe = get()
-      .subscribes.find((s) => String(s.id) === String(subscribeId));
+    const subscribe = get().subscribes.find(
+      (s) => String(s.id) === String(subscribeId)
+    );
     return subscribe?.name ?? `Subscribe ${subscribeId}`;
   },
 

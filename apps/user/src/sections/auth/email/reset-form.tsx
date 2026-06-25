@@ -16,11 +16,11 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 import { useGlobalStore } from "@/stores/global";
+import LocalCaptcha, { type LocalCaptchaRef } from "../local-captcha";
 import SendCode from "../send-code";
+import SliderCaptcha, { type SliderCaptchaRef } from "../slider-captcha";
 import type { TurnstileRef } from "../turnstile";
 import CloudFlareTurnstile from "../turnstile";
-import LocalCaptcha, { type LocalCaptchaRef } from "../local-captcha";
-import SliderCaptcha, { type SliderCaptchaRef } from "../slider-captcha";
 
 export default function ResetForm({
   loading,
@@ -62,12 +62,19 @@ export default function ResetForm({
         : z.string().nullish(),
     slider_token:
       captchaEnabled && isSlider
-        ? z.string().min(1, t("captcha.sliderRequired", "Please complete the slider"))
+        ? z
+            .string()
+            .min(1, t("captcha.sliderRequired", "Please complete the slider"))
         : z.string().optional(),
   });
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { cf_token: "", captcha_code: "", slider_token: "", ...initialValues },
+    defaultValues: {
+      cf_token: "",
+      captcha_code: "",
+      slider_token: "",
+      ...initialValues,
+    },
   });
 
   const turnstile = useRef<TurnstileRef>(null);
@@ -98,7 +105,10 @@ export default function ResetForm({
               <FormItem>
                 <FormControl>
                   <Input
-                    placeholder={t("reset.emailPlaceholder", "Enter your email...")}
+                    placeholder={t(
+                      "reset.emailPlaceholder",
+                      "Enter your email..."
+                    )}
                     type="email"
                     {...field}
                   />
@@ -141,7 +151,10 @@ export default function ResetForm({
               <FormItem>
                 <FormControl>
                   <PasswordInput
-                    placeholder={t("reset.passwordPlaceholder", "Enter your new password...")}
+                    placeholder={t(
+                      "reset.passwordPlaceholder",
+                      "Enter your new password..."
+                    )}
                     {...field}
                   />
                 </FormControl>
@@ -176,8 +189,8 @@ export default function ResetForm({
                   <FormControl>
                     <LocalCaptcha
                       {...field}
-                      ref={localCaptcha}
                       onCaptchaIdChange={setCaptchaId}
+                      ref={localCaptcha}
                     />
                   </FormControl>
                   <FormMessage />
@@ -192,10 +205,7 @@ export default function ResetForm({
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <SliderCaptcha
-                      {...field}
-                      ref={sliderCaptcha}
-                    />
+                    <SliderCaptcha {...field} ref={sliderCaptcha} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

@@ -16,6 +16,7 @@ import { formatBytes } from "@workspace/ui/utils/formatting";
 import { useTranslation } from "react-i18next";
 import { Display } from "@/components/display";
 import { formatDate } from "@/utils/common";
+
 // import EditUserGroupDialog from "./edit-user-group-dialog";
 // import { getUserGroupList } from "@workspace/ui/services/admin/group";
 
@@ -110,7 +111,9 @@ export function UserSubscribeDetail({
               </span>
             </li>
             <li className="flex items-center justify-between">
-              <span className="text-muted-foreground">{t("remainingTraffic")}</span>
+              <span className="text-muted-foreground">
+                {t("remainingTraffic")}
+              </span>
               <span>
                 {data
                   ? totalTraffic === 0
@@ -122,7 +125,9 @@ export function UserSubscribeDetail({
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">{t("startTime")}</span>
               <span>
-                {data?.start_time ? formatDate(toNumber(data.start_time)) : "--"}
+                {data?.start_time
+                  ? formatDate(toNumber(data.start_time))
+                  : "--"}
               </span>
             </li>
             <li className="flex items-center justify-between">
@@ -180,10 +185,7 @@ export function UserSubscribeDetail({
             <li className="flex items-center justify-between font-semibold">
               <span className="text-muted-foreground">{t("balance")}</span>
               <span>
-                <Display
-                  type="currency"
-                  value={toNumber(data?.user.balance)}
-                />
+                <Display type="currency" value={toNumber(data?.user.balance)} />
               </span>
             </li>
             <li className="flex items-center justify-between">

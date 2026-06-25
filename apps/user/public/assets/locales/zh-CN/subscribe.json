@@ -49,6 +49,7 @@
   "resetTrafficDescription": "将流量重置为零，并开始新的计费周期",
   "resetTrafficTitle": "重置流量",
   "subscriptionNotFound": "未找到订阅",
+  "uncategorized": "未分类",
   "unsubscribe": {
     "cancel": "取消",
     "confirm": "确认",

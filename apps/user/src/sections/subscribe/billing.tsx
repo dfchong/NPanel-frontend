@@ -46,7 +46,9 @@ export function SubscribeBilling({ order }: Readonly<SubscribeBillingProps>) {
             </span>
             <span>
               {quantity}{" "}
-              {String(t(order?.unit_time || "Month", order?.unit_time || "Month"))}
+              {String(
+                t(order?.unit_time || "Month", order?.unit_time || "Month")
+              )}
             </span>
           </li>
         )}{" "}

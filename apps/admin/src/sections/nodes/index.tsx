@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import { Switch } from "@workspace/ui/components/switch";
@@ -9,6 +10,10 @@ import {
   type ProTableActions,
 } from "@workspace/ui/composed/pro-table/pro-table";
 import {
+  getGroupConfig,
+  getNodeGroupList,
+} from "@workspace/ui/services/admin/group";
+import {
   createNode,
   deleteNode,
   filterNodeList,
@@ -16,8 +21,6 @@ import {
   toggleNodeStatus,
   updateNode,
 } from "@workspace/ui/services/admin/server";
-import { getGroupConfig, getNodeGroupList } from "@workspace/ui/services/admin/group";
-import { useQuery } from "@tanstack/react-query";
 import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -52,7 +55,7 @@ export default function Nodes() {
     },
   });
 
-  const isGroupEnabled = groupConfigData?.enabled || false;
+  const isGroupEnabled = groupConfigData?.enabled;
 
   const buildNodePayload = (values: NodeFormValues, row?: API.Node) => {
     const isFrontNode = values.node_type === "front";
@@ -68,9 +71,12 @@ export default function Nodes() {
     };
 
     if (isFrontNode) {
-      delete payload.server_id;
-      delete payload.protocol;
-      return payload;
+      const {
+        protocol: _protocol,
+        server_id: _serverID,
+        ...frontPayload
+      } = payload;
+      return frontPayload;
     }
 
     payload.server_id = values.server_id;
@@ -165,7 +171,7 @@ export default function Nodes() {
           if (groupIds.length === 0) {
             return (
               <div className="flex items-center gap-2">
-                <Badge variant="secondary" className="text-xs">
+                <Badge className="text-xs" variant="secondary">
                   {t("public", "Public")}
                 </Badge>
               </div>
@@ -191,7 +197,14 @@ export default function Nodes() {
     }
 
     return baseColumns;
-  }, [isGroupEnabled, nodeGroupsData, t, getServerName, getServerAddress, getProtocolPort]);
+  }, [
+    isGroupEnabled,
+    nodeGroupsData,
+    t,
+    getServerName,
+    getServerAddress,
+    getProtocolPort,
+  ]);
 
   return (
     <ProTable<API.Node, { search: string; node_group_id?: string }>
@@ -205,7 +218,10 @@ export default function Nodes() {
             onSubmit={async (values) => {
               setLoading(true);
               try {
-                const body = buildNodePayload(values, row) as API.UpdateNodeRequest;
+                const body = buildNodePayload(
+                  values,
+                  row
+                ) as API.UpdateNodeRequest;
                 await updateNode(body);
                 toast.success(t("updated", "Updated"));
                 ref.current?.refresh();

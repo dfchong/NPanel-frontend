@@ -12,10 +12,10 @@ import { SidebarTrigger } from "@workspace/ui/components/sidebar";
 import { LanguageSwitch } from "@workspace/ui/composed/language-switch";
 import { ThemeSwitch } from "@workspace/ui/composed/theme-switch";
 import { Fragment, useMemo } from "react";
+import { LayoutSwitch } from "./layout-switch";
 import { findNavByUrl, useNavs } from "./navs";
 import TimezoneSwitch from "./timezone-switch";
 import { UserNav } from "./user-nav";
-import { LayoutSwitch } from "./layout-switch";
 
 export function Header() {
   const pathname = useLocation({ select: (location) => location.pathname });
@@ -56,4 +56,3 @@ export function Header() {
     </header>
   );
 }
-

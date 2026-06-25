@@ -29,13 +29,13 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 function toNumber(value: unknown): number | undefined {
-  if (value === "" || value === null || value === undefined) return undefined;
+  if (value === "" || value === null || value === undefined) return;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : undefined;
 }
 
 function normalizeTimestamp(value: number) {
-  return value > 0 && value < 10000000000 ? value * 1000 : value;
+  return value > 0 && value < 10_000_000_000 ? value * 1000 : value;
 }
 
 function formatDateTimeLocal(value: unknown) {
@@ -53,7 +53,7 @@ function formatDateTimeLocal(value: unknown) {
 }
 
 function parseDateTimeLocal(value: string) {
-  if (!value) return undefined;
+  if (!value) return;
   const timestamp = Math.floor(new Date(value).getTime() / 1000);
   return Number.isFinite(timestamp) ? timestamp : undefined;
 }
@@ -280,7 +280,10 @@ export default function AdsForm<T extends Record<string, any>>({
                         min={formatDateTimeLocal(Date.now())}
                         onValueChange={(value) => {
                           const timestamp = parseDateTimeLocal(value);
-                          form.setValue(field.name, timestamp as unknown as number);
+                          form.setValue(
+                            field.name,
+                            timestamp as unknown as number
+                          );
                           const endTime = form.getValues("end_time");
                           if (!timestamp || (endTime && timestamp > endTime)) {
                             form.setValue("end_time", undefined);
@@ -313,11 +316,17 @@ export default function AdsForm<T extends Record<string, any>>({
                         onValueChange={(value) => {
                           const timestamp = parseDateTimeLocal(value);
                           if (!timestamp) {
-                            form.setValue(field.name, undefined as unknown as number);
+                            form.setValue(
+                              field.name,
+                              undefined as unknown as number
+                            );
                             return;
                           }
                           if (!startTime || timestamp < startTime) return;
-                          form.setValue(field.name, timestamp as unknown as number);
+                          form.setValue(
+                            field.name,
+                            timestamp as unknown as number
+                          );
                         }}
                         placeholder={t("form.enterEndTime", "Select end time")}
                         step="1"

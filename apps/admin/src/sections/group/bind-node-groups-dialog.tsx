@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Button } from "@workspace/ui/components/button";
 import {
   Dialog,
@@ -18,12 +19,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@workspace/ui/components/select";
+import {
+  bindNodeGroups,
+  getNodeGroupList,
+} from "@workspace/ui/services/admin/group";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { getNodeGroupList, bindNodeGroups } from "@workspace/ui/services/admin/group";
 
 interface BindNodeGroupsDialogProps {
   userGroupIds: number[];
@@ -41,7 +44,9 @@ export default function BindNodeGroupsDialog({
   const { t } = useTranslation("group");
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [selectedNodeGroupId, setSelectedNodeGroupId] = useState<number | undefined>();
+  const [selectedNodeGroupId, setSelectedNodeGroupId] = useState<
+    number | undefined
+  >();
 
   const { data: nodeGroupsData, isLoading } = useQuery({
     queryKey: ["nodeGroups"],
@@ -78,10 +83,10 @@ export default function BindNodeGroupsDialog({
       } as API.BindNodeGroupsRequest);
 
       toast.success(
-        t("bindSuccess", "Successfully bound {{userGroupCount}} user groups to node group").replace(
-          /{{userGroupCount}}/g,
-          String(userGroupIds.length)
-        )
+        t(
+          "bindSuccess",
+          "Successfully bound {{userGroupCount}} user groups to node group"
+        ).replace(/{{userGroupCount}}/g, String(userGroupIds.length))
       );
 
       setOpen(false);
@@ -101,12 +106,15 @@ export default function BindNodeGroupsDialog({
       : userGroupNames.join(", ");
 
   return (
-    <Dialog open={open} onOpenChange={(newOpen) => {
-      setOpen(newOpen);
-      onOpenChange?.(newOpen);
-    }}>
+    <Dialog
+      onOpenChange={(newOpen) => {
+        setOpen(newOpen);
+        onOpenChange?.(newOpen);
+      }}
+      open={open}
+    >
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button size="sm" variant="outline">
           {t("bindNodeGroup", "Bind Node Group")}
         </Button>
       </DialogTrigger>
@@ -129,18 +137,25 @@ export default function BindNodeGroupsDialog({
             </div>
           ) : (
             <div className="space-y-2">
-              <Label htmlFor="node-group">{t("selectNodeGroup", "Select Node Group")}</Label>
+              <Label htmlFor="node-group">
+                {t("selectNodeGroup", "Select Node Group")}
+              </Label>
               <Select
+                onValueChange={(val) =>
+                  setSelectedNodeGroupId(Number.parseInt(val, 10) || undefined)
+                }
                 value={selectedNodeGroupId?.toString() || ""}
-                onValueChange={(val) => setSelectedNodeGroupId(parseInt(val) || undefined)}
               >
-                <SelectTrigger id="node-group" className="w-full">
-                  <SelectValue placeholder={t("selectNodeGroupPlaceholder", "Select a node group...")} />
+                <SelectTrigger className="w-full" id="node-group">
+                  <SelectValue
+                    placeholder={t(
+                      "selectNodeGroupPlaceholder",
+                      "Select a node group..."
+                    )}
+                  />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="0">
-                    {t("unbound", "Unbound")}
-                  </SelectItem>
+                  <SelectItem value="0">{t("unbound", "Unbound")}</SelectItem>
                   {nodeGroupsData?.map((nodeGroup) => (
                     <SelectItem key={nodeGroup.id} value={String(nodeGroup.id)}>
                       {nodeGroup.name}
@@ -154,16 +169,19 @@ export default function BindNodeGroupsDialog({
 
         <DialogFooter>
           <Button
-            variant="outline"
+            disabled={saving}
             onClick={() => {
               setOpen(false);
               onOpenChange?.(false);
             }}
-            disabled={saving}
+            variant="outline"
           >
             {t("cancel", "Cancel")}
           </Button>
-          <Button onClick={handleBind} disabled={saving || selectedNodeGroupId === undefined}>
+          <Button
+            disabled={saving || selectedNodeGroupId === undefined}
+            onClick={handleBind}
+          >
             {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {t("confirm", "Confirm")}
           </Button>

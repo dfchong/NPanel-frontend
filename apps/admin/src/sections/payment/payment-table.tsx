@@ -61,7 +61,10 @@ export default function PaymentTable() {
               setLoading(true);
               try {
                 await updatePaymentMethod(
-                  buildPaymentPayload(values, row) as API.UpdatePaymentMethodRequest
+                  buildPaymentPayload(
+                    values,
+                    row
+                  ) as API.UpdatePaymentMethodRequest
                 );
                 toast.success(t("updateSuccess", "Updated successfully"));
                 ref.current?.refresh();
@@ -101,12 +104,10 @@ export default function PaymentTable() {
               setLoading(true);
               try {
                 const { id: _id, ...params } = row;
-                await createPaymentMethod(
-                  {
-                    ...buildPaymentPayload(params),
-                    enable: false,
-                  } as API.CreatePaymentMethodRequest
-                );
+                await createPaymentMethod({
+                  ...buildPaymentPayload(params),
+                  enable: false,
+                } as API.CreatePaymentMethodRequest);
                 toast.success(t("copySuccess", "Copied successfully"));
                 ref.current?.refresh();
                 setLoading(false);
@@ -156,12 +157,10 @@ export default function PaymentTable() {
             <Switch
               checked={Boolean(row.getValue("enable"))}
               onCheckedChange={async (checked) => {
-                await updatePaymentMethod(
-                  {
-                    ...buildPaymentPayload({}, row.original),
-                    enable: checked,
-                  } as API.UpdatePaymentMethodRequest
-                );
+                await updatePaymentMethod({
+                  ...buildPaymentPayload({}, row.original),
+                  enable: checked,
+                } as API.UpdatePaymentMethodRequest);
                 ref.current?.refresh();
               }}
             />
@@ -229,12 +228,10 @@ export default function PaymentTable() {
             onSubmit={async (values) => {
               setLoading(true);
               try {
-                await createPaymentMethod(
-                  {
-                    ...buildPaymentPayload(values),
-                    enable: false,
-                  } as API.CreatePaymentMethodRequest
-                );
+                await createPaymentMethod({
+                  ...buildPaymentPayload(values),
+                  enable: false,
+                } as API.CreatePaymentMethodRequest);
                 toast.success(t("createSuccess", "Created successfully"));
                 ref.current?.refresh();
                 setLoading(false);

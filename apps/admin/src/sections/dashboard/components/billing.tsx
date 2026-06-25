@@ -45,9 +45,9 @@ export default function Billing({ type }: BillingProps) {
 
         return Array.isArray(data[type])
           ? data[type].filter((item: { expiryDate: string }) => {
-            const expiryDate = Date.parse(item.expiryDate);
-            return !Number.isNaN(expiryDate) && expiryDate > now;
-          })
+              const expiryDate = Date.parse(item.expiryDate);
+              return !Number.isNaN(expiryDate) && expiryDate > now;
+            })
           : [];
       } catch {
         return [];

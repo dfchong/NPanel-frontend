@@ -1,5 +1,6 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import {
@@ -15,16 +16,15 @@ import {
   TableCell,
   TableRow,
 } from "@workspace/ui/components/table";
+import {
+  getRecalculationStatus,
+  getSubscribeGroupMapping,
+  recalculateGroup,
+} from "@workspace/ui/services/admin/group";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
-import {
-  getRecalculationStatus,
-  recalculateGroup,
-  getSubscribeGroupMapping,
-} from "@workspace/ui/services/admin/group";
 
 interface SubscribeGroupMapping {
   subscribe_name: string;
@@ -50,7 +50,6 @@ export default function SubscribeModeTab() {
       return (data.data?.list || []) as SubscribeGroupMapping[];
     },
   });
-
 
   const loadStatus = async () => {
     setLoadingStatus(true);
@@ -124,9 +123,14 @@ export default function SubscribeModeTab() {
       {/* Configuration Card */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("subscribeModeConfig", "Subscribe Mode Configuration")}</CardTitle>
+          <CardTitle>
+            {t("subscribeModeConfig", "Subscribe Mode Configuration")}
+          </CardTitle>
           <CardDescription>
-            {t("subscribeModeDescription", "Group users by their purchased subscription plan")}
+            {t(
+              "subscribeModeDescription",
+              "Group users by their purchased subscription plan"
+            )}
           </CardDescription>
         </CardHeader>
       </Card>
@@ -134,7 +138,9 @@ export default function SubscribeModeTab() {
       {/* Subscribe Group Mapping Card */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("subscribeGroupMappingTitle", "套餐-节点组对应关系")}</CardTitle>
+          <CardTitle>
+            {t("subscribeGroupMappingTitle", "套餐-节点组对应关系")}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {mappingLoading ? (
@@ -147,16 +153,21 @@ export default function SubscribeModeTab() {
                 {mappingData && mappingData.length > 0 ? (
                   mappingData
                     .filter(
-                      (item: SubscribeGroupMapping) => item.subscribe_name && item.node_group_name
+                      (item: SubscribeGroupMapping) =>
+                        item.subscribe_name && item.node_group_name
                     )
                     .map((item: SubscribeGroupMapping, index: number) => (
                       <TableRow key={index}>
                         <TableCell>
-                          <span className="font-medium">{item.subscribe_name}</span>
+                          <span className="font-medium">
+                            {item.subscribe_name}
+                          </span>
                           <span className="mx-2 text-muted-foreground">
                             {t("arrow", "→")}
                           </span>
-                          <Badge variant="outline">{item.node_group_name}</Badge>
+                          <Badge variant="outline">
+                            {item.node_group_name}
+                          </Badge>
                         </TableCell>
                       </TableRow>
                     ))
@@ -176,7 +187,9 @@ export default function SubscribeModeTab() {
       {/* Recalculation Card */}
       <Card>
         <CardHeader>
-          <CardTitle>{t("groupRecalculation", "Group Recalculation")}</CardTitle>
+          <CardTitle>
+            {t("groupRecalculation", "Group Recalculation")}
+          </CardTitle>
           <CardDescription>
             {t(
               "groupRecalculationDescription",
@@ -188,7 +201,7 @@ export default function SubscribeModeTab() {
           {/* Current Status */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium">
+              <span className="font-medium text-sm">
                 {t("currentStatus", "Current Status")}
               </span>
               {loadingStatus ? (
@@ -220,14 +233,20 @@ export default function SubscribeModeTab() {
             )}
 
             {status?.state === "completed" && (
-              <div className="text-sm text-muted-foreground">
-                {t("recalculationCompleted", "Recalculation completed successfully")}
+              <div className="text-muted-foreground text-sm">
+                {t(
+                  "recalculationCompleted",
+                  "Recalculation completed successfully"
+                )}
               </div>
             )}
 
             {status?.state === "failed" && (
-              <div className="text-sm text-destructive">
-                {t("recalculationFailed", "Recalculation failed. Please try again.")}
+              <div className="text-destructive text-sm">
+                {t(
+                  "recalculationFailed",
+                  "Recalculation failed. Please try again."
+                )}
               </div>
             )}
           </div>
@@ -235,8 +254,8 @@ export default function SubscribeModeTab() {
           {/* Recalculate Button */}
           <div className="flex justify-end">
             <Button
-              onClick={handleRecalculate}
               disabled={recalculating || status?.state === "running"}
+              onClick={handleRecalculate}
             >
               {recalculating && (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />

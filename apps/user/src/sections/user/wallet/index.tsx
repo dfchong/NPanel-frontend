@@ -14,8 +14,7 @@ import Recharge from "@/sections/subscribe/recharge";
 import { useGlobalStore } from "@/stores/global";
 
 function toNumber(value?: number | string | null) {
-  const parsed =
-    typeof value === "string" ? Number(value) : Number(value ?? 0);
+  const parsed = typeof value === "string" ? Number(value) : Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 }
 

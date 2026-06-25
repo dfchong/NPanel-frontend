@@ -277,14 +277,14 @@ export default function Content({
               }}
             />
             <Separator />
-              <SubscribeBilling
-                order={{
-                  ...order,
-                  quantity: String(params.quantity ?? 1),
-                  unit_price: subscription?.unit_price,
-                  show_original_price: subscription?.show_original_price,
-                }}
-              />
+            <SubscribeBilling
+              order={{
+                ...order,
+                quantity: String(params.quantity ?? 1),
+                unit_price: subscription?.unit_price,
+                show_original_price: subscription?.show_original_price,
+              }}
+            />
           </CardContent>
         </Card>
       </div>

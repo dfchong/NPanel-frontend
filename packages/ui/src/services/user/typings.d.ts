@@ -381,6 +381,8 @@ declare namespace API {
   type Platform = any;
   type PlatformListData = any;
   type PlatformListReply = any;
+  type GetSubscriptionCatalogReply = any;
+  type GetSubscriptionCatalogRequest = any;
   type PortalGetSubscriptionParams = any;
   type PortalPurchaseRequest = any;
   type PortalQueryPurchaseOrderParams = any;
@@ -401,6 +403,7 @@ declare namespace API {
   type PublicDocumentQueryDocumentDetailParams = any;
   type PublicOrderQueryOrderDetailParams = any;
   type PublicOrderQueryOrderListParams = any;
+  type PublicSubscribeQuerySubscribeCatalogParams = any;
   type PublicSubscribeQuerySubscribeListParams = any;
   type PublicUserGetLoginLogParams = any;
   type PublicUserGetSubscribeLogParams = any;
@@ -439,6 +442,8 @@ declare namespace API {
   type QueryServerProtocolConfigReply = any;
   type QueryServerTotalDataData = any;
   type QueryServerTotalDataReply = any;
+  type QuerySubscribeCatalogReply = any;
+  type QuerySubscribeCatalogRequest = any;
   type QuerySubscribeListReply = any;
   type QueryTicketWaitReplyData = any;
   type QueryTicketWaitReplyReply = any;
@@ -526,6 +531,7 @@ declare namespace API {
   type StripeNotifyReply = any;
   type StripePayment = any;
   type Subscribe = any;
+  type SubscribeCategory = any;
   type SubscribeApplication = any;
   type SubscribeApplicationData = any;
   type SubscribeApplicationReply = any;

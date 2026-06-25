@@ -49,6 +49,7 @@
   "resetTrafficDescription": "Reset traffic to zero, and start a new billing cycle",
   "resetTrafficTitle": "Reset Traffic",
   "subscriptionNotFound": "Subscription not found",
+  "uncategorized": "Uncategorized",
   "unsubscribe": {
     "cancel": "Cancel",
     "confirm": "Confirm",
