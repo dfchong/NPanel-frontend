@@ -189,7 +189,7 @@ Click the "Connect" button to display the server node installation script.
 **Install Command:**
 The generated bash script contains:
 ```bash
-wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh && bash install.sh --api-host [domain] --server-id [ID] --secret-key [key]
+wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh && bash install.sh --api-host https://admin.npanel.dev --server-id [ID] --secret-key [key]
 ```
 
 **Operations:**

@@ -5,8 +5,7 @@
 ## Quick start
 
 ```bash
-wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh
-sudo bash install.sh --api-host https://panel.example.com --server-id 1 --secret-key <SECRET>
+wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh && bash install.sh --api-host https://admin.npanel.dev --server-id <SERVER_ID> --secret-key <SECRET>
 ```
 
 The script auto-detects your distro/architecture, downloads the latest release, installs geo databases, and sets up the `ppnode` CLI + system service.

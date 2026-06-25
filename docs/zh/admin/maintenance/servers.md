@@ -189,7 +189,7 @@
 **安装命令:**
 生成的 bash 脚本包含:
 ```bash
-wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh && bash install.sh --api-host [域名] --server-id [ID] --secret-key [密钥]
+wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh && bash install.sh --api-host https://admin.npanel.dev --server-id [ID] --secret-key [密钥]
 ```
 
 **操作:**

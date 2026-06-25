@@ -5,8 +5,7 @@
 ## 快速开始
 
 ```bash
-wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh
-sudo bash install.sh --api-host https://panel.example.com --server-id 1 --secret-key <SECRET>
+wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh && bash install.sh --api-host https://admin.npanel.dev --server-id <SERVER_ID> --secret-key <SECRET>
 ```
 
 脚本会自动识别系统/架构、拉取最新版、安装 geo 数据，并配置 `ppnode` CLI 与系统服务。
