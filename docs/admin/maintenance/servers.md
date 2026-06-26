@@ -82,7 +82,7 @@ The main body of the page displays all servers in a table format.
 
 **Individual Server Operations:**
 - **Edit**: Modify server configuration
-- **Connect**: Display one-click installation script
+- **Install**: Display one-click installation script
 - **Delete**: Delete server (disabled when referenced by nodes)
 - **Copy**: Copy server configuration to create a new server
 
@@ -179,7 +179,7 @@ Some fields support auto-generation with a key icon:
 
 ## One-Click Installation
 
-Click the "Connect" button to display the server node installation script.
+Click the "Install" button to display the server node installation script.
 
 **Configuration:**
 - **API Host**: API address of the management panel (automatically obtained from current domain, can be manually modified)
@@ -189,7 +189,7 @@ Click the "Connect" button to display the server node installation script.
 **Install Command:**
 The generated bash script contains:
 ```bash
-wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh && bash install.sh --api-host [domain] --server-id [ID] --secret-key [key]
+wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh && bash install.sh --api-host https://admin.npanel.dev --server-id [ID] --secret-key [key]
 ```
 
 **Operations:**

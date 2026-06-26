@@ -331,7 +331,6 @@ export function BasicInfoForm({
                           onChange={(value) =>
                             form.setValue("avatar", value as string)
                           }
-                          returnType="base64"
                         />
                       }
                       value={field.value}

@@ -56,7 +56,7 @@ export const Route = createRootRouteWithContext()({
         </Helmet>
         <NavigationProgress />
         <Outlet />
-        <Toaster closeButton richColors />
+        <Toaster closeButton position="top-center" richColors />
         <div
           dangerouslySetInnerHTML={{ __html: common?.site.custom_html || "" }}
           id="custom_html"

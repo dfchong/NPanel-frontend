@@ -37,6 +37,7 @@ import {
   ProList,
   type ProListActions,
 } from "@workspace/ui/composed/pro-list/pro-list";
+import { TicketImagePreview } from "@workspace/ui/composed/ticket-image-preview";
 import { cn } from "@workspace/ui/lib/utils";
 import {
   createUserTicket,
@@ -45,6 +46,7 @@ import {
   getUserTicketList,
   updateUserTicketStatus,
 } from "@workspace/ui/services/user/ticket";
+import { uploadImage } from "@workspace/ui/services/upload";
 import { formatDate } from "@workspace/ui/utils/formatting";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -307,7 +309,7 @@ export default function Ticket() {
                     <p className="text-muted-foreground text-sm">
                       {formatDate(item.created_at)}
                     </p>
-                    <p
+                    <div
                       className={cn(
                         "w-fit rounded-lg bg-accent p-2 font-medium",
                         {
@@ -318,15 +320,12 @@ export default function Ticket() {
                     >
                       {item.type === 1 && item.content}
                       {item.type === 2 && (
-                        <img
+                        <TicketImagePreview
                           alt="ticket attachment"
-                          className="!size-auto object-cover"
-                          height={300}
                           src={item.content!}
-                          width={300}
                         />
                       )}
-                    </p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -392,18 +391,20 @@ export default function Ticket() {
                             ctx?.drawImage(img, 0, 0, width, height);
 
                             canvas.toBlob(
-                              (blob) => {
-                                const reader = new FileReader();
-                                reader.readAsDataURL(blob!);
-                                reader.onloadend = async () => {
+                              async (blob) => {
+                                if (!blob) return;
+                                try {
+                                  const imageUrl = await uploadImage(blob);
                                   await createUserTicketFollow({
                                     ticket_id: ticketId,
                                     from: "User",
                                     type: 2,
-                                    content: reader.result as string,
+                                    content: imageUrl,
                                   });
                                   refetchTicket();
-                                };
+                                } catch (error) {
+                                  console.error(error);
+                                }
                               },
                               "image/webp",
                               0.8

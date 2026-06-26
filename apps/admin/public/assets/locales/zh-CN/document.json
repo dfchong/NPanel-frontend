@@ -15,13 +15,14 @@
     "cancel": "取消",
     "confirm": "确认",
     "content": "内容",
-    "tags": "标签",
-    "tagsPlaceholder": "输入标签",
+    "show": "显示",
+    "tags": "分类",
+    "tagsPlaceholder": "输入分类",
     "title": "标题",
     "titlePlaceholder": "输入文档标题"
   },
   "show": "显示",
-  "tags": "标签",
+  "tags": "分类",
   "title": "标题",
   "updatedAt": "更新时间",
   "updateSuccess": "更新成功"

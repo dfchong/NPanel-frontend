@@ -487,7 +487,7 @@ export function ProtocolForm() {
                           <FormDescription>
                             {t(
                               "form.descriptions.icon",
-                              "Icon URL or base64 encoding"
+                              "Icon URL"
                             )}
                           </FormDescription>
                           <FormMessage />

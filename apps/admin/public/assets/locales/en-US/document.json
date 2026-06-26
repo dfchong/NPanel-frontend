@@ -15,13 +15,14 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "content": "Content",
-    "tags": "Tags",
-    "tagsPlaceholder": "Enter tags",
+    "show": "Show",
+    "tags": "Category",
+    "tagsPlaceholder": "Enter category",
     "title": "Title",
     "titlePlaceholder": "Enter document title"
   },
   "show": "Show",
-  "tags": "Tags",
+  "tags": "Category",
   "title": "Title",
   "updatedAt": "Updated At",
   "updateSuccess": "Updated successfully"

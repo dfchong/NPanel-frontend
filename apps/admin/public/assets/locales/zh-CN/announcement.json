@@ -12,7 +12,7 @@
   "deleteSuccess": "删除成功",
   "edit": "编辑",
   "editAnnouncement": "编辑公告",
-  "enable": "启用",
+  "enable": "显示状态",
   "form": {
     "cancel": "取消",
     "confirm": "确认",

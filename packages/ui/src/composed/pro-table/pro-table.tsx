@@ -129,6 +129,8 @@ export function ProTable<
 
   const table = useReactTable({
     data,
+    getRowId: (originalRow, index) =>
+      originalRow.id != null ? String(originalRow.id) : String(index),
     columns: [
       ...(onSort
         ? [

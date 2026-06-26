@@ -4,7 +4,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from "@workspace/ui/components/sidebar";
-import Announcement from "@/sections/user/announcement";
+import UserPopup from "@/sections/user/user-popup";
 import { SidebarLeft } from "./sidebar-left";
 import { SidebarRight } from "./sidebar-right";
 
@@ -16,7 +16,7 @@ export default function UserLayout() {
         <Outlet />
       </SidebarInset>
       <SidebarRight className="sticky top-[84px] hidden w-52 border-r-0 bg-transparent 2xl:flex" />
-      <Announcement type="popup" />
+      <UserPopup />
     </SidebarProvider>
   );
 }

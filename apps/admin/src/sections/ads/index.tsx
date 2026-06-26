@@ -96,7 +96,7 @@ export default function Ads() {
           header: t("type", "Type"),
           cell: ({ row }) => {
             const type = row.original.type;
-            return <Badge>{toNumber(type)}</Badge>;
+            return <Badge className="capitalize">{type || "-"}</Badge>;
           },
         },
         {

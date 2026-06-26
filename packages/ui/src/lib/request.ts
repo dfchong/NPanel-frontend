@@ -4,10 +4,7 @@ import { isBrowser } from "@workspace/ui/utils/index";
 import axios, { type InternalAxiosRequestConfig } from "axios";
 import { toast } from "sonner";
 
-function getResponseErrorMessage(data?: {
-  message?: string;
-  msg?: string;
-}) {
+function getResponseErrorMessage(data?: { message?: string; msg?: string }) {
   return data?.message ?? data?.msg;
 }
 
@@ -178,15 +175,12 @@ function handleError(response: {
       "components:error.90015",
       "This account has reached the limit of sending times today, please try again tomorrow."
     ),
-    90016: t(
-      "components:error.90016",
-      "Invalid email format."
-    ),
+    90016: t("components:error.90016", "Invalid email format."),
   };
 
   const message =
-    getResponseErrorMessage(response.data) ||
     (code ? ERROR_MESSAGES[code] : undefined) ||
+    getResponseErrorMessage(response.data) ||
     t(
       "components:error.unknown",
       "An error occurred in the system, please try again later."

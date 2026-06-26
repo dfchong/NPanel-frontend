@@ -18,6 +18,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@workspace/ui/components/sheet";
+import { Switch } from "@workspace/ui/components/switch";
 import { MarkdownEditor } from "@workspace/ui/composed/editor/markdown";
 import { Icon } from "@workspace/ui/composed/icon";
 import { TagInput } from "@workspace/ui/composed/tag-input";
@@ -30,6 +31,7 @@ const formSchema = z.object({
   title: z.string(),
   tags: z.array(z.string()).nullish(),
   content: z.string().nullish(),
+  show: z.boolean().optional(),
 });
 
 interface DocumentFormProps<T> {
@@ -53,6 +55,7 @@ export default function DocumentForm<T extends Record<string, any>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       tags: [],
+      show: true,
       ...initialValues,
     } as any,
   });
@@ -60,6 +63,7 @@ export default function DocumentForm<T extends Record<string, any>>({
   useEffect(() => {
     form?.reset({
       tags: [],
+      show: true,
       ...initialValues,
     });
   }, [form, initialValues]);
@@ -115,12 +119,31 @@ export default function DocumentForm<T extends Record<string, any>>({
                 name="tags"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{t("form.tags", "Tags")}</FormLabel>
+                    <FormLabel>{t("form.tags", "Category")}</FormLabel>
                     <FormControl>
                       <TagInput
                         onChange={(value) => form.setValue(field.name, value)}
-                        placeholder={t("form.tagsPlaceholder", "Enter tags")}
+                        placeholder={t(
+                          "form.tagsPlaceholder",
+                          "Enter category"
+                        )}
                         value={field.value}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="show"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("form.show", "Show")}</FormLabel>
+                    <FormControl>
+                      <Switch
+                        checked={field.value ?? true}
+                        onCheckedChange={field.onChange}
                       />
                     </FormControl>
                     <FormMessage />

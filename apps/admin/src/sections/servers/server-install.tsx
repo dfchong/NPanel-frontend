@@ -27,6 +27,18 @@ type Props = {
   server: API.Server;
 };
 
+const DEFAULT_NODE_INSTALL_API_HOST = "https://admin.npanel.dev";
+const NODE_INSTALL_SCRIPT_URL =
+  "https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh";
+
+function getDefaultApiHost() {
+  if (typeof window === "undefined") {
+    return DEFAULT_NODE_INSTALL_API_HOST;
+  }
+
+  return window.location.origin || DEFAULT_NODE_INSTALL_API_HOST;
+}
+
 export default function ServerInstall({ server }: Props) {
   const { t } = useTranslation("servers");
   const [open, setOpen] = useState(false);
@@ -43,14 +55,13 @@ export default function ServerInstall({ server }: Props) {
 
   useEffect(() => {
     if (open) {
-      const host = localStorage.getItem("API_HOST") ?? window.location.origin;
-      setDomain(host);
+      setDomain(getDefaultApiHost());
     }
   }, [open]);
 
   const installCommand = useMemo(() => {
     const secret = cfgResp?.node_secret ?? "";
-    return `wget -N https://raw.githubusercontent.com/npanel-dev/NPanel-node/master/scripts/install.sh && bash install.sh --api-host ${domain} --server-id ${server.id} --secret-key ${secret}`;
+    return `wget -N ${NODE_INSTALL_SCRIPT_URL} && bash install.sh --api-host ${domain} --server-id ${server.id} --secret-key ${secret}`;
   }, [domain, server.id, cfgResp?.node_secret]);
 
   async function handleCopy() {
@@ -75,12 +86,11 @@ export default function ServerInstall({ server }: Props) {
 
   const onDomainChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setDomain(e.target.value);
-    localStorage.setItem("API_HOST", e.target.value);
   }, []);
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <Button variant="secondary">{t("connect", "Connect")}</Button>
+        <Button variant="secondary">{t("connect", "Install")}</Button>
       </DialogTrigger>
 
       <DialogContent className="w-[720px] max-w-full md:max-w-3xl">

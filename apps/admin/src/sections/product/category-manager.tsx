@@ -13,6 +13,13 @@ import {
 } from "@workspace/ui/components/dialog";
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@workspace/ui/components/select";
 import { Switch } from "@workspace/ui/components/switch";
 import {
   Table,
@@ -62,6 +69,7 @@ const categoryDefaultsZh = {
   deleteSuccess: "分类删除成功",
   deleteWarning: "删除分类前请确认没有子分类或绑定套餐。",
   description: "分类描述",
+  defaultLanguage: "默认 / 不限制语言",
   language: "语言",
   manage: "分类管理",
   name: "分类名称",
@@ -84,6 +92,7 @@ const categoryDefaultsEn: Record<CategoryDefaultKey, string> = {
   deleteWarning:
     "Make sure the category has no child categories or linked plans before deleting it.",
   description: "Description",
+  defaultLanguage: "Default / no restriction",
   language: "Language",
   manage: "Manage Categories",
   name: "Category Name",
@@ -269,16 +278,26 @@ export default function CategoryManager({
             <div className="grid grid-cols-2 gap-3">
               <div className="grid gap-2">
                 <Label>{tc("language")}</Label>
-                <Input
-                  onChange={(event) =>
+                <Select
+                  onValueChange={(value) =>
                     setDraft((prev) => ({
                       ...prev,
-                      language: event.target.value,
+                      language: value === "__default__" ? "" : value,
                     }))
                   }
-                  placeholder="zh-CN"
-                  value={draft.language}
-                />
+                  value={draft.language || "__default__"}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="zh-CN" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="__default__">
+                      {tc("defaultLanguage")}
+                    </SelectItem>
+                    <SelectItem value="en-US">en-US</SelectItem>
+                    <SelectItem value="zh-CN">zh-CN</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="grid gap-2">
                 <Label>{tc("sort")}</Label>

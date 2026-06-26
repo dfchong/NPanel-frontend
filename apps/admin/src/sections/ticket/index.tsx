@@ -16,6 +16,7 @@ import {
   ProTable,
   type ProTableActions,
 } from "@workspace/ui/composed/pro-table/pro-table";
+import { TicketImagePreview } from "@workspace/ui/composed/ticket-image-preview";
 import { cn } from "@workspace/ui/lib/utils";
 import {
   createTicketFollow,
@@ -23,6 +24,7 @@ import {
   getTicketList,
   updateTicketStatus,
 } from "@workspace/ui/services/admin/ticket";
+import { uploadImage } from "@workspace/ui/services/upload";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -220,7 +222,7 @@ export default function Page() {
                     <p className="text-muted-foreground text-sm">
                       {formatDate(toNumber(item.created_at))}
                     </p>
-                    <p
+                    <div
                       className={cn(
                         "w-fit rounded-lg bg-accent p-2 font-medium",
                         {
@@ -231,16 +233,12 @@ export default function Page() {
                     >
                       {toNumber(item.type) === 1 && item.content}
                       {toNumber(item.type) === 2 && (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <TicketImagePreview
                           alt="attachment"
-                          className="!size-auto object-cover"
-                          height={300}
                           src={item.content!}
-                          width={300}
                         />
                       )}
-                    </p>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -306,18 +304,20 @@ export default function Page() {
                             ctx?.drawImage(img, 0, 0, width, height);
 
                             canvas.toBlob(
-                              (blob) => {
-                                const reader = new FileReader();
-                                reader.readAsDataURL(blob!);
-                                reader.onloadend = async () => {
+                              async (blob) => {
+                                if (!blob) return;
+                                try {
+                                  const imageUrl = await uploadImage(blob);
                                   await createTicketFollow({
                                     ticket_id: ticketId,
                                     from: "System",
                                     type: 2,
-                                    content: reader.result as string,
+                                    content: imageUrl,
                                   });
                                   refetchTicket();
-                                };
+                                } catch (error) {
+                                  console.error(error);
+                                }
                               },
                               "image/webp",
                               0.8

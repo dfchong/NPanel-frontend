@@ -1,10 +1,11 @@
 import { Input } from "@workspace/ui/components/input";
 import { Label } from "@workspace/ui/components/label";
 import { cn } from "@workspace/ui/lib/utils";
+import { uploadImage } from "@workspace/ui/services/upload";
 import { Upload } from "lucide-react";
 import { useState } from "react";
 
-type ReturnType = "base64" | "file";
+type ReturnType = "base64" | "file" | "url";
 
 interface UploadImageProps {
   onChange: (value: string | File) => void;
@@ -17,7 +18,7 @@ interface UploadImageProps {
 
 export const UploadImage = ({
   onChange,
-  returnType = "base64",
+  returnType = "url",
   id = "image-upload",
   children,
   className,
@@ -52,8 +53,11 @@ export const UploadImage = ({
       if (returnType === "base64") {
         const base64 = await toBase64(file);
         onChange(base64);
-      } else {
+      } else if (returnType === "file") {
         onChange(file);
+      } else {
+        const url = await uploadImage(file);
+        onChange(url);
       }
     } catch (error) {
       console.error(error);
@@ -83,8 +87,11 @@ export const UploadImage = ({
       if (returnType === "base64") {
         const base64 = await toBase64(file);
         onChange(base64);
-      } else {
+      } else if (returnType === "file") {
         onChange(file);
+      } else {
+        const url = await uploadImage(file);
+        onChange(url);
       }
     } catch (error) {
       console.error(error);
