@@ -68,6 +68,13 @@ function toNumber(value: number | string | null | undefined) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function getPrimaryAuthMethod(authMethods?: API.UserAuthMethod[]) {
+  return (
+    authMethods?.find((method) => method.auth_type === "email") ??
+    authMethods?.[0]
+  );
+}
+
 export default function User() {
   const { t } = useTranslation("user");
   const [loading, setLoading] = useState(false);
@@ -230,7 +237,7 @@ export default function User() {
           accessorKey: "auth_methods",
           header: t("userName", "Username"),
           cell: ({ row }) => {
-            const method = row.original.auth_methods?.[0];
+            const method = getPrimaryAuthMethod(row.original.auth_methods);
             const identifier = method?.auth_identifier ?? "";
             return (
               <div className="flex min-w-0 max-w-[260px] items-center gap-0.5">

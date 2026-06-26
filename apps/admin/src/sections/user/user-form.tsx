@@ -33,6 +33,10 @@ function toNumber(value: number | string | null | undefined) {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function optionalTrimmedString() {
+  return z.string().trim().optional();
+}
+
 interface UserFormProps<T> {
   onSubmit: (data: T) => Promise<boolean> | boolean;
   initialValues?: T;
@@ -54,20 +58,43 @@ export default function UserForm<T extends Record<string, any>>({
   const { currency } = common;
 
   const [open, setOpen] = useState(false);
-  const formSchema = z.object({
-    email: z.email(t("invalidEmailFormat", "Invalid email format")),
-    telephone_area_code: z.string().optional(),
-    telephone: z.string().optional(),
-    password: z.string().optional(),
-    referer_id: z.string().optional(),
-    refer_code: z.string().optional(),
-    referral_percentage: z.number().optional(),
-    only_first_purchase: z.boolean().optional(),
-    is_admin: z.boolean().optional(),
-    balance: z.number().optional(),
-    gift_amount: z.number().optional(),
-    commission: z.number().optional(),
-  });
+  const formSchema = z
+    .object({
+      email: z.email(t("invalidEmailFormat", "Invalid email format")),
+      telephone_area_code: optionalTrimmedString(),
+      telephone: optionalTrimmedString(),
+      password: optionalTrimmedString(),
+      referer_id: optionalTrimmedString(),
+      refer_code: optionalTrimmedString(),
+      referral_percentage: z.number().optional(),
+      only_first_purchase: z.boolean().optional(),
+      is_admin: z.boolean().optional(),
+      balance: z.number().optional(),
+      gift_amount: z.number().optional(),
+      commission: z.number().optional(),
+    })
+    .superRefine((values, ctx) => {
+      if (!values.telephone) {
+        return;
+      }
+      if (!values.telephone_area_code) {
+        ctx.addIssue({
+          code: "custom",
+          message: t("telephoneAreaCodeRequired", "Area code is required"),
+          path: ["telephone_area_code"],
+        });
+      }
+      if (!/^\d{4,15}$/.test(values.telephone)) {
+        ctx.addIssue({
+          code: "custom",
+          message: t(
+            "invalidTelephoneFormat",
+            "Please enter a valid phone number"
+          ),
+          path: ["telephone"],
+        });
+      }
+    });
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -93,6 +120,10 @@ export default function UserForm<T extends Record<string, any>>({
     const payload = {
       ...rest,
       referer_user: referer_id || undefined,
+      telephone_area_code: rest.telephone
+        ? rest.telephone_area_code || undefined
+        : undefined,
+      telephone: rest.telephone || undefined,
     };
     const bool = await onSubmit(payload as unknown as T);
 
