@@ -82,11 +82,11 @@ const DurationSelector: React.FC<DurationSelectorProps> = ({
   const formatOptionLabel = (item: SubscribePriceOptionLike) => {
     const durationUnit = getOptionDurationUnit(item);
     if (durationUnit === "NoLimit") {
-      return item.name || t("NoLimit", "No Limit");
+      return t("NoLimit", "No Limit");
     }
     const value = getOptionDurationValue(item);
     const unit = t(durationUnit, durationUnit);
-    return item.name || `${value} / ${unit}`;
+    return `${value} ${unit}`;
   };
 
   return (
