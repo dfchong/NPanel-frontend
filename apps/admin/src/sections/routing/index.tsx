@@ -333,8 +333,8 @@ function RoutingTable({ config }: { config: ResourceConfig }) {
     <ProTable<RoutingItem, { search: string }>
       action={ref}
       actions={{
-        render(row) {
-          const item = row.original as RoutingItem;
+        render(item) {
+          const itemId = item.id == null ? "" : String(item.id);
           return [
             <RoutingForm
               config={config}
@@ -362,7 +362,11 @@ function RoutingTable({ config }: { config: ResourceConfig }) {
               )}
               key="delete"
               onConfirm={async () => {
-                await config.remove(String(item.id));
+                if (!itemId) {
+                  toast.error(t("missingId", "Missing item ID"));
+                  return;
+                }
+                await config.remove(itemId);
                 toast.success(t("deleteSuccess", "Deleted successfully"));
                 ref.current?.refresh();
               }}
@@ -537,7 +541,7 @@ function RoutingOverviewPanel() {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="font-medium text-lg">
-            {t("p4Overview", "P4 Health / Guard")}
+            {t("overview", "Health / Guard")}
           </h2>
           <p className="text-muted-foreground text-sm">
             {overview?.profileCode || "-"} ·{" "}
