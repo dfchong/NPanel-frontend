@@ -107,7 +107,7 @@ export default function Page() {
           header: t("show", "Show"),
           cell: ({ row }) => (
             <Switch
-              defaultChecked={row.getValue("show")}
+              checked={Boolean(row.getValue("show"))}
               onCheckedChange={async (checked) => {
                 await updateDocument({
                   ...row.original,
@@ -124,7 +124,7 @@ export default function Page() {
         },
         {
           accessorKey: "tags",
-          header: t("tags", "Tags"),
+          header: t("tags", "Category"),
           cell: ({ row }) => row.original.tags.join(", "),
         },
         {
@@ -142,10 +142,7 @@ export default function Page() {
             onSubmit={async (values) => {
               setLoading(true);
               try {
-                await createDocument({
-                  ...values,
-                  show: false,
-                });
+                await createDocument(values);
                 toast.success(t("createSuccess", "Created successfully"));
                 ref.current?.refresh();
                 return true;
@@ -166,7 +163,7 @@ export default function Page() {
         },
         {
           key: "tag",
-          placeholder: t("tags", "Tags"),
+          placeholder: t("tags", "Category"),
         },
       ]}
       request={async (pagination, filter) => {
