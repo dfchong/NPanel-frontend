@@ -24,6 +24,7 @@
   "enforceReady": "Enforce 就绪",
   "fallback": "Fallback",
   "healthSnapshot": "健康快照",
+  "healthReports": "健康上报",
   "invalidJson": "JSON 格式错误",
   "matched": "已命中",
   "missingId": "缺少数据 ID",
@@ -70,6 +71,7 @@
   "userSubscribeId": "用户订阅 ID",
   "yes": "是",
   "no": "否",
+  "noHealthReports": "暂无健康上报",
   "defaults": {
     "profileName": "P1 默认智能分流",
     "userProfileName": "用户 {{userId}} 分流策略",
@@ -110,6 +112,8 @@
     "failed": "失败",
     "degraded": "降级",
     "disabled": "已禁用",
+    "guarded": "受保护",
+    "small-scope ready": "小流量就绪",
     "empty": "空"
   },
   "healthKinds": {
@@ -119,11 +123,20 @@
   },
   "sources": {
     "admin_config": "Admin 配置",
-    "backend_global": "后端全局"
+    "backend_global": "后端全局",
+    "health_report": "健康上报",
+    "client_health_report": "客户端健康上报",
+    "node_health_report": "节点健康上报"
+  },
+  "reporterTypes": {
+    "client": "客户端",
+    "node": "节点",
+    "backend": "后端"
   },
   "healthErrors": {
     "health check is not configured": "未配置健康检查",
-    "waiting for node/client health reports": "等待节点/客户端健康上报"
+    "waiting for node/client health reports": "等待节点/客户端健康上报",
+    "health report is stale": "健康上报已过期"
   },
   "auditResourceTypes": {
     "profile": "Profile",

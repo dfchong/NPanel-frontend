@@ -2745,6 +2745,47 @@ declare namespace API {
     auditEvents?: RoutingAuditEvent[];
   };
 
+  type RoutingHealthReport = {
+    id?: string;
+    reporterType?: string;
+    reporterId?: string;
+    profileCode?: string;
+    routingHash?: string;
+    subjectType?: string;
+    subjectKey?: string;
+    region?: string;
+    status?: string;
+    source?: string;
+    rttMs?: number;
+    consecutiveFailures?: number;
+    lastError?: string;
+    outboundTag?: string;
+    dnsResolverTag?: string;
+    checkedAt?: string;
+    reportJson?: string;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+
+  type RoutingHealthReportListData = {
+    list?: RoutingHealthReport[];
+    total?: number;
+  };
+
+  type ListRoutingHealthReportsReply = {
+    code?: number;
+    message?: string;
+    data?: RoutingHealthReportListData;
+  };
+
+  type RoutingServiceListRoutingHealthReportsParams = {
+    page?: string;
+    size?: string;
+    subjectType?: string;
+    subjectKey?: string;
+    reporterType?: string;
+  };
+
   type PreviewSubscribeTemplateData = {
     template?: string;
   };

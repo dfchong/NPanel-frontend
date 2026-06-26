@@ -39,6 +39,7 @@ import {
   routingServiceListRouteOutbounds,
   routingServiceListRouteProfiles,
   routingServiceListRouteRules,
+  routingServiceListRoutingHealthReports,
   routingServiceListUnlockServices,
   routingServicePreviewRouteConfig,
   routingServiceUpdateDnsResolver,
@@ -565,12 +566,17 @@ function RoutingOverviewPanel() {
   const { t } = useTranslation("routing");
   const [loading, setLoading] = useState(false);
   const [overview, setOverview] = useState<API.RoutingOverview | null>(null);
+  const [reports, setReports] = useState<API.RoutingHealthReport[]>([]);
 
   const loadOverview = async () => {
     setLoading(true);
     try {
-      const { data } = await routingServiceGetRoutingOverview();
+      const [{ data }, reportsResp] = await Promise.all([
+        routingServiceGetRoutingOverview(),
+        routingServiceListRoutingHealthReports({ page: "1", size: "6" }),
+      ]);
       setOverview(data.data || null);
+      setReports(reportsResp.data.data?.list || []);
     } finally {
       setLoading(false);
     }
@@ -721,6 +727,45 @@ function RoutingOverviewPanel() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <div className="mb-2 font-medium text-sm">
+          {t("healthReports", "Health Reports")}
+        </div>
+        <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+          {reports.length > 0 ? (
+            reports.map((report) => (
+              <div
+                className="min-w-0 rounded-md border px-3 py-2"
+                key={String(report.id)}
+              >
+                <div className="flex items-center justify-between gap-2">
+                  <span className="truncate font-medium text-sm">
+                    {translatedValue(t, "healthKinds", report.subjectType)} ·{" "}
+                    {report.subjectKey || "-"}
+                  </span>
+                  <Badge variant={statusBadgeVariant(report.status)}>
+                    {translatedValue(t, "statuses", report.status)}
+                  </Badge>
+                </div>
+                <div className="mt-1 truncate text-muted-foreground text-xs">
+                  {translatedValue(t, "reporterTypes", report.reporterType)} ·{" "}
+                  {report.reporterId || "-"} · {dateCell(report.checkedAt)}
+                </div>
+                {report.lastError ? (
+                  <div className="mt-1 truncate text-muted-foreground text-xs">
+                    {translatedValue(t, "healthErrors", report.lastError)}
+                  </div>
+                ) : null}
+              </div>
+            ))
+          ) : (
+            <div className="rounded-md border px-3 py-2 text-muted-foreground text-sm">
+              {t("noHealthReports", "No health reports")}
+            </div>
+          )}
         </div>
       </div>
     </div>

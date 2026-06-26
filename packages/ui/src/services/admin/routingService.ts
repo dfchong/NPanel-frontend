@@ -177,6 +177,23 @@ export async function routingServiceGetRoutingOverview(options?: {
   );
 }
 
+/** 此处后端没有提供注释 GET /v1/admin/routing/health_reports */
+export async function routingServiceListRoutingHealthReports(
+  params: API.RoutingServiceListRoutingHealthReportsParams,
+  options?: { [key: string]: any }
+) {
+  return request<API.ListRoutingHealthReportsReply>(
+    `${import.meta.env.VITE_API_PREFIX || ""}/v1/admin/routing/health_reports`,
+    {
+      method: "GET",
+      params: {
+        ...params,
+      },
+      ...(options || {}),
+    }
+  );
+}
+
 /** 此处后端没有提供注释 PUT /v1/admin/routing/profile */
 export async function routingServiceUpdateRouteProfile(
   body: API.UpdateRouteProfileRequest,

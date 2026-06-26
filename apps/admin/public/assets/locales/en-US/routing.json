@@ -24,6 +24,7 @@
   "enforceReady": "Enforce Ready",
   "fallback": "Fallback",
   "healthSnapshot": "Health Snapshot",
+  "healthReports": "Health Reports",
   "invalidJson": "Invalid JSON",
   "matched": "Matched",
   "missingId": "Missing item ID",
@@ -70,6 +71,7 @@
   "userSubscribeId": "User Subscribe ID",
   "yes": "Yes",
   "no": "No",
+  "noHealthReports": "No health reports",
   "defaults": {
     "profileName": "P1 Default Smart",
     "userProfileName": "User {{userId}} Routing",
@@ -110,6 +112,8 @@
     "failed": "failed",
     "degraded": "degraded",
     "disabled": "disabled",
+    "guarded": "guarded",
+    "small-scope ready": "small-scope ready",
     "empty": "empty"
   },
   "healthKinds": {
@@ -119,11 +123,20 @@
   },
   "sources": {
     "admin_config": "admin config",
-    "backend_global": "backend global"
+    "backend_global": "backend global",
+    "health_report": "health report",
+    "client_health_report": "client health report",
+    "node_health_report": "node health report"
+  },
+  "reporterTypes": {
+    "client": "client",
+    "node": "node",
+    "backend": "backend"
   },
   "healthErrors": {
     "health check is not configured": "health check is not configured",
-    "waiting for node/client health reports": "waiting for node/client health reports"
+    "waiting for node/client health reports": "waiting for node/client health reports",
+    "health report is stale": "health report is stale"
   },
   "auditResourceTypes": {
     "profile": "profile",
