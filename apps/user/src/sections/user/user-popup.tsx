@@ -10,6 +10,7 @@ import {
 import { Markdown } from "@workspace/ui/composed/markdown";
 import { getAds } from "@workspace/ui/services/common/common";
 import { queryAnnouncement } from "@workspace/ui/services/user/announcement";
+import { ChevronLeft, ChevronRight, ExternalLink } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGlobalStore } from "@/stores/global";
 
@@ -33,14 +34,13 @@ type AnnouncementPopup = {
   content?: string;
 };
 
-type AdPopup = {
-  kind: "ad";
-  id?: number | string;
-  title?: string;
-  ad: Ad;
+type AdsPopup = {
+  kind: "ads";
+  id: string;
+  ads: Ad[];
 };
 
-type PopupItem = AnnouncementPopup | AdPopup;
+type PopupItem = AnnouncementPopup | AdsPopup;
 
 function toTimestamp(value: unknown) {
   const timestamp = Number(value ?? 0);
@@ -70,34 +70,129 @@ function compareAds(left: Ad, right: Ad) {
 function AdContent({ ad }: { ad: Ad }) {
   if (ad.type === "video" && ad.content) {
     return (
-      // biome-ignore lint/a11y/useMediaCaption: Ad video sources are configured externally and do not provide caption tracks.
-      <video
-        className="max-h-[60vh] w-full rounded-md bg-muted object-contain"
-        controls
-        src={ad.content}
-      />
+      <div className="flex aspect-video max-h-[60vh] w-full items-center justify-center overflow-hidden rounded-md bg-muted/60">
+        {/* biome-ignore lint/a11y/useMediaCaption: Ad video sources are configured externally and do not provide caption tracks. */}
+        <video
+          className="h-full w-full object-contain"
+          controls
+          src={ad.content}
+        />
+      </div>
     );
   }
 
   if (ad.type === "image" && ad.content) {
     return (
-      <img
-        alt={ad.title || "Advertisement"}
-        className="max-h-[60vh] w-full rounded-md object-contain"
-        height={540}
-        src={ad.content}
-        width={960}
-      />
+      <div className="flex aspect-video max-h-[60vh] w-full items-center justify-center overflow-hidden rounded-md bg-muted/60">
+        <img
+          alt={ad.title || "Advertisement"}
+          className="h-full w-full object-contain"
+          height={540}
+          src={ad.content}
+          width={960}
+        />
+      </div>
     );
   }
 
   return null;
 }
 
+function AdCarousel({
+  ads,
+  activeAdIndex,
+  onActiveAdIndexChange,
+}: {
+  ads: Ad[];
+  activeAdIndex: number;
+  onActiveAdIndexChange: (index: number) => void;
+}) {
+  const activeAd = ads[activeAdIndex];
+
+  if (!activeAd) return null;
+
+  const hasMultipleAds = ads.length > 1;
+
+  function showPreviousAd() {
+    onActiveAdIndexChange((activeAdIndex - 1 + ads.length) % ads.length);
+  }
+
+  function showNextAd() {
+    onActiveAdIndexChange((activeAdIndex + 1) % ads.length);
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="relative">
+        <AdContent ad={activeAd} />
+        {hasMultipleAds ? (
+          <>
+            <Button
+              aria-label="Previous advertisement"
+              className="-translate-y-1/2 absolute top-1/2 left-2 size-8 rounded-full bg-background/80 shadow-sm backdrop-blur"
+              onClick={showPreviousAd}
+              size="icon"
+              type="button"
+              variant="outline"
+            >
+              <ChevronLeft className="size-4" />
+            </Button>
+            <Button
+              aria-label="Next advertisement"
+              className="-translate-y-1/2 absolute top-1/2 right-2 size-8 rounded-full bg-background/80 shadow-sm backdrop-blur"
+              onClick={showNextAd}
+              size="icon"
+              type="button"
+              variant="outline"
+            >
+              <ChevronRight className="size-4" />
+            </Button>
+          </>
+        ) : null}
+      </div>
+      {activeAd.description ? (
+        <p className="whitespace-pre-wrap text-muted-foreground text-sm">
+          {activeAd.description}
+        </p>
+      ) : null}
+      {activeAd.target_url ? (
+        <Button asChild className="w-full">
+          <a
+            href={activeAd.target_url}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <ExternalLink className="size-4" />
+            查看详情
+          </a>
+        </Button>
+      ) : null}
+      {hasMultipleAds ? (
+        <div className="flex items-center justify-center gap-2">
+          {ads.map((ad, index) => (
+            <button
+              aria-label={`Show advertisement ${index + 1}`}
+              className={`size-2 rounded-full transition-colors ${
+                index === activeAdIndex
+                  ? "bg-primary"
+                  : "bg-muted-foreground/30"
+              }`}
+              key={`${ad.id ?? ad.title ?? ad.content ?? "ad"}-${index}`}
+              onClick={() => onActiveAdIndexChange(index)}
+              type="button"
+            />
+          ))}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export default function UserPopup() {
   const { user } = useGlobalStore();
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [activeAdIndex, setActiveAdIndex] = useState(0);
   const shownPopupKeyRef = useRef("");
 
   const { data: announcement, isFetched: announcementFetched } = useQuery({
@@ -154,15 +249,15 @@ export default function UserPopup() {
     }
 
     const now = Math.floor(Date.now() / 1000);
-    const activeAd = ads
-      ?.filter((ad) => isActiveAd(ad, now))
-      .sort(compareAds)[0];
-    if (activeAd) {
+    const activeAds =
+      ads?.filter((ad) => isActiveAd(ad, now)).sort(compareAds) || [];
+    if (activeAds.length > 0) {
       items.push({
-        kind: "ad",
-        id: activeAd.id,
-        title: activeAd.title,
-        ad: activeAd,
+        kind: "ads",
+        id: activeAds
+          .map((ad) => ad.id ?? ad.title ?? ad.content ?? "")
+          .join(","),
+        ads: activeAds,
       });
     }
 
@@ -178,7 +273,7 @@ export default function UserPopup() {
             return `announcement:${item.id ?? item.title ?? ""}`;
           }
 
-          return `ad:${item.id ?? item.title ?? item.ad.content ?? ""}`;
+          return `ads:${item.id}`;
         })
         .join("|"),
     [popups]
@@ -193,8 +288,32 @@ export default function UserPopup() {
 
     shownPopupKeyRef.current = popupKey;
     setActiveIndex(0);
+    setActiveAdIndex(0);
     setOpen(true);
   }, [popupKey]);
+
+  useEffect(() => {
+    if (activePopup?.kind !== "ads") {
+      setActiveAdIndex(0);
+      return;
+    }
+
+    setActiveAdIndex((index) =>
+      Math.min(index, Math.max(activePopup.ads.length - 1, 0))
+    );
+  }, [activePopup]);
+
+  useEffect(() => {
+    if (!(open && activePopup?.kind === "ads" && activePopup.ads.length > 1)) {
+      return;
+    }
+
+    const timer = window.setInterval(() => {
+      setActiveAdIndex((index) => (index + 1) % activePopup.ads.length);
+    }, 5000);
+
+    return () => window.clearInterval(timer);
+  }, [activePopup, open]);
 
   function handleOpenChange(nextOpen: boolean) {
     if (nextOpen) {
@@ -217,36 +336,29 @@ export default function UserPopup() {
 
   if (!activePopup) return null;
 
+  const activeAd =
+    activePopup.kind === "ads" ? activePopup.ads[activeAdIndex] : null;
+
   return (
     <Dialog onOpenChange={handleOpenChange} open={open}>
       <DialogContent className="max-h-[85vh] overflow-auto sm:max-w-[520px]">
         <DialogHeader>
-          <DialogTitle>{activePopup.title}</DialogTitle>
+          <DialogTitle>
+            {activePopup.kind === "announcement"
+              ? activePopup.title
+              : activeAd?.title}
+          </DialogTitle>
         </DialogHeader>
         {activePopup.kind === "announcement" ? (
           <div className="prose prose-sm dark:prose-invert max-w-none">
             <Markdown>{activePopup.content || ""}</Markdown>
           </div>
         ) : (
-          <div className="space-y-4">
-            <AdContent ad={activePopup.ad} />
-            {activePopup.ad.description ? (
-              <p className="whitespace-pre-wrap text-muted-foreground text-sm">
-                {activePopup.ad.description}
-              </p>
-            ) : null}
-            {activePopup.ad.target_url ? (
-              <Button asChild className="w-full">
-                <a
-                  href={activePopup.ad.target_url}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  {activePopup.ad.target_url}
-                </a>
-              </Button>
-            ) : null}
-          </div>
+          <AdCarousel
+            activeAdIndex={activeAdIndex}
+            ads={activePopup.ads}
+            onActiveAdIndexChange={setActiveAdIndex}
+          />
         )}
       </DialogContent>
     </Dialog>
