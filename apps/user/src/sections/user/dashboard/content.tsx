@@ -49,14 +49,47 @@ import ResetTraffic from "../../subscribe/reset-traffic";
 import Unsubscribe from "../../subscribe/unsubscribe";
 import RedeemCode from "./redeem-code";
 
-const platforms: (keyof API.DownloadLink)[] = [
-  "windows",
-  "mac",
-  "linux",
-  "ios",
-  "android",
-  "harmony",
+type DownloadPlatform = keyof API.DownloadLink;
+
+const platformOptions: Array<{
+  fallback: string;
+  icon: string;
+  key: DownloadPlatform;
+  labelKey: string;
+}> = [
+  {
+    fallback: "Windows PC",
+    icon: "mdi:microsoft-windows",
+    key: "windows",
+    labelKey: "platforms.windows",
+  },
+  {
+    fallback: "Mac",
+    icon: "uil:apple",
+    key: "mac",
+    labelKey: "platforms.mac",
+  },
+  {
+    fallback: "Android",
+    icon: "uil:android",
+    key: "android",
+    labelKey: "platforms.android",
+  },
+  {
+    fallback: "iOS",
+    icon: "simple-icons:ios",
+    key: "ios",
+    labelKey: "platforms.ios",
+  },
+  {
+    fallback: "Linux",
+    icon: "uil:linux",
+    key: "linux",
+    labelKey: "platforms.linux",
+  },
 ];
+
+const platforms = platformOptions.map((item) => item.key);
 
 function toNumber(value?: number | string | null) {
   const parsed = typeof value === "string" ? Number(value) : Number(value ?? 0);
@@ -88,10 +121,10 @@ export default function Content() {
     },
   });
 
-  const availablePlatforms = React.useMemo(() => {
+  const availablePlatforms = React.useMemo<DownloadPlatform[]>(() => {
     if (!applications || applications.length === 0) return platforms;
 
-    const platformsSet = new Set<keyof API.DownloadLink>();
+    const platformsSet = new Set<DownloadPlatform>();
 
     applications.forEach((app) => {
       if (app.download_link) {
@@ -103,16 +136,22 @@ export default function Content() {
       }
     });
 
+    if (platformsSet.size === 0) return platforms;
+
     return platforms.filter((platform) => platformsSet.has(platform));
   }, [applications]);
 
-  const [platform, setPlatform] = useState<keyof API.DownloadLink>(() => {
+  const [platform, setPlatform] = useState<DownloadPlatform>(() => {
     const detectedPlatform =
       getPlatform() === "macos"
         ? "mac"
-        : (getPlatform() as keyof API.DownloadLink);
+        : (getPlatform() as DownloadPlatform);
     return detectedPlatform;
   });
+
+  const availablePlatformOptions = platformOptions.filter((item) =>
+    availablePlatforms.includes(item.key)
+  );
 
   React.useEffect(() => {
     if (
@@ -175,31 +214,18 @@ export default function Content() {
             {availablePlatforms.length > 0 && (
               <Tabs
                 className="w-full max-w-full md:w-auto"
-                onValueChange={(value) =>
-                  setPlatform(value as keyof API.DownloadLink)
-                }
+                onValueChange={(value) => setPlatform(value as DownloadPlatform)}
                 value={platform}
               >
-                <TabsList className="flex *:flex-auto">
-                  {availablePlatforms.map((item) => (
+                <TabsList className="flex h-auto flex-wrap gap-1 p-1">
+                  {availablePlatformOptions.map((item) => (
                     <TabsTrigger
-                      className="px-1 lg:px-3"
-                      key={item}
-                      value={item}
+                      className="gap-1.5 px-2 py-1.5 text-xs lg:px-3"
+                      key={item.key}
+                      value={item.key}
                     >
-                      <Icon
-                        className="size-5"
-                        icon={`${
-                          {
-                            windows: "mdi:microsoft-windows",
-                            mac: "uil:apple",
-                            linux: "uil:linux",
-                            ios: "simple-icons:ios",
-                            android: "uil:android",
-                            harmony: "simple-icons:harmonyos",
-                          }[item]
-                        }`}
-                      />
+                      <Icon className="size-4" icon={item.icon} />
+                      <span>{t(item.labelKey, item.fallback)}</span>
                     </TabsTrigger>
                   ))}
                 </TabsList>

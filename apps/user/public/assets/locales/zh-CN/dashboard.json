@@ -17,6 +17,13 @@
   "pinnedOnly": "仅置顶",
   "popup": "弹窗",
   "popupOnly": "仅弹窗",
+  "platforms": {
+    "android": "安卓手机",
+    "ios": "iOS 手机",
+    "linux": "Linux",
+    "mac": "Mac 电脑",
+    "windows": "Windows 电脑"
+  },
   "manualImportMessage": "请手动导入",
   "mySubscriptions": "我的订阅",
   "nextResetDays": "距离下次重置天数",
