@@ -4901,6 +4901,8 @@ declare namespace API {
   type SubscribePriceOption = {
     id?: string;
     subscribeId?: string;
+    code?: string;
+    type?: string;
     name?: string;
     durationUnit?: string;
     durationValue?: string;
@@ -4909,15 +4911,18 @@ declare namespace API {
     inventory?: number;
     show?: boolean;
     sell?: boolean;
-    isDefault?: boolean;
-    sort?: number;
-    createdAt?: string;
+	    isDefault?: boolean;
+	    sort?: number;
+	    version?: number;
+	    createdAt?: string;
     updatedAt?: string;
   };
 
   type SubscribePriceOption = {
     id?: string;
     subscribeId?: string;
+    code?: string;
+    type?: string;
     name?: string;
     durationUnit?: string;
     durationValue?: string;
@@ -4926,15 +4931,18 @@ declare namespace API {
     inventory?: number;
     show?: boolean;
     sell?: boolean;
-    isDefault?: boolean;
-    sort?: number;
-    createdAt?: string;
+	    isDefault?: boolean;
+	    sort?: number;
+	    version?: number;
+	    createdAt?: string;
     updatedAt?: string;
   };
 
   type SubscribePriceOption = {
     id?: string;
     subscribeId?: string;
+    code?: string;
+    type?: string;
     name?: string;
     durationUnit?: string;
     durationValue?: string;
@@ -4943,15 +4951,18 @@ declare namespace API {
     inventory?: number;
     show?: boolean;
     sell?: boolean;
-    isDefault?: boolean;
-    sort?: number;
-    createdAt?: string;
+	    isDefault?: boolean;
+	    sort?: number;
+	    version?: number;
+	    createdAt?: string;
     updatedAt?: string;
   };
 
   type SubscribePriceOption = {
     id?: string;
     subscribeId?: string;
+    code?: string;
+    type?: string;
     name?: string;
     durationUnit?: string;
     durationValue?: string;
@@ -4960,15 +4971,18 @@ declare namespace API {
     inventory?: number;
     show?: boolean;
     sell?: boolean;
-    isDefault?: boolean;
-    sort?: number;
-    createdAt?: string;
+	    isDefault?: boolean;
+	    sort?: number;
+	    version?: number;
+	    createdAt?: string;
     updatedAt?: string;
   };
 
   type SubscribePriceOption = {
     id?: string;
     subscribeId?: string;
+    code?: string;
+    type?: string;
     name?: string;
     durationUnit?: string;
     durationValue?: string;
@@ -4977,9 +4991,10 @@ declare namespace API {
     inventory?: number;
     show?: boolean;
     sell?: boolean;
-    isDefault?: boolean;
-    sort?: number;
-    createdAt?: string;
+	    isDefault?: boolean;
+	    sort?: number;
+	    version?: number;
+	    createdAt?: string;
     updatedAt?: string;
   };
 

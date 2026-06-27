@@ -15491,6 +15491,18 @@
             "items": {
               "$ref": "#/components/schemas/api.admin.subscribe.v1.SubscribePriceOption"
             }
+          },
+          "shortDescription": {
+            "type": "string"
+          },
+          "features": {
+            "type": "string"
+          },
+          "detailFormat": {
+            "type": "string"
+          },
+          "detailContent": {
+            "type": "string"
           }
         },
         "description": "CreateSubscribeRequest 创建订阅套餐请求"
@@ -15958,6 +15970,18 @@
             "items": {
               "$ref": "#/components/schemas/api.admin.subscribe.v1.SubscribePriceOption"
             }
+          },
+          "shortDescription": {
+            "type": "string"
+          },
+          "features": {
+            "type": "string"
+          },
+          "detailFormat": {
+            "type": "string"
+          },
+          "detailContent": {
+            "type": "string"
           }
         },
         "description": "SubscribeInfo 订阅套餐信息"
@@ -16085,6 +16109,18 @@
             "items": {
               "$ref": "#/components/schemas/api.admin.subscribe.v1.SubscribePriceOption"
             }
+          },
+          "shortDescription": {
+            "type": "string"
+          },
+          "features": {
+            "type": "string"
+          },
+          "detailFormat": {
+            "type": "string"
+          },
+          "detailContent": {
+            "type": "string"
           }
         },
         "description": "SubscribeItem 订阅套餐列表项（包含销量）"
@@ -16135,6 +16171,16 @@
           },
           "updatedAt": {
             "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "description": "SubscribePriceOption 商品价格档位"
@@ -16435,6 +16481,18 @@
             "items": {
               "$ref": "#/components/schemas/api.admin.subscribe.v1.SubscribePriceOption"
             }
+          },
+          "shortDescription": {
+            "type": "string"
+          },
+          "features": {
+            "type": "string"
+          },
+          "detailFormat": {
+            "type": "string"
+          },
+          "detailContent": {
+            "type": "string"
           }
         },
         "description": "UpdateSubscribeRequest 更新订阅套餐请求"
@@ -20983,6 +21041,12 @@
           },
           "updatedAt": {
             "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
           }
         }
       },
@@ -21555,6 +21619,12 @@
           },
           "updatedAt": {
             "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
           }
         }
       },
@@ -21761,6 +21831,18 @@
             "items": {
               "$ref": "#/components/schemas/api.public.subscribe.v1.SubscribePriceOption"
             }
+          },
+          "shortDescription": {
+            "type": "string"
+          },
+          "features": {
+            "type": "string"
+          },
+          "detailFormat": {
+            "type": "string"
+          },
+          "detailContent": {
+            "type": "string"
           }
         }
       },
@@ -21860,6 +21942,12 @@
             "type": "string"
           },
           "updatedAt": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "type": {
             "type": "string"
           }
         }
@@ -22698,6 +22786,12 @@
             "type": "string"
           },
           "updatedAt": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "type": {
             "type": "string"
           }
         }

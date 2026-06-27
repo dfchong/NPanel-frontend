@@ -243,28 +243,40 @@ function normalizeSubscribeValues<T extends Record<string, any>>(values?: T) {
   };
 
   const priceOptions = Array.isArray(processedValues.price_options)
-    ? processedValues.price_options.map((item: Record<string, any>) => ({
-        ...item,
-        name: item.name ?? "",
-        duration_unit:
-          item.duration_unit || processedValues.unit_time || "Month",
-        duration_value:
-          item.duration_unit === "NoLimit"
-            ? 0
-            : toNumber(item.duration_value) || 1,
-        price:
-          toNumber(item.price) ?? toNumber(processedValues.unit_price) ?? 0,
-        original_price: toNumber(item.original_price) ?? 0,
-        inventory: toNumber(item.inventory) ?? -1,
-        show: item.show ?? true,
-        sell: item.sell ?? true,
-        is_default: item.is_default ?? false,
-        sort: toNumber(item.sort) ?? 0,
-      }))
+    ? processedValues.price_options
+        .filter((item: Record<string, any>) => item.show !== false || item.sell !== false)
+        .map((item: Record<string, any>) => ({
+          ...item,
+          code: item.code ?? "",
+          type: item.type || item.option_type || "duration",
+          name: item.name ?? "",
+          version: toNumber(item.version) ?? 0,
+          created_at: item.created_at ?? item.createdAt,
+          updated_at: item.updated_at ?? item.updatedAt,
+          duration_unit:
+            item.duration_unit || processedValues.unit_time || "Month",
+          duration_value:
+            item.duration_unit === "NoLimit"
+              ? 0
+              : toNumber(item.duration_value) || 1,
+          price:
+            toNumber(item.price) ?? toNumber(processedValues.unit_price) ?? 0,
+          original_price: toNumber(item.original_price) ?? 0,
+          inventory: toNumber(item.inventory) ?? -1,
+          show: item.show ?? true,
+          sell: item.sell ?? true,
+          is_default: item.is_default ?? false,
+          sort: toNumber(item.sort) ?? 0,
+        }))
     : [];
   if (priceOptions.length === 0) {
     priceOptions.push({
+      code: "monthly",
+      type: "duration",
       name: "",
+      version: 0,
+      created_at: 0,
+      updated_at: 0,
       duration_unit: processedValues.unit_time || "Month",
       duration_value: processedValues.unit_time === "NoLimit" ? 0 : 1,
       price: toNumber(processedValues.unit_price) ?? 0,
@@ -365,23 +377,40 @@ function normalizePriceOptionsForSubmit(
   const source = Array.isArray(items) && items.length > 0 ? items : [];
   const normalized = source.map((item, index) => {
     const durationUnit = item.duration_unit || fallback.unit_time || "Month";
+    const optionType = item.type || item.option_type || "duration";
+    const show = item.show ?? true;
+    const sell = item.sell ?? true;
+    const isArchived = show === false && sell === false;
     return {
       ...item,
-      name: "",
+      code:
+        item.code ||
+        defaultPriceOptionCode(
+          optionType,
+          durationUnit,
+          durationUnit === "NoLimit" ? 0 : toNumber(item.duration_value) || 1,
+          index
+        ),
+      type: optionType,
+      name: String(item.name || ""),
       duration_unit: durationUnit,
       duration_value:
         durationUnit === "NoLimit" ? 0 : toNumber(item.duration_value) || 1,
       price: toNumber(item.price) ?? 0,
       original_price: toNumber(item.original_price) ?? 0,
-      inventory: -1,
-      show: true,
-      sell: true,
-      is_default: item.is_default ?? index === 0,
+      inventory: toNumber(item.inventory) ?? -1,
+      show,
+      sell,
+      is_default: isArchived ? false : (item.is_default ?? index === 0),
       sort: toNumber(item.sort) ?? source.length - index,
+      version: toNumber(item.version) ?? 0,
     };
   });
-  if (!normalized.some((item) => item.is_default) && normalized[0]) {
-    normalized[0].is_default = true;
+  if (!normalized.some((item) => item.is_default)) {
+    const firstVisible = normalized.find(
+      (item) => !(item.show === false && item.sell === false)
+    );
+    if (firstVisible) firstVisible.is_default = true;
   }
   return normalized;
 }
@@ -442,6 +471,8 @@ function getFirstValidationMessage(error: unknown): string | undefined {
 
 type PriceOptionEditorItem = {
   id?: string | number;
+  code: string;
+  type: string;
   name: string;
   duration_unit: string;
   duration_value: number;
@@ -452,8 +483,91 @@ type PriceOptionEditorItem = {
   sell: boolean;
   is_default: boolean;
   sort: number;
+  version: number;
   [key: string]: unknown;
 };
+
+const QUICK_PRICE_PERIODS = [
+  {
+    code: "monthly",
+    labelKey: "monthlyPrice",
+    fallbackLabel: "Monthly",
+    duration_unit: "Month",
+    duration_value: 1,
+    sort: 600,
+  },
+  {
+    code: "quarterly",
+    labelKey: "quarterlyPrice",
+    fallbackLabel: "Quarterly",
+    duration_unit: "Month",
+    duration_value: 3,
+    sort: 500,
+  },
+  {
+    code: "half_year",
+    labelKey: "halfYearPrice",
+    fallbackLabel: "Half Year",
+    duration_unit: "Month",
+    duration_value: 6,
+    sort: 400,
+  },
+  {
+    code: "yearly",
+    labelKey: "yearlyPrice",
+    fallbackLabel: "Yearly",
+    duration_unit: "Year",
+    duration_value: 1,
+    sort: 300,
+  },
+  {
+    code: "two_year",
+    labelKey: "twoYearPrice",
+    fallbackLabel: "Two Years",
+    duration_unit: "Year",
+    duration_value: 2,
+    sort: 200,
+  },
+  {
+    code: "three_year",
+    labelKey: "threeYearPrice",
+    fallbackLabel: "Three Years",
+    duration_unit: "Year",
+    duration_value: 3,
+    sort: 100,
+  },
+] as const;
+
+type QuickPricePeriod = (typeof QUICK_PRICE_PERIODS)[number];
+
+function defaultPriceOptionCode(
+  optionType: string,
+  durationUnit: string,
+  durationValue: number,
+  index = 0
+) {
+  const type = optionType || "duration";
+  if (type !== "duration") return `${type}_${index + 1}`;
+  if (durationUnit === "NoLimit") return "duration_no_limit";
+  return `duration_${durationValue || 1}_${String(durationUnit || "Month").toLowerCase()}`;
+}
+
+function isQuickPeriodOption(
+  item: Partial<PriceOptionEditorItem>,
+  period: QuickPricePeriod
+) {
+  if (item.type && item.type !== "duration") return false;
+  if (item.code === period.code) return true;
+  return (
+    !item.code?.startsWith("custom_") &&
+    item.duration_unit === period.duration_unit &&
+    Number(item.duration_value || 0) === period.duration_value
+  );
+}
+
+function isArchivedPriceOption(item: Partial<PriceOptionEditorItem>) {
+  return item.show === false && item.sell === false;
+}
 
 function getDiscountLabel(item: PriceOptionEditorItem) {
   if (!(item.original_price > 0)) return "-";
@@ -483,6 +597,8 @@ function PriceOptionsEditor({
   ];
 
   const createDefaultOption = (index: number): PriceOptionEditorItem => ({
+    code: `custom_${index + 1}`,
+    type: "duration",
     name: "",
     duration_unit: "Month",
     duration_value: 1,
@@ -493,24 +609,45 @@ function PriceOptionsEditor({
     sell: true,
     is_default: index === 0,
     sort: (index + 1) * 100,
+    version: 0,
   });
 
   const normalizeItems = (items: Partial<PriceOptionEditorItem>[]) => {
+    const seenCodes = new Set<string>();
     const normalized: PriceOptionEditorItem[] = items.map((item, index) => {
       const durationUnit = item.duration_unit || "Month";
+      const optionType = item.type || "duration";
+      const baseCode =
+        String(item.code || "").trim() ||
+        defaultPriceOptionCode(
+          optionType,
+          durationUnit,
+          durationUnit === "NoLimit" ? 0 : toNumber(item.duration_value) || 1,
+          index
+        );
+      let code = baseCode;
+      let duplicateIndex = 2;
+      while (seenCodes.has(code)) {
+        code = `${baseCode}_${duplicateIndex}`;
+        duplicateIndex += 1;
+      }
+      seenCodes.add(code);
       return {
         ...item,
-        name: "",
+        code,
+        type: optionType,
+        name: String(item.name || ""),
         duration_unit: durationUnit,
         duration_value:
           durationUnit === "NoLimit" ? 0 : toNumber(item.duration_value) || 1,
         price: toNumber(item.price) ?? 0,
         original_price: toNumber(item.original_price) ?? 0,
-        inventory: -1,
-        show: true,
-        sell: true,
+        inventory: toNumber(item.inventory) ?? -1,
+        show: item.show ?? true,
+        sell: item.sell ?? true,
         is_default: item.is_default ?? index === 0,
         sort: toNumber(item.sort) ?? (index + 1) * 100,
+        version: toNumber(item.version) ?? 0,
       };
     });
 
@@ -520,11 +657,27 @@ function PriceOptionsEditor({
     return normalized;
   };
 
-  const safeValue =
+  const normalizedValue =
     value.length > 0 ? normalizeItems(value) : [createDefaultOption(0)];
+  const archivedValue = normalizedValue.filter(isArchivedPriceOption);
+  const visibleValue = normalizedValue.filter(
+    (item) => !isArchivedPriceOption(item)
+  );
+  const safeValue =
+    visibleValue.length > 0 ? visibleValue : [createDefaultOption(0)];
 
   const emitChange = (items: Partial<PriceOptionEditorItem>[]) => {
-    onChange(normalizeItems(items));
+    const normalizedItems = normalizeItems(items);
+    const nextIDs = new Set(
+      normalizedItems
+        .map((item) => item.id)
+        .filter((id): id is string | number => id !== undefined && id !== null)
+        .map((id) => String(id))
+    );
+    const retainedArchived = archivedValue.filter(
+      (item) => !item.id || !nextIDs.has(String(item.id))
+    );
+    onChange([...normalizedItems, ...retainedArchived]);
   };
 
   const updateItem = (index: number, patch: Partial<PriceOptionEditorItem>) => {
@@ -537,162 +690,373 @@ function PriceOptionsEditor({
     emitChange(nextItems);
   };
 
+  const quickIndex = (period: QuickPricePeriod) =>
+    safeValue.findIndex((item) => isQuickPeriodOption(item, period));
+
+  const quickOption = (period: QuickPricePeriod) => {
+    const index = quickIndex(period);
+    return index >= 0 ? safeValue[index] : undefined;
+  };
+
+  const updateQuickOption = (
+    period: QuickPricePeriod,
+    patch: Partial<PriceOptionEditorItem> = {}
+  ) => {
+    const index = quickIndex(period);
+    const archivedOption = archivedValue.find((item) =>
+      isQuickPeriodOption(item, period)
+    );
+    const base: PriceOptionEditorItem =
+      index >= 0
+        ? safeValue[index]!
+        : archivedOption
+          ? archivedOption
+        : {
+            code: period.code,
+            type: "duration",
+            name: t(`form.${period.labelKey}`, period.fallbackLabel),
+            duration_unit: period.duration_unit,
+            duration_value: period.duration_value,
+            price: 0,
+            original_price: 0,
+            inventory: -1,
+            show: true,
+            sell: true,
+            is_default: false,
+            sort: period.sort,
+            version: 0,
+          };
+    const nextOption = {
+      ...base,
+      code: period.code,
+      type: "duration",
+      duration_unit: period.duration_unit,
+      duration_value: period.duration_value,
+      sort: period.sort,
+      show: true,
+      sell: true,
+      ...patch,
+    };
+    const nextItems =
+      index >= 0
+        ? safeValue.map((item, itemIndex) =>
+            itemIndex === index ? nextOption : item
+          )
+        : [...safeValue, nextOption];
+    emitChange(
+      nextOption.is_default
+        ? nextItems.map((item) => ({
+            ...item,
+            is_default: item.code === nextOption.code,
+          }))
+        : nextItems
+    );
+  };
+
+  const removeQuickOption = (period: QuickPricePeriod) => {
+    const removed = quickOption(period);
+    const nextItems = safeValue.filter(
+      (item) => !isQuickPeriodOption(item, period)
+    );
+    const archived =
+      removed?.id === undefined || removed.id === null
+        ? undefined
+        : { ...removed, show: false, sell: false, is_default: false };
+    emitChange(archived ? [...nextItems, archived] : nextItems);
+  };
+
   const addOption = () => {
     emitChange([...safeValue, createDefaultOption(safeValue.length)]);
   };
 
   const removeOption = (index: number) => {
+    const removed = safeValue[index];
     const nextItems = safeValue.filter((_, itemIndex) => itemIndex !== index);
-    emitChange(nextItems.length > 0 ? nextItems : [createDefaultOption(0)]);
+    const archived =
+      removed?.id === undefined || removed.id === null
+        ? undefined
+        : { ...removed, show: false, sell: false, is_default: false };
+    emitChange(archived ? [...nextItems, archived] : nextItems);
   };
 
   return (
-    <div className="space-y-2">
-      <div className="hidden grid-cols-[minmax(220px,1.25fr)_minmax(160px,1fr)_minmax(160px,1fr)_80px_88px_44px] gap-3 px-1 text-muted-foreground text-xs lg:grid">
-        <span>{t("form.duration")}</span>
-        <span>{t("form.originalPrice")}</span>
-        <span>{t("form.price")}</span>
-        <span>{t("form.discountRate")}</span>
-        <span>{t("form.recommended")}</span>
-        <span />
-      </div>
-      <div className="space-y-2">
-        {safeValue.map((item, index) => (
-          <div
-            className="grid gap-3 rounded-lg border bg-card p-3 lg:grid-cols-[minmax(220px,1.25fr)_minmax(160px,1fr)_minmax(160px,1fr)_80px_88px_44px] lg:items-end"
-            key={`${item.id ?? "option"}-${index}`}
-          >
-            <div className="space-y-2">
-              <Label className="lg:hidden">{t("form.duration")}</Label>
-              <div className="grid grid-cols-[1fr_1.2fr] gap-2">
-                <EnhancedInput
-                  disabled={item.duration_unit === "NoLimit"}
-                  min={1}
-                  onValueChange={(durationValue) =>
-                    updateItem(index, {
-                      duration_value:
-                        item.duration_unit === "NoLimit"
-                          ? 0
-                          : toNumber(durationValue) || 1,
-                    })
-                  }
-                  step={1}
-                  type="number"
-                  value={
-                    item.duration_unit === "NoLimit"
-                      ? 0
-                      : toNumber(item.duration_value) || 1
-                  }
-                />
-                <Combobox<string, false>
-                  onChange={(durationUnit) =>
-                    updateItem(index, {
-                      duration_unit: durationUnit,
-                      duration_value:
-                        durationUnit === "NoLimit"
-                          ? 0
-                          : toNumber(item.duration_value) || 1,
-                    })
-                  }
-                  options={durationUnitOptions}
-                  placeholder={t("form.selectUnitTime")}
-                  value={item.duration_unit || "Month"}
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="lg:hidden">{t("form.originalPrice")}</Label>
-              <EnhancedInput
-                formatInput={(inputValue) =>
-                  unitConversion("centsToDollars", inputValue)
-                }
-                formatOutput={(inputValue) =>
-                  unitConversion("dollarsToCents", inputValue)
-                }
-                min={0}
-                onValueChange={(originalPrice) =>
-                  updateItem(index, {
-                    original_price: toNumber(originalPrice) ?? 0,
-                  })
-                }
-                prefix={currencySymbol}
-                step={0.01}
-                type="number"
-                value={item.original_price}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="lg:hidden">{t("form.price")}</Label>
-              <EnhancedInput
-                formatInput={(inputValue) =>
-                  unitConversion("centsToDollars", inputValue)
-                }
-                formatOutput={(inputValue) =>
-                  unitConversion("dollarsToCents", inputValue)
-                }
-                min={0}
-                onValueChange={(price) =>
-                  updateItem(index, { price: toNumber(price) ?? 0 })
-                }
-                prefix={currencySymbol}
-                step={0.01}
-                type="number"
-                value={item.price}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label className="lg:hidden">{t("form.discountRate")}</Label>
-              <div className="flex h-9 items-center rounded-md border bg-muted/40 px-3 text-muted-foreground text-sm">
-                {getDiscountLabel(item)}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="lg:hidden">{t("form.recommended")}</Label>
-              <div className="flex h-9 items-center">
-                <Switch
-                  checked={!!item.is_default}
-                  onCheckedChange={(checked) => {
-                    if (!checked) return;
-                    if (
-                      safeValue.some(
-                        (option, optionIndex) =>
-                          optionIndex !== index && option.is_default
-                      )
-                    ) {
-                      toast.info(t("form.recommendedOptionChanged"));
+    <div className="space-y-4">
+      <div className="rounded-lg border">
+        <div className="hidden grid-cols-[minmax(120px,0.9fr)_minmax(150px,1fr)_minmax(150px,1fr)_80px_88px] gap-3 border-b bg-muted/40 px-3 py-2 text-muted-foreground text-xs lg:grid">
+          <span>{t("form.duration")}</span>
+          <span>{t("form.originalPrice")}</span>
+          <span>{t("form.price")}</span>
+          <span>{t("form.discountRate")}</span>
+          <span>{t("form.recommended")}</span>
+        </div>
+        <div className="divide-y">
+          {QUICK_PRICE_PERIODS.map((period) => {
+            const item = quickOption(period);
+            const enabled = !!item;
+            return (
+              <div
+                className="grid gap-3 p-3 lg:grid-cols-[minmax(120px,0.9fr)_minmax(150px,1fr)_minmax(150px,1fr)_80px_88px] lg:items-end"
+                key={period.code}
+              >
+                <div className="flex h-9 items-center gap-2">
+                  <Checkbox
+                    checked={enabled}
+                    onCheckedChange={(checked) => {
+                      if (checked) {
+                        updateQuickOption(period);
+                      } else {
+                        removeQuickOption(period);
+                      }
+                    }}
+                  />
+                  <span className="font-medium text-sm">
+                    {t(`form.${period.labelKey}`, period.fallbackLabel)}
+                  </span>
+                </div>
+                <div className="space-y-2">
+                  <Label className="lg:hidden">{t("form.originalPrice")}</Label>
+                  <EnhancedInput
+                    disabled={!enabled}
+                    formatInput={(inputValue) =>
+                      unitConversion("centsToDollars", inputValue)
                     }
-                    updateItem(index, { is_default: true });
-                  }}
-                />
+                    formatOutput={(inputValue) =>
+                      unitConversion("dollarsToCents", inputValue)
+                    }
+                    min={0}
+                    onValueChange={(originalPrice) =>
+                      updateQuickOption(period, {
+                        original_price: toNumber(originalPrice) ?? 0,
+                      })
+                    }
+                    prefix={currencySymbol}
+                    step={0.01}
+                    type="number"
+                    value={item?.original_price ?? 0}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="lg:hidden">{t("form.price")}</Label>
+                  <EnhancedInput
+                    disabled={!enabled}
+                    formatInput={(inputValue) =>
+                      unitConversion("centsToDollars", inputValue)
+                    }
+                    formatOutput={(inputValue) =>
+                      unitConversion("dollarsToCents", inputValue)
+                    }
+                    min={0}
+                    onValueChange={(price) =>
+                      updateQuickOption(period, { price: toNumber(price) ?? 0 })
+                    }
+                    prefix={currencySymbol}
+                    step={0.01}
+                    type="number"
+                    value={item?.price ?? 0}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label className="lg:hidden">{t("form.discountRate")}</Label>
+                  <div className="flex h-9 items-center rounded-md border bg-muted/40 px-3 text-muted-foreground text-sm">
+                    {item ? getDiscountLabel(item) : "-"}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label className="lg:hidden">{t("form.recommended")}</Label>
+                  <div className="flex h-9 items-center">
+                    <Switch
+                      checked={!!item?.is_default}
+                      disabled={!enabled}
+                      onCheckedChange={(checked) => {
+                        if (!checked) return;
+                        if (safeValue.some((option) => option.is_default)) {
+                          toast.info(t("form.recommendedOptionChanged"));
+                        }
+                        updateQuickOption(period, { is_default: true });
+                      }}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="flex h-9 items-center justify-end">
-              {safeValue.length > 1 && (
-                <Button
-                  aria-label={t("form.deletePriceOption")}
-                  className="text-destructive"
-                  onClick={() => removeOption(index)}
-                  size="icon"
-                  type="button"
-                  variant="ghost"
-                >
-                  <Trash2Icon className="size-4" />
-                </Button>
-              )}
-            </div>
-          </div>
-        ))}
+            );
+          })}
+        </div>
       </div>
 
-      <Button
-        className="w-full"
-        onClick={addOption}
-        type="button"
-        variant="outline"
-      >
-        <PlusIcon className="size-4" />
-        {t("form.addPriceOption")}
-      </Button>
+      <Accordion collapsible type="single">
+        <AccordionItem value="advanced-price-options">
+          <AccordionTrigger>{t("form.advancedPriceOption")}</AccordionTrigger>
+          <AccordionContent className="space-y-2">
+            <div className="hidden grid-cols-[minmax(220px,1.25fr)_minmax(160px,1fr)_minmax(160px,1fr)_80px_88px_44px] gap-3 px-1 text-muted-foreground text-xs lg:grid">
+              <span>{t("form.duration")}</span>
+              <span>{t("form.originalPrice")}</span>
+              <span>{t("form.price")}</span>
+              <span>{t("form.discountRate")}</span>
+              <span>{t("form.recommended")}</span>
+              <span />
+            </div>
+            <div className="space-y-2">
+              {safeValue.map((item, index) => (
+                <div
+                  className="grid gap-3 rounded-lg border bg-card p-3 lg:grid-cols-[minmax(220px,1.25fr)_minmax(160px,1fr)_minmax(160px,1fr)_80px_88px_44px] lg:items-end"
+                  key={`${item.id ?? item.code}-${index}`}
+                >
+                  <div className="space-y-2">
+                    <Label className="lg:hidden">{t("form.duration")}</Label>
+                    <div className="grid grid-cols-[1fr_1.2fr] gap-2">
+                      <EnhancedInput
+                        disabled={item.duration_unit === "NoLimit"}
+                        min={1}
+                        onValueChange={(durationValue) =>
+                          updateItem(index, {
+                            code: item.code?.startsWith("custom_")
+                              ? item.code
+                              : defaultPriceOptionCode(
+                                  item.type,
+                                  item.duration_unit,
+                                  toNumber(durationValue) || 1,
+                                  index
+                                ),
+                            duration_value:
+                              item.duration_unit === "NoLimit"
+                                ? 0
+                                : toNumber(durationValue) || 1,
+                          })
+                        }
+                        step={1}
+                        type="number"
+                        value={
+                          item.duration_unit === "NoLimit"
+                            ? 0
+                            : toNumber(item.duration_value) || 1
+                        }
+                      />
+                      <Combobox<string, false>
+                        onChange={(durationUnit) =>
+                          updateItem(index, {
+                            code: item.code?.startsWith("custom_")
+                              ? item.code
+                              : defaultPriceOptionCode(
+                                  item.type,
+                                  durationUnit,
+                                  durationUnit === "NoLimit"
+                                    ? 0
+                                    : toNumber(item.duration_value) || 1,
+                                  index
+                                ),
+                            duration_unit: durationUnit,
+                            duration_value:
+                              durationUnit === "NoLimit"
+                                ? 0
+                                : toNumber(item.duration_value) || 1,
+                          })
+                        }
+                        options={durationUnitOptions}
+                        placeholder={t("form.selectUnitTime")}
+                        value={item.duration_unit || "Month"}
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="lg:hidden">
+                      {t("form.originalPrice")}
+                    </Label>
+                    <EnhancedInput
+                      formatInput={(inputValue) =>
+                        unitConversion("centsToDollars", inputValue)
+                      }
+                      formatOutput={(inputValue) =>
+                        unitConversion("dollarsToCents", inputValue)
+                      }
+                      min={0}
+                      onValueChange={(originalPrice) =>
+                        updateItem(index, {
+                          original_price: toNumber(originalPrice) ?? 0,
+                        })
+                      }
+                      prefix={currencySymbol}
+                      step={0.01}
+                      type="number"
+                      value={item.original_price}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="lg:hidden">{t("form.price")}</Label>
+                    <EnhancedInput
+                      formatInput={(inputValue) =>
+                        unitConversion("centsToDollars", inputValue)
+                      }
+                      formatOutput={(inputValue) =>
+                        unitConversion("dollarsToCents", inputValue)
+                      }
+                      min={0}
+                      onValueChange={(price) =>
+                        updateItem(index, { price: toNumber(price) ?? 0 })
+                      }
+                      prefix={currencySymbol}
+                      step={0.01}
+                      type="number"
+                      value={item.price}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="lg:hidden">
+                      {t("form.discountRate")}
+                    </Label>
+                    <div className="flex h-9 items-center rounded-md border bg-muted/40 px-3 text-muted-foreground text-sm">
+                      {getDiscountLabel(item)}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="lg:hidden">{t("form.recommended")}</Label>
+                    <div className="flex h-9 items-center">
+                      <Switch
+                        checked={!!item.is_default}
+                        onCheckedChange={(checked) => {
+                          if (!checked) return;
+                          if (
+                            safeValue.some(
+                              (option, optionIndex) =>
+                                optionIndex !== index && option.is_default
+                            )
+                          ) {
+                            toast.info(t("form.recommendedOptionChanged"));
+                          }
+                          updateItem(index, { is_default: true });
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex h-9 items-center justify-end">
+                    {safeValue.length > 1 && (
+                      <Button
+                        aria-label={t("form.deletePriceOption")}
+                        className="text-destructive"
+                        onClick={() => removeOption(index)}
+                        size="icon"
+                        type="button"
+                        variant="ghost"
+                      >
+                        <Trash2Icon className="size-4" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Button
+              className="w-full"
+              onClick={addOption}
+              type="button"
+              variant="outline"
+            >
+              <PlusIcon className="size-4" />
+              {t("form.addPriceOption")}
+            </Button>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
     </div>
   );
 }
@@ -1249,6 +1613,8 @@ export default function SubscribeForm<T extends Record<string, any>>({
       .array(
         z.object({
           id: z.union([z.string(), z.number()]).optional(),
+          code: z.string().optional(),
+          type: z.string().optional(),
           name: z.string().optional(),
           duration_unit: z.string(),
           duration_value: z.number(),
@@ -1257,9 +1623,10 @@ export default function SubscribeForm<T extends Record<string, any>>({
           inventory: z.number().optional(),
           show: z.boolean().optional(),
           sell: z.boolean().optional(),
-          is_default: z.boolean().optional(),
-          sort: z.number().optional(),
-        })
+	          is_default: z.boolean().optional(),
+	          sort: z.number().optional(),
+	          version: z.number().optional(),
+	        })
       )
       .optional(),
     replacement: z.number().optional(),
