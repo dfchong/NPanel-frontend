@@ -26,21 +26,7 @@ import { Logout } from "./utils/common.ts";
 initializeI18n({
   supportedLngs,
   fallbackLng,
-  ns: [
-    "affiliate",
-    "auth",
-    "components",
-    "dashboard",
-    "document",
-    "layout",
-    "main",
-    "order",
-    "payment",
-    "profile",
-    "subscribe",
-    "ticket",
-    "wallet",
-  ],
+  ns: ["components", "layout"],
 });
 
 window.logout = Logout;

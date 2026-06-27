@@ -39,6 +39,7 @@ import {
 } from "@workspace/ui/composed/pro-list/pro-list";
 import { TicketImagePreview } from "@workspace/ui/composed/ticket-image-preview";
 import { cn } from "@workspace/ui/lib/utils";
+import { uploadImage } from "@workspace/ui/services/upload";
 import {
   createUserTicket,
   createUserTicketFollow,
@@ -46,9 +47,8 @@ import {
   getUserTicketList,
   updateUserTicketStatus,
 } from "@workspace/ui/services/user/ticket";
-import { uploadImage } from "@workspace/ui/services/upload";
 import { formatDate } from "@workspace/ui/utils/formatting";
-import { useEffect, useRef, useState } from "react";
+import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -56,6 +56,8 @@ function toNumber(value?: number | string | null) {
   const parsed = typeof value === "string" ? Number(value) : Number(value ?? 0);
   return Number.isFinite(parsed) ? parsed : 0;
 }
+
+const ticketStatusOptions = [1, 2, 3, 4];
 
 export default function Ticket() {
   const { t } = useTranslation("ticket");
@@ -91,6 +93,30 @@ export default function Ticket() {
       }
     }, 66);
   }, [ticket?.follow?.length]);
+
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    const file = input.files?.[0];
+    if (!file?.type.startsWith("image/")) {
+      input.value = "";
+      return;
+    }
+
+    try {
+      const imageUrl = await uploadImage(file);
+      await createUserTicketFollow({
+        ticket_id: ticketId,
+        from: "User",
+        type: 2,
+        content: imageUrl,
+      });
+      refetchTicket();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      input.value = "";
+    }
+  };
 
   const ref = useRef<ProListActions>(null);
   const [create, setCreate] =
@@ -167,12 +193,10 @@ export default function Ticket() {
           {
             key: "status",
             placeholder: t("status.0", "Status"),
-            options: [
-              {
-                label: t("close", "Close"),
-                value: "4",
-              },
-            ],
+            options: ticketStatusOptions.map((status) => ({
+              label: statusMap[status] || t(`status.${status}`),
+              value: String(status),
+            })),
           },
         ]}
         renderItem={(item) => (
@@ -357,62 +381,7 @@ export default function Ticket() {
                     accept="image/*"
                     className="hidden"
                     id="picture"
-                    onChange={(event) => {
-                      const file = event.target.files?.[0];
-                      if (file?.type.startsWith("image/")) {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onload = (e) => {
-                          const img = new Image();
-                          img.src = e.target?.result as string;
-                          img.onload = () => {
-                            const canvas = document.createElement("canvas");
-                            const ctx = canvas.getContext("2d");
-
-                            const maxWidth = 300;
-                            const maxHeight = 300;
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width > height) {
-                              if (width > maxWidth) {
-                                height = Math.round(
-                                  (maxWidth / width) * height
-                                );
-                                width = maxWidth;
-                              }
-                            } else if (height > maxHeight) {
-                              width = Math.round((maxHeight / height) * width);
-                              height = maxHeight;
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-                            ctx?.drawImage(img, 0, 0, width, height);
-
-                            canvas.toBlob(
-                              async (blob) => {
-                                if (!blob) return;
-                                try {
-                                  const imageUrl = await uploadImage(blob);
-                                  await createUserTicketFollow({
-                                    ticket_id: ticketId,
-                                    from: "User",
-                                    type: 2,
-                                    content: imageUrl,
-                                  });
-                                  refetchTicket();
-                                } catch (error) {
-                                  console.error(error);
-                                }
-                              },
-                              "image/webp",
-                              0.8
-                            );
-                          };
-                        };
-                      }
-                    }}
+                    onChange={handleImageUpload}
                     type="file"
                   />
                 </Button>

@@ -27,32 +27,7 @@ import { Logout } from "./utils/common.ts";
 const i18n = initializeI18n({
   supportedLngs,
   fallbackLng,
-  ns: [
-    "ads",
-    "announcement",
-    "auth-control",
-    "auth",
-    "components",
-    "coupon",
-    "dashboard",
-    "document",
-    "group",
-    "log",
-    "marketing",
-    "menu",
-    "nodes",
-    "order",
-    "payment",
-    "product",
-    "redemption",
-    "servers",
-    "subscribe",
-    "system",
-    "ticket",
-    "tool",
-    "translation",
-    "user",
-  ],
+  ns: ["components", "menu"],
 });
 
 window.logout = Logout;

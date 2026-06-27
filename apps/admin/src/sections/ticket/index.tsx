@@ -25,13 +25,14 @@ import {
   updateTicketStatus,
 } from "@workspace/ui/services/admin/ticket";
 import { uploadImage } from "@workspace/ui/services/upload";
-import { useEffect, useRef, useState } from "react";
+import { type ChangeEvent, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { formatDate } from "@/utils/common";
 import { UserDetail } from "../user/user-detail";
 
 const toNumber = (value: unknown) => Number(value ?? 0);
+const ticketStatusOptions = [1, 2, 3, 4];
 
 export default function Page() {
   const { t } = useTranslation("ticket");
@@ -70,6 +71,30 @@ export default function Page() {
       }
     }, 66);
   }, [ticket?.follow?.length]);
+
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const input = event.currentTarget;
+    const file = input.files?.[0];
+    if (!file?.type.startsWith("image/")) {
+      input.value = "";
+      return;
+    }
+
+    try {
+      const imageUrl = await uploadImage(file);
+      await createTicketFollow({
+        ticket_id: ticketId,
+        from: "System",
+        type: 2,
+        content: imageUrl,
+      });
+      refetchTicket();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      input.value = "";
+    }
+  };
 
   const ref = useRef<ProTableActions>(null);
   return (
@@ -160,12 +185,10 @@ export default function Page() {
           {
             key: "status",
             placeholder: t("status.0", "Status"),
-            options: [
-              {
-                label: t("close", "Close"),
-                value: "4",
-              },
-            ],
+            options: ticketStatusOptions.map((status) => ({
+              label: t(`status.${status}`),
+              value: String(status),
+            })),
           },
         ]}
         request={async (pagination, filters) => {
@@ -270,62 +293,7 @@ export default function Page() {
                     accept="image/*"
                     className="hidden"
                     id="picture"
-                    onChange={(event) => {
-                      const file = event.target.files?.[0];
-                      if (file?.type.startsWith("image/")) {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(file);
-                        reader.onload = (e) => {
-                          const img = new Image();
-                          img.src = e.target?.result as string;
-                          img.onload = () => {
-                            const canvas = document.createElement("canvas");
-                            const ctx = canvas.getContext("2d");
-
-                            const maxWidth = 300;
-                            const maxHeight = 300;
-                            let width = img.width;
-                            let height = img.height;
-
-                            if (width > height) {
-                              if (width > maxWidth) {
-                                height = Math.round(
-                                  (maxWidth / width) * height
-                                );
-                                width = maxWidth;
-                              }
-                            } else if (height > maxHeight) {
-                              width = Math.round((maxHeight / height) * width);
-                              height = maxHeight;
-                            }
-
-                            canvas.width = width;
-                            canvas.height = height;
-                            ctx?.drawImage(img, 0, 0, width, height);
-
-                            canvas.toBlob(
-                              async (blob) => {
-                                if (!blob) return;
-                                try {
-                                  const imageUrl = await uploadImage(blob);
-                                  await createTicketFollow({
-                                    ticket_id: ticketId,
-                                    from: "System",
-                                    type: 2,
-                                    content: imageUrl,
-                                  });
-                                  refetchTicket();
-                                } catch (error) {
-                                  console.error(error);
-                                }
-                              },
-                              "image/webp",
-                              0.8
-                            );
-                          };
-                        };
-                      }
-                    }}
+                    onChange={handleImageUpload}
                     type="file"
                   />
                 </Button>
