@@ -1,0 +1,49 @@
+{
+  "balanceRecharge": "Nạp lại số dư",
+  "cancel": "Hủy bỏ",
+  "createdAt": "Được tạo tại",
+  "detail": "Chi tiết",
+  "goToPayment": "Đi tới Thanh toán",
+  "checkoutFailed": "Kiểm tra thanh toán không thành công, vui lòng thử lại sau.",
+  "insufficientBalance": {
+    "available": "Số dư khả dụng",
+    "close": "Đóng",
+    "description": "Số dư của bạn không đủ để hoàn thành khoản thanh toán này. Vui lòng nạp tiền và thử lại.",
+    "recharge": "Đi tới Nạp tiền",
+    "required": "Số tiền yêu cầu",
+    "title": "Số dư không đủ"
+  },
+  "name": "Tên sản phẩm",
+  "orderClosed": "Lệnh đã đóng",
+  "orderList": "Danh sách đặt hàng",
+  "orderNo": "Số thứ tự",
+  "orderNumber": "Số thứ tự",
+  "payment": "Thanh toán",
+  "paymentAmount": "Số tiền",
+  "paymentMethod": "Phương thức thanh toán",
+  "paymentSuccess": "Thanh toán thành công",
+  "productList": "Danh sách sản phẩm",
+  "rechargeAmount": "Số tiền nạp",
+  "resetPrice": "Đặt lại giá",
+  "resetTraffic": "Đặt lại lưu lượng truy cập",
+  "scanToPay": "Quét để thanh toán",
+  "status": {
+    "0": "Trạng thái",
+    "1": "Đang chờ xử lý",
+    "2": "Đã trả tiền",
+    "3": "Đã hủy",
+    "4": "Đã đóng",
+    "5": "Đã hoàn thành"
+  },
+  "subscribeNow": "Đăng ký ngay",
+  "timeExpired": "Thời gian đã hết hạn",
+  "type": {
+    "0": "loại",
+    "1": "Mua mới",
+    "2": "Gia hạn",
+    "3": "Đặt lại lưu lượng truy cập",
+    "4": "nạp tiền"
+  },
+  "viewDocument": "Xem tài liệu",
+  "waitingForPayment": "Đang chờ thanh toán"
+}

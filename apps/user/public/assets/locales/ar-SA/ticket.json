@@ -1,0 +1,26 @@
+{
+  "cancel": "إلغاء",
+  "check": "تحقق",
+  "close": "إغلاق",
+  "closeSuccess": "إغلاق النجاح",
+  "closeWarning": "هل أنت متأكد أنك تريد إغلاق هذه التذكرة؟",
+  "confirm": "تأكيد",
+  "confirmClose": "تأكيد الإغلاق",
+  "createSuccess": "خلق النجاح",
+  "createTicket": "إنشاء تذكرة",
+  "createTicketDescription": "إنشاء وصف التذكرة",
+  "description": "الوصف",
+  "inputPlaceholder": "العنصر النائب للإدخال",
+  "reply": "رد",
+  "status": {
+    "0": "الحالة",
+    "1": "في انتظار الرد",
+    "2": "في انتظار المتابعة",
+    "3": "تم الحل",
+    "4": "مغلق"
+  },
+  "submit": "إرسال",
+  "ticketList": "قائمة التذاكر",
+  "title": "العنوان",
+  "updatedAt": "تم التحديث في"
+}

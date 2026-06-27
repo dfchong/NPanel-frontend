@@ -1,0 +1,16 @@
+{
+  "title": "آمار ترافیک",
+  "selectSubscription": "اشتراک را انتخاب کنید",
+  "days7": "7 روز",
+  "days30": "30 روز",
+  "totalTraffic": "کل ترافیک",
+  "uploadTraffic": "بارگذاری ترافیک",
+  "downloadTraffic": "دانلود ترافیک",
+  "trafficTrend": "روند ترافیک",
+  "trafficRatio": "نسبت آپلود/دانلود",
+  "upload": "آپلود کنید",
+  "download": "دانلود کنید",
+  "noData": "هیچ داده ترافیکی موجود نیست",
+  "date": "تاریخ",
+  "traffic": "ترافیک (MB)"
+}

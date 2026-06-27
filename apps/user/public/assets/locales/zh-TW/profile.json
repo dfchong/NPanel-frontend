@@ -1,0 +1,31 @@
+{
+  "accountSettings": {
+    "accountSettings": "帳戶設定",
+    "newPassword": "新密碼",
+    "passwordMismatch": "密碼不匹配",
+    "repeatNewPassword": "重複新密碼",
+    "updatePassword": "更新密碼",
+    "updateSuccess": "密碼更新成功"
+  },
+  "notify": {
+    "balanceChange": "餘額變動通知",
+    "finance": "財務通知",
+    "login": "登入通知",
+    "notificationSettings": "通知設定",
+    "save": "儲存",
+    "subscribe": "訂閱通知",
+    "updateSuccess": "通知設定更新成功"
+  },
+  "thirdParty": {
+    "bind": "綁定",
+    "bindFailed": "綁定失敗",
+    "bindMobile": "綁定手機",
+    "bindSuccess": "綁定成功",
+    "confirm": "確認",
+    "save": "儲存",
+    "title": "第三方帳戶",
+    "unbind": "解綁",
+    "update": "更新",
+    "updateSuccess": "更新成功"
+  }
+}

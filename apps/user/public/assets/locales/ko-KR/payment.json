@@ -1,0 +1,27 @@
+{
+  "stripe": {
+    "card": {
+      "loading": "Stripe 로드 중..."
+    },
+    "card_name": "카드 소지자 이름",
+    "card_number": "카드번호",
+    "element_error": "모든 카드 정보를 입력해주세요.",
+    "error": "오류가 발생했습니다",
+    "expiry_date": "만료일",
+    "loading": "Stripe 로드 중...",
+    "name_placeholder": "카드에 적힌 이름",
+    "name_required": "카드 소지자 이름이 필요합니다",
+    "pay_button": "지금 결제",
+    "payment_failed": "결제 실패",
+    "processing": "결제 처리 중...",
+    "processing_button": "처리 중...",
+    "qrcode": {
+      "alipay": "결제하려면 Alipay로 스캔하세요.",
+      "wechat_pay": "결제하려면 WeChat으로 스캔하세요."
+    },
+    "secure_notice": "결제는 안전하고 암호화되어 있습니다.",
+    "security_code": "CVC",
+    "success_message": "구매해주셔서 감사합니다. 귀하의 주문이 처리되었습니다.",
+    "success_title": "결제 성공"
+  }
+}

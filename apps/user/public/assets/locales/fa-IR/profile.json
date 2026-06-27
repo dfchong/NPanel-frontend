@@ -1,0 +1,31 @@
+{
+  "accountSettings": {
+    "accountSettings": "تنظیمات حساب",
+    "newPassword": "رمز عبور جدید",
+    "passwordMismatch": "گذرواژه ها مطابقت ندارند",
+    "repeatNewPassword": "رمز عبور جدید را تکرار کنید",
+    "updatePassword": "رمز عبور را به روز کنید",
+    "updateSuccess": "رمز عبور با موفقیت به روز شد"
+  },
+  "notify": {
+    "balanceChange": "اعلان تغییر موجودی",
+    "finance": "اطلاعیه مالی",
+    "login": "اعلان ورود",
+    "notificationSettings": "تنظیمات اعلان",
+    "save": "ذخیره کنید",
+    "subscribe": "اطلاعیه اشتراک",
+    "updateSuccess": "تنظیمات اعلان با موفقیت به روز شد"
+  },
+  "thirdParty": {
+    "bind": "thirdParty.bind",
+    "bindFailed": "اتصال ناموفق بود",
+    "bindMobile": "Bind Mobile",
+    "bindSuccess": "پیوند با موفقیت",
+    "confirm": "تایید کنید",
+    "save": "thirdParty.save",
+    "title": "حساب های شخص ثالث",
+    "unbind": "thirdParty.unbind",
+    "update": "thirdParty.update",
+    "updateSuccess": "به روز رسانی با موفقیت"
+  }
+}

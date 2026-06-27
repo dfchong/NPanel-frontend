@@ -1,0 +1,31 @@
+{
+  "accountSettings": {
+    "accountSettings": "Настройки учетной записи",
+    "newPassword": "Новый пароль",
+    "passwordMismatch": "Пароли не совпадают",
+    "repeatNewPassword": "Повторите новый пароль",
+    "updatePassword": "Обновить пароль",
+    "updateSuccess": "Пароль успешно обновлен"
+  },
+  "notify": {
+    "balanceChange": "Уведомление об изменении баланса",
+    "finance": "Финансовое уведомление",
+    "login": "Уведомление о входе",
+    "notificationSettings": "Настройки уведомлений",
+    "save": "Сохранить",
+    "subscribe": "Подписаться на уведомление",
+    "updateSuccess": "Настройки уведомлений успешно обновлены."
+  },
+  "thirdParty": {
+    "bind": "третья сторона.bind",
+    "bindFailed": "Привязка не удалась",
+    "bindMobile": "Привязать мобильный телефон",
+    "bindSuccess": "Привязать успешно",
+    "confirm": "Подтвердить",
+    "save": "третья сторона.save",
+    "title": "Сторонние аккаунты",
+    "unbind": "третья сторона.unbind",
+    "update": "третья сторона.обновление",
+    "updateSuccess": "Обновить успешно"
+  }
+}

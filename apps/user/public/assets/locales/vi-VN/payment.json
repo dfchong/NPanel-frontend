@@ -1,0 +1,27 @@
+{
+  "stripe": {
+    "card": {
+      "loading": "Đang tải Stripe..."
+    },
+    "card_name": "Tên chủ thẻ",
+    "card_number": "Số thẻ",
+    "element_error": "Vui lòng điền đầy đủ thông tin thẻ",
+    "error": "Đã xảy ra lỗi",
+    "expiry_date": "Ngày hết hạn",
+    "loading": "Đang tải Stripe...",
+    "name_placeholder": "Tên đầy đủ trên thẻ",
+    "name_required": "Tên chủ thẻ là bắt buộc",
+    "pay_button": "Thanh toán ngay",
+    "payment_failed": "Thanh toán không thành công",
+    "processing": "Đang xử lý thanh toán...",
+    "processing_button": "Đang xử lý...",
+    "qrcode": {
+      "alipay": "Quét bằng Alipay để thanh toán",
+      "wechat_pay": "Quét bằng WeChat để thanh toán"
+    },
+    "secure_notice": "Thanh toán được bảo mật và mã hóa",
+    "security_code": "CVC",
+    "success_message": "Cảm ơn bạn đã mua hàng. Đơn đặt hàng của bạn đã được xử lý.",
+    "success_title": "Thanh toán thành công"
+  }
+}

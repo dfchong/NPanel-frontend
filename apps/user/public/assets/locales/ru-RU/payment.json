@@ -1,0 +1,27 @@
+{
+  "stripe": {
+    "card": {
+      "loading": "Загрузка Stripe..."
+    },
+    "card_name": "Имя владельца карты",
+    "card_number": "Номер карты",
+    "element_error": "Пожалуйста, заполните все данные карты",
+    "error": "Произошла ошибка",
+    "expiry_date": "Дата истечения срока действия",
+    "loading": "Загрузка Stripe...",
+    "name_placeholder": "Полное имя на карте",
+    "name_required": "Требуется имя владельца карты.",
+    "pay_button": "Оплатить сейчас",
+    "payment_failed": "Платеж не выполнен",
+    "processing": "Обработка платежа...",
+    "processing_button": "Обработка...",
+    "qrcode": {
+      "alipay": "Отсканируйте с помощью Alipay, чтобы оплатить",
+      "wechat_pay": "Сканируйте с помощью WeChat, чтобы оплатить"
+    },
+    "secure_notice": "Платежи безопасны и зашифрованы",
+    "security_code": "CVC",
+    "success_message": "Благодарим вас за покупку. Ваш заказ обработан.",
+    "success_title": "Платеж успешен"
+  }
+}

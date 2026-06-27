@@ -1,0 +1,49 @@
+{
+  "balanceRecharge": "バランスリチャージ",
+  "cancel": "キャンセル",
+  "createdAt": "作成日",
+  "detail": "詳細",
+  "goToPayment": "お支払いに移動",
+  "checkoutFailed": "支払いチェックアウトに失敗しました。後でもう一度お試しください。",
+  "insufficientBalance": {
+    "available": "利用可能残高",
+    "close": "閉じる",
+    "description": "このお支払いを完了するには残高が不足しています。充電してもう一度お試しください。",
+    "recharge": "リチャージに進む",
+    "required": "必要量",
+    "title": "残高不足"
+  },
+  "name": "製品名",
+  "orderClosed": "注文は終了しました",
+  "orderList": "注文リスト",
+  "orderNo": "注文番号",
+  "orderNumber": "注文番号",
+  "payment": "お支払い",
+  "paymentAmount": "金額",
+  "paymentMethod": "お支払い方法",
+  "paymentSuccess": "支払いが成功しました",
+  "productList": "製品一覧",
+  "rechargeAmount": "リチャージ金額",
+  "resetPrice": "価格をリセット",
+  "resetTraffic": "トラフィックをリセットする",
+  "scanToPay": "スキャンして支払う",
+  "status": {
+    "0": "ステータス",
+    "1": "保留中",
+    "2": "有料",
+    "3": "キャンセルされました",
+    "4": "閉店",
+    "5": "完了"
+  },
+  "subscribeNow": "今すぐ購読する",
+  "timeExpired": "期限切れ",
+  "type": {
+    "0": "種類",
+    "1": "新規購入",
+    "2": "リニューアル",
+    "3": "トラフィックをリセットする",
+    "4": "リチャージ"
+  },
+  "viewDocument": "ドキュメントを見る",
+  "waitingForPayment": "支払いを待っています"
+}
