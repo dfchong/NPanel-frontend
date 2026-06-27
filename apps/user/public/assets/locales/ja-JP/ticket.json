@@ -1,0 +1,26 @@
+{
+  "cancel": "キャンセル",
+  "check": "チェックする",
+  "close": "閉じる",
+  "closeSuccess": "成功を閉じる",
+  "closeWarning": "このチケットを閉じてもよろしいですか?",
+  "confirm": "確認する",
+  "confirmClose": "閉じるの確認",
+  "createSuccess": "成功を生み出す",
+  "createTicket": "チケットの作成",
+  "createTicketDescription": "チケットの説明の作成",
+  "description": "説明",
+  "inputPlaceholder": "入力プレースホルダー",
+  "reply": "返信",
+  "status": {
+    "0": "ステータス",
+    "1": "返信保留中",
+    "2": "フォローアップ保留中",
+    "3": "解決済み",
+    "4": "閉店"
+  },
+  "submit": "送信する",
+  "ticketList": "チケット一覧",
+  "title": "タイトル",
+  "updatedAt": "更新日"
+}

@@ -214,12 +214,22 @@ export default function SubscribeTable() {
                   updated_at: _updated_at,
                   created_at: _created_at,
                   ...params
-                } = row;
-                await createSubscribe({
-                  ...params,
-                  show: false,
-                  sell: false,
-                } as API.CreateSubscribeRequest);
+	                } = row;
+	                await createSubscribe({
+	                  ...params,
+	                  price_options: row.price_options?.map(
+	                    ({
+	                      id: _optionId,
+	                      subscribe_id: _optionSubscribeID,
+	                      version: _optionVersion,
+	                      created_at: _optionCreatedAt,
+	                      updated_at: _optionUpdatedAt,
+	                      ...option
+	                    }) => option
+	                  ),
+	                  show: false,
+	                  sell: false,
+	                } as API.CreateSubscribeRequest);
                 toast.success(t("copySuccess"));
                 ref.current?.refresh();
                 fetchSubscribes();
@@ -312,7 +322,9 @@ export default function SubscribeTable() {
           accessorKey: "unit_price",
           header: t("unitPrice"),
           cell: ({ row }) => {
-            const options = row.original.price_options || [];
+            const options = (row.original.price_options || []).filter(
+              (item) => item.show !== false || item.sell !== false
+            );
             const option =
               options.find((item) => item.is_default) || options[0];
             const durationUnit = option?.duration_unit || row.original.unit_time;

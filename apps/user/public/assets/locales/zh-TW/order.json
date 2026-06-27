@@ -1,0 +1,49 @@
+{
+  "balanceRecharge": "餘額儲值",
+  "cancel": "取消",
+  "createdAt": "創建時間",
+  "detail": "詳情",
+  "goToPayment": "去支付",
+  "checkoutFailed": "支付初始化失敗，請稍後再試。",
+  "insufficientBalance": {
+    "available": "可用餘額",
+    "close": "關閉",
+    "description": "您的帳戶餘額不足，無法完成本次付款。請儲值後再繼續支付。",
+    "recharge": "去儲值",
+    "required": "需要支付",
+    "title": "餘額不足"
+  },
+  "name": "商品名稱",
+  "orderClosed": "訂單已關閉",
+  "orderList": "訂單列表",
+  "orderNo": "訂單編號",
+  "orderNumber": "訂單編號",
+  "payment": "支付",
+  "paymentAmount": "支付金額",
+  "paymentMethod": "支付方式",
+  "paymentSuccess": "支付成功",
+  "productList": "商品列表",
+  "rechargeAmount": "儲值金額",
+  "resetPrice": "重置價格",
+  "resetTraffic": "重置流量",
+  "scanToPay": "掃碼支付",
+  "status": {
+    "0": "狀態",
+    "1": "待支付",
+    "2": "已支付",
+    "3": "已取消",
+    "4": "已關閉",
+    "5": "已完成"
+  },
+  "subscribeNow": "立即訂閱",
+  "timeExpired": "時間已過期",
+  "type": {
+    "0": "類型",
+    "1": "新購",
+    "2": "續費",
+    "3": "重置流量",
+    "4": "儲值"
+  },
+  "viewDocument": "查看文件",
+  "waitingForPayment": "等待支付"
+}

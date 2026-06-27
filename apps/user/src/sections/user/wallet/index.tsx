@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearch } from "@tanstack/react-router";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import {
   ProList,
@@ -20,6 +21,7 @@ function toNumber(value?: number | string | null) {
 
 export default function Wallet() {
   const { t } = useTranslation("wallet");
+  const search = useSearch({ strict: false }) as { recharge?: string };
   const typeMap: Record<number, string> = {
     0: t("type.0", "Type"),
     1: t("type.1", "Recharge"),
@@ -68,7 +70,7 @@ export default function Wallet() {
                   <Display type="currency" value={totalAssets} />
                 </p>
               </div>
-              <Recharge />
+              <Recharge defaultOpen={search.recharge === "1"} />
             </div>
           </div>
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">

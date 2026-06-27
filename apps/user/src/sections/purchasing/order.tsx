@@ -23,9 +23,16 @@ import { addMinutes, format } from "date-fns";
 import { QRCodeCanvas } from "qrcode.react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { Display } from "@/components/display";
 import { SubscribeBilling } from "@/sections/subscribe/billing";
 import { SubscribeDetail } from "@/sections/subscribe/detail";
+import {
+  getCheckoutErrorMessage,
+  InsufficientBalanceDialog,
+  type InsufficientBalanceInfo,
+  parseInsufficientBalanceError,
+} from "@/sections/user/payment/insufficient-balance-dialog";
 import StripePayment from "@/sections/user/payment/stripe";
 import { useGlobalStore } from "@/stores/global";
 import { setAuthorization } from "@/utils/common";
@@ -43,10 +50,15 @@ function toTimestampMs(value?: number | string | null) {
 
 export default function Order() {
   const { t } = useTranslation("order");
-  const { getUserInfo } = useGlobalStore();
+  const { getUserInfo, user } = useGlobalStore();
   const [orderNo, setOrderNo] = useState<string>();
   const [enabled, setEnabled] = useState<boolean>(false);
   const [paymentOpened, setPaymentOpened] = useState<boolean>(false);
+  const [insufficientBalance, setInsufficientBalance] =
+    useState<InsufficientBalanceInfo | null>(null);
+  const [insufficientBalanceOpen, setInsufficientBalanceOpen] =
+    useState<boolean>(false);
+  const [checkoutBlocked, setCheckoutBlocked] = useState<boolean>(false);
   const search = useSearch({ from: "/(main)/purchasing/order/" });
 
   const { data } = useQuery({
@@ -74,13 +86,37 @@ export default function Order() {
   });
 
   const { data: payment } = useQuery({
-    enabled: !!orderNo && toNumber(data?.status) === 1,
+    enabled: !!orderNo && toNumber(data?.status) === 1 && !checkoutBlocked,
     queryKey: ["purchaseCheckout", orderNo],
     queryFn: async () => {
-      const { data } = await purchaseCheckout({
-        orderNo: orderNo || "",
-        returnUrl: window.location.href,
-      });
+      let response: Awaited<ReturnType<typeof purchaseCheckout>>;
+      try {
+        response = await purchaseCheckout(
+          {
+            orderNo: orderNo || "",
+            returnUrl: window.location.href,
+          },
+          { skipErrorHandler: true }
+        );
+      } catch (error) {
+        const balanceError = parseInsufficientBalanceError(error);
+        if (balanceError) {
+          setInsufficientBalance(balanceError);
+          setInsufficientBalanceOpen(true);
+          setCheckoutBlocked(true);
+          await getUserInfo();
+          return null;
+        }
+        toast.error(
+          getCheckoutErrorMessage(error) ||
+            t(
+              "checkoutFailed",
+              "Payment checkout failed, please try again later."
+            )
+        );
+        throw error;
+      }
+      const { data } = response;
       if (
         data.data?.type === "url" &&
         data.data?.checkout_url &&
@@ -91,6 +127,7 @@ export default function Order() {
       }
       return data?.data || null;
     },
+    retry: false,
   });
 
   useEffect(() => {
@@ -98,8 +135,11 @@ export default function Order() {
       setOrderNo(search.order_no);
       setEnabled(true);
       setPaymentOpened(false);
+      setInsufficientBalance(null);
+      setInsufficientBalanceOpen(false);
+      setCheckoutBlocked(false);
     }
-  }, [search]);
+  }, [search.order_no]);
 
   const [countDown, formattedRes] = useCountDown({
     targetDate:
@@ -125,6 +165,12 @@ export default function Order() {
 
   return (
     <main className="container lg:mt-16">
+      <InsufficientBalanceDialog
+        balance={toNumber(user?.balance) + toNumber(user?.gift_amount)}
+        info={insufficientBalance}
+        onOpenChange={setInsufficientBalanceOpen}
+        open={insufficientBalanceOpen && !!insufficientBalance}
+      />
       <div className="grid gap-4 xl:grid-cols-2">
         <Card className="order-2 xl:order-1">
           <CardHeader className="flex flex-row items-start bg-muted/50">

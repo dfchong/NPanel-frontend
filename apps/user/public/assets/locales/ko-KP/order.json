@@ -1,0 +1,49 @@
+{
+  "balanceRecharge": "잔액 충전",
+  "cancel": "취소",
+  "createdAt": "생성 날짜",
+  "detail": "세부정보",
+  "goToPayment": "결제로 이동",
+  "checkoutFailed": "결제 체크아웃에 실패했습니다. 나중에 다시 시도해 주세요.",
+  "insufficientBalance": {
+    "available": "사용 가능한 잔액",
+    "close": "닫기",
+    "description": "잔액이 부족하여 결제를 완료할 수 없습니다. 충전한 후 다시 시도해 주세요.",
+    "recharge": "재충전으로 이동",
+    "required": "필요금액",
+    "title": "잔액 부족"
+  },
+  "name": "제품명",
+  "orderClosed": "주문 마감",
+  "orderList": "주문 목록",
+  "orderNo": "주문 번호",
+  "orderNumber": "주문 번호",
+  "payment": "결제",
+  "paymentAmount": "금액",
+  "paymentMethod": "결제수단",
+  "paymentSuccess": "결제 성공",
+  "productList": "제품 목록",
+  "rechargeAmount": "충전금액",
+  "resetPrice": "가격 재설정",
+  "resetTraffic": "트래픽 재설정",
+  "scanToPay": "스캔하여 결제",
+  "status": {
+    "0": "상태",
+    "1": "보류 중",
+    "2": "유료",
+    "3": "취소됨",
+    "4": "휴무",
+    "5": "완료됨"
+  },
+  "subscribeNow": "지금 구독하세요",
+  "timeExpired": "시간이 만료되었습니다",
+  "type": {
+    "0": "유형",
+    "1": "신규 구매",
+    "2": "갱신",
+    "3": "트래픽 재설정",
+    "4": "재충전"
+  },
+  "viewDocument": "문서 보기",
+  "waitingForPayment": "결제 대기 중"
+}

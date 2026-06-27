@@ -1,0 +1,26 @@
+{
+  "cancel": "취소",
+  "check": "확인",
+  "close": "닫기",
+  "closeSuccess": "성공 마감",
+  "closeWarning": "이 티켓을 종료하시겠습니까?",
+  "confirm": "확인",
+  "confirmClose": "닫기 확인",
+  "createSuccess": "성공을 창조하다",
+  "createTicket": "티켓 생성",
+  "createTicketDescription": "티켓 설명 만들기",
+  "description": "설명",
+  "inputPlaceholder": "입력 자리 표시자",
+  "reply": "답장하다",
+  "status": {
+    "0": "상태",
+    "1": "응답 대기 중",
+    "2": "후속 조치 보류 중",
+    "3": "해결됨",
+    "4": "휴무"
+  },
+  "submit": "제출",
+  "ticketList": "티켓 목록",
+  "title": "제목",
+  "updatedAt": "업데이트 날짜"
+}

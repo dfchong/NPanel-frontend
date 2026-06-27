@@ -1,0 +1,31 @@
+{
+  "accountSettings": {
+    "accountSettings": "계정 설정",
+    "newPassword": "새 비밀번호",
+    "passwordMismatch": "비밀번호가 일치하지 않습니다.",
+    "repeatNewPassword": "새 비밀번호를 반복하세요",
+    "updatePassword": "비밀번호 업데이트",
+    "updateSuccess": "비밀번호가 성공적으로 업데이트되었습니다."
+  },
+  "notify": {
+    "balanceChange": "잔액 변경 알림",
+    "finance": "금융통지",
+    "login": "로그인 알림",
+    "notificationSettings": "알림 설정",
+    "save": "저장",
+    "subscribe": "구독 알림",
+    "updateSuccess": "알림 설정이 업데이트되었습니다."
+  },
+  "thirdParty": {
+    "bind": "thirdParty.bind",
+    "bindFailed": "바인딩 실패",
+    "bindMobile": "모바일 바인딩",
+    "bindSuccess": "바인딩에 성공했습니다.",
+    "confirm": "확인",
+    "save": "thirdParty.save",
+    "title": "제3자 계정",
+    "unbind": "thirdParty.unbind",
+    "update": "thirdParty.업데이트",
+    "updateSuccess": "업데이트가 성공적으로 완료되었습니다."
+  }
+}

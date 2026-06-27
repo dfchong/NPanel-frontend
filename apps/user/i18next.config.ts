@@ -10,7 +10,18 @@ import { defineConfig } from "i18next-cli";
  */
 export default defineConfig({
   // Use supported languages from shared config
-  locales: ["en-US", "zh-CN"],
+  locales: [
+    "en-US",
+    "zh-CN",
+    "zh-TW",
+    "ja-JP",
+    "ko-KR",
+    "ko-KP",
+    "vi-VN",
+    "ru-RU",
+    "fa-IR",
+    "ar-SA",
+  ],
 
   // Extraction configuration
   extract: {

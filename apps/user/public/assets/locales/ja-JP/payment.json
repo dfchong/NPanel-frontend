@@ -1,0 +1,27 @@
+{
+  "stripe": {
+    "card": {
+      "loading": "Stripe を読み込んでいます..."
+    },
+    "card_name": "カード所有者名",
+    "card_number": "カード番号",
+    "element_error": "カードの詳細をすべて入力してください",
+    "error": "エラーが発生しました",
+    "expiry_date": "有効期限",
+    "loading": "Stripe を読み込んでいます...",
+    "name_placeholder": "カード上の氏名",
+    "name_required": "カード所有者の名前は必須です",
+    "pay_button": "今すぐ支払う",
+    "payment_failed": "支払いに失敗しました",
+    "processing": "支払いを処理しています...",
+    "processing_button": "処理中...",
+    "qrcode": {
+      "alipay": "Alipayでスキャンして支払います",
+      "wechat_pay": "WeChatでスキャンして支払います"
+    },
+    "secure_notice": "支払いは安全で暗号化されています",
+    "security_code": "CVC",
+    "success_message": "ご購入いただきありがとうございます。ご注文は処理されました。",
+    "success_title": "支払いが成功しました"
+  }
+}

@@ -45,6 +45,11 @@ export function useNavs() {
             icon: "flat-color-icons:ruler",
           },
           {
+            title: t("Routing Management", "Routing Management"),
+            url: "/dashboard/routing",
+            icon: "flat-color-icons:flow-chart",
+          },
+          {
             title: t("Product Management", "Product Management"),
             url: "/dashboard/product",
             icon: "flat-color-icons:shop",

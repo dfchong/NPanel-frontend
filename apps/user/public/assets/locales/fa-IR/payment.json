@@ -1,0 +1,27 @@
+{
+  "stripe": {
+    "card": {
+      "loading": "در حال بارگیری Stripe..."
+    },
+    "card_name": "نام دارنده کارت",
+    "card_number": "شماره کارت",
+    "element_error": "لطفا تمام مشخصات کارت را وارد کنید",
+    "error": "خطایی رخ داد",
+    "expiry_date": "تاریخ انقضا",
+    "loading": "در حال بارگیری Stripe...",
+    "name_placeholder": "نام کامل روی کارت",
+    "name_required": "نام دارنده کارت الزامی است",
+    "pay_button": "اکنون پرداخت کنید",
+    "payment_failed": "پرداخت انجام نشد",
+    "processing": "در حال پردازش پرداخت...",
+    "processing_button": "در حال پردازش...",
+    "qrcode": {
+      "alipay": "برای پرداخت با Alipay اسکن کنید",
+      "wechat_pay": "برای پرداخت با وی چت اسکن کنید"
+    },
+    "secure_notice": "پرداخت ها امن و رمزگذاری شده است",
+    "security_code": "CVC",
+    "success_message": "از خرید شما سپاسگزاریم سفارش شما پردازش شد",
+    "success_title": "پرداخت با موفقیت انجام شد"
+  }
+}

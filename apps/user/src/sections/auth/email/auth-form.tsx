@@ -23,6 +23,27 @@ type EmailAuthFormProps = {
   onFormTypeChange?: Dispatch<SetStateAction<AuthFormType>>;
 };
 
+function getErrorCode(error: unknown) {
+  const response = error as {
+    data?: { code?: number };
+    response?: { data?: { code?: number } };
+  };
+  return response.data?.code ?? response.response?.data?.code;
+}
+
+function getErrorMessage(error: unknown) {
+  const response = error as {
+    data?: { message?: string; msg?: string };
+    response?: { data?: { message?: string; msg?: string } };
+  };
+  return (
+    response.data?.message ||
+    response.data?.msg ||
+    response.response?.data?.message ||
+    response.response?.data?.msg
+  );
+}
+
 export default function EmailAuthForm({
   formType: controlledFormType,
   onFormTypeChange,
@@ -69,7 +90,9 @@ export default function EmailAuthForm({
             break;
           }
           case "register": {
-            const create = await userRegister(params);
+            const create = await userRegister(params, {
+              skipErrorHandler: true,
+            });
             toast.success(t("register.success", "Registration successful!"));
             onLogin(create.data.data?.token);
             break;
@@ -80,8 +103,25 @@ export default function EmailAuthForm({
             setFormType("login");
             break;
         }
-      } catch (_error) {
-        /* empty */
+      } catch (error) {
+        if (formType === "register") {
+          if (getErrorCode(error) === 20001) {
+            toast.error(
+              t(
+                "register.emailExists",
+                "This email already exists, please try another email."
+              )
+            );
+            return;
+          }
+          toast.error(
+            getErrorMessage(error) ||
+              t(
+                "register.failed",
+                "Registration failed. Please try again later."
+              )
+          );
+        }
       }
     });
   };

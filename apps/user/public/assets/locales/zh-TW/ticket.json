@@ -1,0 +1,26 @@
+{
+  "cancel": "取消",
+  "check": "查看",
+  "close": "關閉",
+  "closeSuccess": "關閉成功",
+  "closeWarning": "您確定要關閉此工單嗎？",
+  "confirm": "確認",
+  "confirmClose": "確認關閉",
+  "createSuccess": "創建成功",
+  "createTicket": "建立工單",
+  "createTicketDescription": "建立工單描述",
+  "description": "描述",
+  "inputPlaceholder": "請輸入內容",
+  "reply": "回覆",
+  "status": {
+    "0": "狀態",
+    "1": "待回覆",
+    "2": "待跟進",
+    "3": "已解決",
+    "4": "已關閉"
+  },
+  "submit": "提交",
+  "ticketList": "工單列表",
+  "title": "標題",
+  "updatedAt": "更新時間"
+}

@@ -1,0 +1,27 @@
+{
+  "stripe": {
+    "card": {
+      "loading": "جارٍ تحميل Stripe..."
+    },
+    "card_name": "اسم حامل البطاقة",
+    "card_number": "رقم البطاقة",
+    "element_error": "يرجى ملء جميع تفاصيل البطاقة",
+    "error": "حدث خطأ",
+    "expiry_date": "تاريخ انتهاء الصلاحية",
+    "loading": "جارٍ تحميل Stripe...",
+    "name_placeholder": "الاسم الكامل على البطاقة",
+    "name_required": "اسم حامل البطاقة مطلوب",
+    "pay_button": "ادفع الآن",
+    "payment_failed": "فشل الدفع",
+    "processing": "جارٍ معالجة الدفع...",
+    "processing_button": "جارٍ المعالجة...",
+    "qrcode": {
+      "alipay": "قم بالمسح باستخدام Alipay للدفع",
+      "wechat_pay": "قم بالمسح باستخدام WeChat للدفع"
+    },
+    "secure_notice": "المدفوعات آمنة ومشفرة",
+    "security_code": "CVC",
+    "success_message": "شكرا لك على الشراء. تمت معالجة طلبك.",
+    "success_title": "تم الدفع بنجاح"
+  }
+}

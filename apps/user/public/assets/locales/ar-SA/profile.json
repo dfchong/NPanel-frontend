@@ -1,0 +1,31 @@
+{
+  "accountSettings": {
+    "accountSettings": "إعدادات الحساب",
+    "newPassword": "كلمة المرور الجديدة",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "repeatNewPassword": "كرر كلمة المرور الجديدة",
+    "updatePassword": "تحديث كلمة المرور",
+    "updateSuccess": "تم تحديث كلمة المرور بنجاح"
+  },
+  "notify": {
+    "balanceChange": "إشعار تغيير الرصيد",
+    "finance": "إشعار المالية",
+    "login": "إشعار تسجيل الدخول",
+    "notificationSettings": "إعدادات الإخطار",
+    "save": "حفظ",
+    "subscribe": "إشعار الاشتراك",
+    "updateSuccess": "تم تحديث إعدادات الإشعارات بنجاح"
+  },
+  "thirdParty": {
+    "bind": "ThirdParty.bind",
+    "bindFailed": "فشل الربط",
+    "bindMobile": "ربط الجوال",
+    "bindSuccess": "ربط بنجاح",
+    "confirm": "تأكيد",
+    "save": "ThirdParty.save",
+    "title": "حسابات الطرف الثالث",
+    "unbind": "ThirdParty.unbind",
+    "update": "ThirdParty.update",
+    "updateSuccess": "تم التحديث بنجاح"
+  }
+}

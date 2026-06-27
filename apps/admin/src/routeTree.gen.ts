@@ -25,6 +25,9 @@ const DashboardSystemIndexLazyRouteImport =
 const DashboardSubscribeIndexLazyRouteImport = createFileRoute(
   '/dashboard/subscribe/',
 )()
+const DashboardRoutingIndexLazyRouteImport = createFileRoute(
+  '/dashboard/routing/',
+)()
 const DashboardRedemptionIndexLazyRouteImport = createFileRoute(
   '/dashboard/redemption/',
 )()
@@ -151,6 +154,14 @@ const DashboardSubscribeIndexLazyRoute =
     getParentRoute: () => DashboardRouteLazyRoute,
   } as any).lazy(() =>
     import('./routes/dashboard/subscribe/index.lazy').then((d) => d.Route),
+  )
+const DashboardRoutingIndexLazyRoute =
+  DashboardRoutingIndexLazyRouteImport.update({
+    id: '/routing/',
+    path: '/routing/',
+    getParentRoute: () => DashboardRouteLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/dashboard/routing/index.lazy').then((d) => d.Route),
   )
 const DashboardRedemptionIndexLazyRoute =
   DashboardRedemptionIndexLazyRouteImport.update({
@@ -360,6 +371,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/payment': typeof DashboardPaymentIndexLazyRoute
   '/dashboard/product': typeof DashboardProductIndexLazyRoute
   '/dashboard/redemption': typeof DashboardRedemptionIndexLazyRoute
+  '/dashboard/routing': typeof DashboardRoutingIndexLazyRoute
   '/dashboard/subscribe': typeof DashboardSubscribeIndexLazyRoute
   '/dashboard/system': typeof DashboardSystemIndexLazyRoute
   '/dashboard/ticket': typeof DashboardTicketIndexLazyRoute
@@ -393,6 +405,7 @@ export interface FileRoutesByTo {
   '/dashboard/payment': typeof DashboardPaymentIndexLazyRoute
   '/dashboard/product': typeof DashboardProductIndexLazyRoute
   '/dashboard/redemption': typeof DashboardRedemptionIndexLazyRoute
+  '/dashboard/routing': typeof DashboardRoutingIndexLazyRoute
   '/dashboard/subscribe': typeof DashboardSubscribeIndexLazyRoute
   '/dashboard/system': typeof DashboardSystemIndexLazyRoute
   '/dashboard/ticket': typeof DashboardTicketIndexLazyRoute
@@ -428,6 +441,7 @@ export interface FileRoutesById {
   '/dashboard/payment/': typeof DashboardPaymentIndexLazyRoute
   '/dashboard/product/': typeof DashboardProductIndexLazyRoute
   '/dashboard/redemption/': typeof DashboardRedemptionIndexLazyRoute
+  '/dashboard/routing/': typeof DashboardRoutingIndexLazyRoute
   '/dashboard/subscribe/': typeof DashboardSubscribeIndexLazyRoute
   '/dashboard/system/': typeof DashboardSystemIndexLazyRoute
   '/dashboard/ticket/': typeof DashboardTicketIndexLazyRoute
@@ -464,6 +478,7 @@ export interface FileRouteTypes {
     | '/dashboard/payment'
     | '/dashboard/product'
     | '/dashboard/redemption'
+    | '/dashboard/routing'
     | '/dashboard/subscribe'
     | '/dashboard/system'
     | '/dashboard/ticket'
@@ -497,6 +512,7 @@ export interface FileRouteTypes {
     | '/dashboard/payment'
     | '/dashboard/product'
     | '/dashboard/redemption'
+    | '/dashboard/routing'
     | '/dashboard/subscribe'
     | '/dashboard/system'
     | '/dashboard/ticket'
@@ -531,6 +547,7 @@ export interface FileRouteTypes {
     | '/dashboard/payment/'
     | '/dashboard/product/'
     | '/dashboard/redemption/'
+    | '/dashboard/routing/'
     | '/dashboard/subscribe/'
     | '/dashboard/system/'
     | '/dashboard/ticket/'
@@ -605,6 +622,13 @@ declare module '@tanstack/react-router' {
       path: '/subscribe'
       fullPath: '/dashboard/subscribe'
       preLoaderRoute: typeof DashboardSubscribeIndexLazyRouteImport
+      parentRoute: typeof DashboardRouteLazyRoute
+    }
+    '/dashboard/routing/': {
+      id: '/dashboard/routing/'
+      path: '/routing'
+      fullPath: '/dashboard/routing'
+      preLoaderRoute: typeof DashboardRoutingIndexLazyRouteImport
       parentRoute: typeof DashboardRouteLazyRoute
     }
     '/dashboard/redemption/': {
@@ -798,6 +822,7 @@ interface DashboardRouteLazyRouteChildren {
   DashboardPaymentIndexLazyRoute: typeof DashboardPaymentIndexLazyRoute
   DashboardProductIndexLazyRoute: typeof DashboardProductIndexLazyRoute
   DashboardRedemptionIndexLazyRoute: typeof DashboardRedemptionIndexLazyRoute
+  DashboardRoutingIndexLazyRoute: typeof DashboardRoutingIndexLazyRoute
   DashboardSubscribeIndexLazyRoute: typeof DashboardSubscribeIndexLazyRoute
   DashboardSystemIndexLazyRoute: typeof DashboardSystemIndexLazyRoute
   DashboardTicketIndexLazyRoute: typeof DashboardTicketIndexLazyRoute
@@ -831,6 +856,7 @@ const DashboardRouteLazyRouteChildren: DashboardRouteLazyRouteChildren = {
   DashboardPaymentIndexLazyRoute: DashboardPaymentIndexLazyRoute,
   DashboardProductIndexLazyRoute: DashboardProductIndexLazyRoute,
   DashboardRedemptionIndexLazyRoute: DashboardRedemptionIndexLazyRoute,
+  DashboardRoutingIndexLazyRoute: DashboardRoutingIndexLazyRoute,
   DashboardSubscribeIndexLazyRoute: DashboardSubscribeIndexLazyRoute,
   DashboardSystemIndexLazyRoute: DashboardSystemIndexLazyRoute,
   DashboardTicketIndexLazyRoute: DashboardTicketIndexLazyRoute,

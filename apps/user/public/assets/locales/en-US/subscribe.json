@@ -56,6 +56,7 @@
     "confirmUnsubscribe": "Confirm Unsubscribe",
     "confirmUnsubscribeDescription": "Are you sure you want to unsubscribe?",
     "failed": "Failed to unsubscribe. Please try again.",
+    "noResidualValue": "The remaining value is 0 and cannot be cancelled.",
     "residualValue": "Residual value:",
     "success": "You have been unsubscribed successfully.",
     "unsubscribe": "Unsubscribe",

@@ -4,6 +4,15 @@
   "createdAt": "创建时间",
   "detail": "详情",
   "goToPayment": "去支付",
+  "checkoutFailed": "支付初始化失败，请稍后再试。",
+  "insufficientBalance": {
+    "available": "可用余额",
+    "close": "关闭",
+    "description": "您的账户余额不足，无法完成本次支付。请充值后再继续支付。",
+    "recharge": "去充值",
+    "required": "需要支付",
+    "title": "余额不足"
+  },
   "name": "商品名称",
   "orderClosed": "订单已关闭",
   "orderList": "订单列表",

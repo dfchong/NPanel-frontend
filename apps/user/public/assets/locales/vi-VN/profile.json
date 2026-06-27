@@ -1,0 +1,31 @@
+{
+  "accountSettings": {
+    "accountSettings": "Cài đặt tài khoản",
+    "newPassword": "Mật khẩu mới",
+    "passwordMismatch": "Mật khẩu không khớp",
+    "repeatNewPassword": "Lặp lại mật khẩu mới",
+    "updatePassword": "Cập nhật mật khẩu",
+    "updateSuccess": "Đã cập nhật mật khẩu thành công"
+  },
+  "notify": {
+    "balanceChange": "Thông báo thay đổi số dư",
+    "finance": "Thông báo tài chính",
+    "login": "Thông báo đăng nhập",
+    "notificationSettings": "Cài đặt thông báo",
+    "save": "Lưu",
+    "subscribe": "Đăng ký thông báo",
+    "updateSuccess": "Đã cập nhật cài đặt thông báo thành công"
+  },
+  "thirdParty": {
+    "bind": "bên thứ ba.bind",
+    "bindFailed": "Liên kết không thành công",
+    "bindMobile": "Liên kết di động",
+    "bindSuccess": "Liên kết thành công",
+    "confirm": "Xác nhận",
+    "save": "bên thứ ba.save",
+    "title": "Tài khoản của bên thứ ba",
+    "unbind": "bên thứ ba.unbind",
+    "update": "bên thứ ba.update",
+    "updateSuccess": "Cập nhật thành công"
+  }
+}

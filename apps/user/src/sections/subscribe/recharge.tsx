@@ -21,14 +21,19 @@ import { useGlobalStore } from "@/stores/global";
 import PaymentMethods from "./payment-methods";
 
 export default function Recharge(
-  props: Readonly<React.ComponentProps<typeof Button>>
+  props: Readonly<
+    React.ComponentProps<typeof Button> & {
+      defaultOpen?: boolean;
+    }
+  >
 ) {
+  const { defaultOpen = false, ...buttonProps } = props;
   const { t } = useTranslation("subscribe");
   const { common } = useGlobalStore();
   const navigate = useNavigate();
   const { currency } = common;
 
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(defaultOpen);
   const [loading, startTransition] = useTransition();
 
   const [params, setParams] = useState<API.RechargeOrderRequest>({
@@ -39,7 +44,7 @@ export default function Recharge(
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogTrigger asChild>
-        <Button {...props}>{t("recharge", "Recharge")}</Button>
+        <Button {...buttonProps}>{t("recharge", "Recharge")}</Button>
       </DialogTrigger>
       <DialogContent className="flex h-full flex-col overflow-hidden md:h-auto">
         <DialogHeader>

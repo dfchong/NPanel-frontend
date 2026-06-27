@@ -11,13 +11,11 @@ import {
   SidebarMenuItem,
 } from "@workspace/ui/components/sidebar";
 import { Icon } from "@workspace/ui/composed/icon";
-import { useTranslation } from "react-i18next";
 import { useNavs } from "@/layout/navs";
 
 export function SidebarLeft({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-  const { t } = useTranslation("menu");
   const location = useLocation();
   const navs = useNavs();
   return (
@@ -26,9 +24,7 @@ export function SidebarLeft({
         <SidebarMenu>
           {navs.map((nav) => (
             <SidebarGroup key={nav.title}>
-              {nav.items && (
-                <SidebarGroupLabel>{t(nav.title)}</SidebarGroupLabel>
-              )}
+              {nav.items && <SidebarGroupLabel>{nav.title}</SidebarGroupLabel>}
               <SidebarGroupContent>
                 <SidebarMenu>
                   {(nav.items || [nav]).map((item) => (
@@ -36,11 +32,11 @@ export function SidebarLeft({
                       <SidebarMenuButton
                         asChild
                         isActive={item.url === location.pathname}
-                        tooltip={t(item.title)}
+                        tooltip={item.title}
                       >
                         <Link to={item.url || "/"}>
                           {item.icon && <Icon icon={item.icon} />}
-                          <span>{t(item.title)}</span>
+                          <span>{item.title}</span>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>

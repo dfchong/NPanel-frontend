@@ -1,0 +1,16 @@
+{
+  "title": "교통통계",
+  "selectSubscription": "구독 선택",
+  "days7": "7일",
+  "days30": "30일",
+  "totalTraffic": "총 트래픽",
+  "uploadTraffic": "트래픽 업로드",
+  "downloadTraffic": "트래픽 다운로드",
+  "trafficTrend": "트래픽 동향",
+  "trafficRatio": "업로드/다운로드 비율",
+  "upload": "업로드",
+  "download": "다운로드",
+  "noData": "사용 가능한 교통 데이터가 없습니다.",
+  "date": "날짜",
+  "traffic": "트래픽(MB)"
+}

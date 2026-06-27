@@ -35,16 +35,27 @@ export default function Unsubscribe({
 
   const [open, setOpen] = useState(false);
 
-  const { data } = useQuery({
-    enabled: Boolean(open && id && allowDeduction),
+  const { data, isFetching } = useQuery({
+    enabled: Boolean(open && id && (single_model || allowDeduction)),
     queryKey: ["preUnsubscribe", id],
     queryFn: async () => {
       const { data } = await preUnsubscribe({ id });
-      return data.data?.deduction_amount || "0";
+      return Number(data.data?.deduction_amount || 0);
     },
   });
+  const residualValue = Number(data || 0);
+  const cannotCancel = !isFetching && residualValue <= 0;
 
   const handleSubmit = async () => {
+    if (cannotCancel) {
+      toast.error(
+        t(
+          "unsubscribe.noResidualValue",
+          "The remaining value is 0 and cannot be cancelled."
+        )
+      );
+      return;
+    }
     try {
       await unsubscribe(
         { id },
@@ -84,8 +95,16 @@ export default function Unsubscribe({
         </DialogHeader>
         <p>{t("unsubscribe.residualValue", "Residual Value")}</p>
         <p className="font-semibold text-2xl text-primary">
-          <Display type="currency" value={data} />
+          <Display type="currency" value={residualValue} />
         </p>
+        {cannotCancel && (
+          <p className="font-medium text-destructive text-sm">
+            {t(
+              "unsubscribe.noResidualValue",
+              "The remaining value is 0 and cannot be cancelled."
+            )}
+          </p>
+        )}
         <p className="text-muted-foreground text-sm">
           {t(
             "unsubscribe.unsubscribeDescription",
@@ -96,7 +115,7 @@ export default function Unsubscribe({
           <Button onClick={() => setOpen(false)} variant="outline">
             {t("unsubscribe.cancel", "Cancel")}
           </Button>
-          <Button onClick={handleSubmit}>
+          <Button disabled={isFetching || cannotCancel} onClick={handleSubmit}>
             {t("unsubscribe.confirm", "Confirm")}
           </Button>
         </DialogFooter>

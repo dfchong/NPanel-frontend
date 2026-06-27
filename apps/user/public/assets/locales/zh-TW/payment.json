@@ -1,0 +1,27 @@
+{
+  "stripe": {
+    "card": {
+      "loading": "正在載入 Stripe..."
+    },
+    "card_name": "持卡人姓名",
+    "card_number": "卡號",
+    "element_error": "請填寫完整的卡片資訊",
+    "error": "發生錯誤",
+    "expiry_date": "有效期",
+    "loading": "正在載入 Stripe...",
+    "name_placeholder": "卡片上的姓名",
+    "name_required": "持卡人姓名為必填項",
+    "pay_button": "立即付款",
+    "payment_failed": "付款失敗",
+    "processing": "正在處理付款...",
+    "processing_button": "處理中...",
+    "qrcode": {
+      "alipay": "使用支付寶掃碼支付",
+      "wechat_pay": "使用微信掃碼支付"
+    },
+    "secure_notice": "付款安全且加密",
+    "security_code": "CVC",
+    "success_message": "感謝您的購買。您的訂單已處理。",
+    "success_title": "付款成功"
+  }
+}

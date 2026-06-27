@@ -20,13 +20,58 @@ const languages = [
     name: "中文",
     flag: "🇨🇳",
   },
+  {
+    code: "zh-TW",
+    name: "繁體中文",
+    flag: "🇹🇼",
+  },
+  {
+    code: "ja-JP",
+    name: "日本語",
+    flag: "🇯🇵",
+  },
+  {
+    code: "ko-KR",
+    name: "한국어",
+    flag: "🇰🇷",
+  },
+  {
+    code: "ko-KP",
+    name: "조선말",
+    flag: "🇰🇵",
+  },
+  {
+    code: "vi-VN",
+    name: "Tiếng Việt",
+    flag: "🇻🇳",
+  },
+  {
+    code: "ru-RU",
+    name: "Русский",
+    flag: "🇷🇺",
+  },
+  {
+    code: "fa-IR",
+    name: "فارسی",
+    flag: "🇮🇷",
+  },
+  {
+    code: "ar-SA",
+    name: "العربية",
+    flag: "🇸🇦",
+  },
 ];
 
 export function LanguageSwitch() {
-  const { language, changeLanguage } = useLanguage();
+  const { language, changeLanguage, supportedLanguages } = useLanguage();
   const { t } = useTranslation("components");
 
-  const currentLanguage = languages.find((lang) => lang.code === language);
+  const availableLanguages = languages.filter((lang) =>
+    supportedLanguages.includes(lang.code)
+  );
+  const currentLanguage = availableLanguages.find(
+    (lang) => lang.code === language
+  );
 
   return (
     <DropdownMenu>
@@ -37,11 +82,11 @@ export function LanguageSwitch() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {languages.map((language) => (
+        {availableLanguages.map((language) => (
           <DropdownMenuItem
             className="flex items-center justify-between"
             key={language.code}
-            onClick={() => changeLanguage(language.code as "en-US" | "zh-CN")}
+            onClick={() => changeLanguage(language.code)}
           >
             <div className="flex items-center gap-2">
               <span>{language.flag}</span>

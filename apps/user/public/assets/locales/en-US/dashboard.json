@@ -17,6 +17,13 @@
   "pinnedOnly": "Pinned Only",
   "popup": "Popup",
   "popupOnly": "Popup Only",
+  "platforms": {
+    "android": "Android",
+    "ios": "iOS",
+    "linux": "Linux",
+    "mac": "Mac",
+    "windows": "Windows PC"
+  },
   "manualImportMessage": "Please import manually",
   "mySubscriptions": "My Subscriptions",
   "nextResetDays": "Next Reset Days",

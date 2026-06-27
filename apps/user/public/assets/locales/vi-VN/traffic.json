@@ -1,0 +1,16 @@
+{
+  "title": "Thống kê lưu lượng truy cập",
+  "selectSubscription": "Chọn đăng ký",
+  "days7": "7 ngày",
+  "days30": "30 ngày",
+  "totalTraffic": "Tổng lưu lượng truy cập",
+  "uploadTraffic": "Tải lên lưu lượng truy cập",
+  "downloadTraffic": "Tải xuống lưu lượng truy cập",
+  "trafficTrend": "Xu hướng giao thông",
+  "trafficRatio": "Tỷ lệ tải lên/tải xuống",
+  "upload": "Tải lên",
+  "download": "Tải xuống",
+  "noData": "Không có dữ liệu giao thông",
+  "date": "Ngày",
+  "traffic": "Lưu lượng truy cập (MB)"
+}

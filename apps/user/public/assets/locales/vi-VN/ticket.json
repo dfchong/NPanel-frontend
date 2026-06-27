@@ -1,0 +1,26 @@
+{
+  "cancel": "Hủy bỏ",
+  "check": "Kiểm tra",
+  "close": "Đóng",
+  "closeSuccess": "Đóng thành công",
+  "closeWarning": "Bạn có chắc chắn muốn đóng phiếu này không?",
+  "confirm": "Xác nhận",
+  "confirmClose": "Xác nhận Đóng",
+  "createSuccess": "Tạo thành công",
+  "createTicket": "Tạo vé",
+  "createTicketDescription": "Tạo mô tả vé",
+  "description": "Mô tả",
+  "inputPlaceholder": "Trình giữ chỗ đầu vào",
+  "reply": "trả lời",
+  "status": {
+    "0": "Trạng thái",
+    "1": "Đang chờ trả lời",
+    "2": "Đang chờ theo dõi",
+    "3": "Đã giải quyết",
+    "4": "Đã đóng"
+  },
+  "submit": "Gửi",
+  "ticketList": "Danh sách vé",
+  "title": "Tiêu đề",
+  "updatedAt": "Cập nhật lúc"
+}

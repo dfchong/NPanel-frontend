@@ -1,0 +1,16 @@
+{
+  "title": "流量統計",
+  "selectSubscription": "選擇訂閱",
+  "days7": "7 天",
+  "days30": "30 天",
+  "totalTraffic": "總流量",
+  "uploadTraffic": "上傳流量",
+  "downloadTraffic": "下載流量",
+  "trafficTrend": "流量趨勢",
+  "trafficRatio": "上傳/下載佔比",
+  "upload": "上傳",
+  "download": "下載",
+  "noData": "暫無流量數據",
+  "date": "日期",
+  "traffic": "流量 (MB)"
+}

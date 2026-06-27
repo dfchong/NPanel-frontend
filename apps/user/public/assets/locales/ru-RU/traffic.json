@@ -1,0 +1,16 @@
+{
+  "title": "Статистика трафика",
+  "selectSubscription": "Выберите подписку",
+  "days7": "7 дней",
+  "days30": "30 дней",
+  "totalTraffic": "Общий трафик",
+  "uploadTraffic": "Загрузить трафик",
+  "downloadTraffic": "Скачать трафик",
+  "trafficTrend": "Тренд трафика",
+  "trafficRatio": "Коэффициент загрузки/выгрузки",
+  "upload": "Загрузить",
+  "download": "Скачать",
+  "noData": "Нет данных о пробках",
+  "date": "Дата",
+  "traffic": "Трафик (МБ)"
+}

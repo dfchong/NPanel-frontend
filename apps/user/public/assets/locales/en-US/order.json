@@ -4,6 +4,15 @@
   "createdAt": "Created At",
   "detail": "Detail",
   "goToPayment": "Go to Payment",
+  "checkoutFailed": "Payment checkout failed, please try again later.",
+  "insufficientBalance": {
+    "available": "Available Balance",
+    "close": "Close",
+    "description": "Your balance is not enough to complete this payment. Please recharge and try again.",
+    "recharge": "Go to Recharge",
+    "required": "Required Amount",
+    "title": "Insufficient Balance"
+  },
   "name": "Product Name",
   "orderClosed": "Order Closed",
   "orderList": "Order List",

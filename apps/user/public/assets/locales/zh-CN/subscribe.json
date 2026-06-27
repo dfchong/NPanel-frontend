@@ -56,6 +56,7 @@
     "confirmUnsubscribe": "确认取消订阅",
     "confirmUnsubscribeDescription": "您确定要取消订阅吗？",
     "failed": "取消订阅失败。请重试。",
+    "noResidualValue": "剩余价值为 0，不可取消。",
     "residualValue": "剩余价值：",
     "success": "您已成功取消订阅。",
     "unsubscribe": "取消订阅",

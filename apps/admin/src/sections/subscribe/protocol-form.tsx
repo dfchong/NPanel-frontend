@@ -94,6 +94,27 @@ const createClientFormSchema = (t: any) =>
 
 type ClientFormData = z.infer<ReturnType<typeof createClientFormSchema>>;
 
+function normalizeDownloadLink(link?: Record<string, string>) {
+  return {
+    windows: link?.windows || "",
+    mac: link?.mac || link?.macos || "",
+    linux: link?.linux || "",
+    ios: link?.ios || "",
+    android: link?.android || "",
+    harmony: link?.harmony || "",
+  };
+}
+
+function buildApplicationPayload(data: ClientFormData) {
+  return {
+    ...data,
+    download_link: {
+      ...data.download_link,
+      macos: data.download_link.mac,
+    },
+  };
+}
+
 export function ProtocolForm() {
   const { t } = useTranslation("subscribe");
   const [loading, setLoading] = useState(false);
@@ -114,14 +135,7 @@ export function ProtocolForm() {
       scheme: "",
       template: "",
       output_format: "",
-      download_link: {
-        windows: "",
-        mac: "",
-        linux: "",
-        ios: "",
-        android: "",
-        harmony: "",
-      },
+      download_link: normalizeDownloadLink(),
     },
   });
 
@@ -267,14 +281,7 @@ export function ProtocolForm() {
     setEditingClient(client);
     form.reset({
       ...client,
-      download_link: client.download_link || {
-        windows: "",
-        mac: "",
-        linux: "",
-        ios: "",
-        android: "",
-        harmony: "",
-      },
+      download_link: normalizeDownloadLink(client.download_link),
     });
     setOpen(true);
   };
@@ -320,14 +327,14 @@ export function ProtocolForm() {
     try {
       if (editingClient) {
         await updateSubscribeApplication({
-          ...data,
+          ...buildApplicationPayload(data),
           is_default: editingClient.is_default,
           id: editingClient.id,
         });
         toast.success(t("actions.updateSuccess", "Updated successfully"));
       } else {
         await createSubscribeApplication({
-          ...data,
+          ...buildApplicationPayload(data),
           is_default: false,
         });
         toast.success(t("actions.createSuccess", "Created successfully"));
