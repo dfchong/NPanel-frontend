@@ -12,13 +12,7 @@ export function Hero() {
   const { site } = common;
 
   return (
-    <motion.div
-      animate={{ opacity: 1, y: 0 }}
-      className="grid gap-8 pt-16 sm:grid-cols-2"
-      initial={{ opacity: 0, y: -50 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      viewport={{ once: true, amount: 0.2 }}
-    >
+    <div className="grid gap-8 pt-16 sm:grid-cols-2">
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col items-start justify-center"
@@ -59,6 +53,6 @@ export function Hero() {
           src="/assets/lotties/network-security.json"
         />
       </motion.div>
-    </motion.div>
+    </div>
   );
 }
