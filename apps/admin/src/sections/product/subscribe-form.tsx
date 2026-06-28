@@ -88,7 +88,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 import { shake } from "radash";
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -147,6 +147,31 @@ type SubscribeFeatureEditorItem = {
 
 type SubscribeDetailFormat = "markdown" | "html" | "text";
 type SubscribeDetailEditorMode = SubscribeDetailFormat | "rich";
+
+function HelpTooltip({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          aria-label={label}
+          className="inline-flex size-4 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground"
+          type="button"
+        >
+          <HelpCircleIcon className="size-3.5" />
+        </button>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-72 leading-relaxed">
+        {children}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
 
 function parseJSON(value?: unknown) {
   if (typeof value !== "string" || value.trim() === "") return null;
@@ -3075,9 +3100,89 @@ export default function SubscribeForm<T extends Record<string, any>>({
                       name="traffic_limit"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>
-                            {t("form.trafficLimitRules", "Traffic Limit Rules")}
+                          <FormLabel className="flex items-center gap-1.5">
+                            <span>
+                              {t(
+                                "form.trafficLimitRules",
+                                "Traffic Limit Rules"
+                              )}
+                            </span>
+                            <HelpTooltip
+                              label={t(
+                                "form.trafficLimitRulesHelp",
+                                "Traffic limit rules help"
+                              )}
+                            >
+                              {t(
+                                "form.trafficLimitRulesHelpDescription",
+                                "Set rules based on recent traffic usage. For example, Day + 1 + 100GB + 1024kb/s means users will be limited to 1024kb/s after using 100GB in the last 1 day."
+                              )}
+                            </HelpTooltip>
                           </FormLabel>
+                          <div className="hidden gap-4 pr-24 text-muted-foreground text-xs md:flex">
+                            <div className="flex flex-1 items-center gap-1.5">
+                              <span>
+                                {t("form.statType", "Statistics Type")}
+                              </span>
+                              <HelpTooltip
+                                label={t(
+                                  "form.trafficLimitStatTypeHelp",
+                                  "Statistics type help"
+                                )}
+                              >
+                                {t(
+                                  "form.trafficLimitStatTypeHelpDescription",
+                                  "Choose whether the rule counts traffic by hour or by day."
+                                )}
+                              </HelpTooltip>
+                            </div>
+                            <div className="flex flex-1 items-center gap-1.5">
+                              <span>{t("form.statValue", "Time Value")}</span>
+                              <HelpTooltip
+                                label={t(
+                                  "form.trafficLimitStatValueHelp",
+                                  "Time value help"
+                                )}
+                              >
+                                {t(
+                                  "form.trafficLimitStatValueHelpDescription",
+                                  "How many hours or days to look back. For example, Day + 1 means the last 1 day."
+                                )}
+                              </HelpTooltip>
+                            </div>
+                            <div className="flex flex-1 items-center gap-1.5">
+                              <span>
+                                {t("form.trafficUsage", "Traffic Usage (GB)")}
+                              </span>
+                              <HelpTooltip
+                                label={t(
+                                  "form.trafficLimitTrafficUsageHelp",
+                                  "Traffic usage help"
+                                )}
+                              >
+                                {t(
+                                  "form.trafficLimitTrafficUsageHelpDescription",
+                                  "Traffic threshold in GB. The rule starts after usage reaches this value; 0 means it can match immediately."
+                                )}
+                              </HelpTooltip>
+                            </div>
+                            <div className="flex flex-1 items-center gap-1.5">
+                              <span>
+                                {t("form.speedLimitKb", "Speed Limit (kb/s)")}
+                              </span>
+                              <HelpTooltip
+                                label={t(
+                                  "form.trafficLimitSpeedLimitHelp",
+                                  "Speed limit help"
+                                )}
+                              >
+                                {t(
+                                  "form.trafficLimitSpeedLimitHelpDescription",
+                                  "Speed limit after the rule is matched, in kb/s. 0 means unlimited and this rule will not apply a speed limit."
+                                )}
+                              </HelpTooltip>
+                            </div>
+                          </div>
                           <FormControl>
                             <ArrayInput
                               fields={[
@@ -3130,6 +3235,7 @@ export default function SubscribeForm<T extends Record<string, any>>({
                                     "Traffic Usage (GB)"
                                   ),
                                   min: 0,
+                                  suffix: "GB",
                                   onKeyDown: (
                                     e: React.KeyboardEvent<HTMLInputElement>
                                   ) => {
@@ -3149,9 +3255,10 @@ export default function SubscribeForm<T extends Record<string, any>>({
                                   type: "number",
                                   placeholder: t(
                                     "form.speedLimitKb",
-                                    "Speed Limit (kb)"
+                                    "Speed Limit (kb/s)"
                                   ),
                                   min: 0,
+                                  suffix: "kb/s",
                                   onKeyDown: (
                                     e: React.KeyboardEvent<HTMLInputElement>
                                   ) => {
@@ -3185,7 +3292,7 @@ export default function SubscribeForm<T extends Record<string, any>>({
                           <FormDescription>
                             {t(
                               "form.trafficLimitDescription",
-                              "Configure traffic-based speed limit rules. When traffic usage reaches the specified amount, the speed will be limited."
+                              "Configure traffic-based speed limit rules. Example: Day + 1 + 100GB + 1024kb/s means users will be limited to 1024kb/s after using 100GB in the last 1 day. Speed limit 0 means unlimited."
                             )}
                           </FormDescription>
                           <FormMessage />
