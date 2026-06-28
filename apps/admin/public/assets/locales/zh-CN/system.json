@@ -12,6 +12,9 @@
     "descriptionLine2": "未启用时，节点不会执行准入检查，设备限制仅依赖传统的心跳上报机制。",
     "enabled": "已启用",
     "disabled": "未启用",
+    "enabledSummary": "新连接将实时校验设备准入",
+    "disabledSummary": "当前使用传统心跳上报限制设备",
+    "helpLabel": "查看实时设备准入说明",
     "saveSuccess": "保存成功",
     "saveFailed": "保存失败"
   },
@@ -21,6 +24,8 @@
     "byIp": "按 IP 计数",
     "byIpDescription": "同一 WiFi 下多设备共享公网 IP 只算一个设备名额，策略偏宽松。",
     "description": "配置在线设备的计数方式",
+    "disabledReason": "需先开启实时设备准入检查后生效",
+    "disabledDescription": "设备计数模式依赖实时设备准入检查。未开启时，节点不会按此模式执行连接准入判断，仍使用传统心跳上报机制。",
     "modeLabel": "计数模式",
     "saveFailed": "保存失败",
     "saveSuccess": "保存成功",

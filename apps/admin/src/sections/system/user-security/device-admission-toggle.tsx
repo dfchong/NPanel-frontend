@@ -1,5 +1,10 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Switch } from "@workspace/ui/components/switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@workspace/ui/components/tooltip";
 import { Icon } from "@workspace/ui/composed/icon";
 import {
   getNodeConfig,
@@ -42,32 +47,56 @@ export default function DeviceAdmissionToggle() {
   }
 
   return (
-    <div className="flex items-center justify-between transition-colors">
+    <div className="flex items-center justify-between gap-4 transition-colors">
       <div className="flex min-w-0 flex-1 items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
           <Icon className="h-5 w-5 text-primary" icon="mdi:shield-check" />
         </div>
-        <div className="flex-1">
-          <p className="font-medium">
-            {t("deviceAdmission.title", "Real-time Device Admission Control")}
-          </p>
-          <div className="max-w-md space-y-2 text-muted-foreground text-sm">
-            <p className="break-words">
-              {t(
-                "deviceAdmission.descriptionLine1",
-                "On: each new connection is verified with the panel. Requires OmnXT Node v1.0.0+ with the admission module."
-              )}
+        <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <p className="truncate font-medium">
+              {t("deviceAdmission.title", "Real-time Device Admission Control")}
             </p>
-            <p className="break-words">
-              {t(
-                "deviceAdmission.descriptionLine2",
-                "Off: no admission checks; device limits use traditional heartbeat mechanism."
-              )}
-            </p>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  aria-label={t("deviceAdmission.helpLabel", "Description")}
+                  className="inline-flex size-4 flex-shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:text-foreground"
+                  type="button"
+                >
+                  <Icon className="size-3.5" icon="mdi:help-circle-outline" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-80 space-y-1.5 leading-relaxed">
+                <p>
+                  {t(
+                    "deviceAdmission.descriptionLine1",
+                    "On: each new connection is verified with the panel. Requires OmnXT Node v1.0.0+ with the admission module."
+                  )}
+                </p>
+                <p>
+                  {t(
+                    "deviceAdmission.descriptionLine2",
+                    "Off: no admission checks; device limits use traditional heartbeat mechanism."
+                  )}
+                </p>
+              </TooltipContent>
+            </Tooltip>
           </div>
+          <p className="truncate text-muted-foreground text-sm">
+            {enabled
+              ? t(
+                  "deviceAdmission.enabledSummary",
+                  "Admission checks are active"
+                )
+              : t(
+                  "deviceAdmission.disabledSummary",
+                  "Using heartbeat-based device limits"
+                )}
+          </p>
         </div>
       </div>
-      <div className="ml-4 flex flex-shrink-0 items-center gap-2">
+      <div className="flex flex-shrink-0 items-center gap-2">
         <span className="text-muted-foreground text-sm">
           {enabled
             ? t("deviceAdmission.enabled", "Enabled")

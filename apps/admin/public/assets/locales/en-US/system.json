@@ -12,6 +12,9 @@
     "descriptionLine2": "Off: no admission checks; device limits use traditional heartbeat mechanism.",
     "enabled": "Enabled",
     "disabled": "Disabled",
+    "enabledSummary": "New connections are checked in real time",
+    "disabledSummary": "Using heartbeat-based device limits",
+    "helpLabel": "View real-time admission details",
     "saveSuccess": "Save Successful",
     "saveFailed": "Save Failed"
   },
@@ -21,6 +24,8 @@
     "byIp": "Count by IP",
     "byIpDescription": "Devices sharing the same public IP (e.g. same WiFi) count as one device slot. More lenient policy.",
     "description": "Configure how online devices are counted",
+    "disabledReason": "Enable real-time device admission first",
+    "disabledDescription": "Device count mode depends on real-time device admission. While it is off, nodes do not use this mode for connection admission and device limits still use the traditional heartbeat mechanism.",
     "modeLabel": "Count Mode",
     "saveFailed": "Save Failed",
     "saveSuccess": "Save Successful",

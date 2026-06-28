@@ -74,7 +74,7 @@ export default function DeviceCountModeForm() {
   }, [data, form]);
 
   async function onSubmit(values: DeviceCountModeFormData) {
-    if (!data) return;
+    if (!(data && admissionEnabled)) return;
     setLoading(true);
     try {
       await updateNodeConfig({
@@ -92,32 +92,31 @@ export default function DeviceCountModeForm() {
   }
 
   return (
-    <Sheet
-      onOpenChange={(v) => {
-        if (admissionEnabled) setOpen(v);
-      }}
-      open={open}
-    >
+    <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger asChild>
         <div
-          aria-disabled={!admissionEnabled}
-          className={`flex items-center justify-between transition-colors ${admissionEnabled ? "cursor-pointer hover:bg-accent/50" : "pointer-events-none cursor-not-allowed opacity-50"}`}
+          className="flex cursor-pointer items-center justify-between gap-4 transition-colors hover:bg-accent/50"
           role="button"
-          tabIndex={admissionEnabled ? 0 : -1}
+          tabIndex={0}
         >
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
               <Icon className="h-5 w-5 text-primary" icon="mdi:devices" />
             </div>
-            <div className="flex-1">
+            <div className="min-w-0 flex-1">
               <p className="font-medium">
                 {t("deviceCountMode.title", "Device Count Mode")}
               </p>
               <p className="text-muted-foreground text-sm">
-                {t(
-                  "deviceCountMode.description",
-                  "Configure how online devices are counted"
-                )}
+                {admissionEnabled
+                  ? t(
+                      "deviceCountMode.description",
+                      "Configure how online devices are counted"
+                    )
+                  : t(
+                      "deviceCountMode.disabledReason",
+                      "Enable real-time device admission first"
+                    )}
               </p>
             </div>
           </div>
@@ -137,6 +136,14 @@ export default function DeviceCountModeForm() {
               id="device-count-mode-form"
               onSubmit={form.handleSubmit(onSubmit)}
             >
+              {!admissionEnabled && (
+                <div className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-amber-700 text-sm dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-300">
+                  {t(
+                    "deviceCountMode.disabledDescription",
+                    "Device count mode depends on real-time device admission. While it is off, nodes do not use this mode for connection admission and device limits still use the traditional heartbeat mechanism."
+                  )}
+                </div>
+              )}
               <FormField
                 control={form.control}
                 name="device_count_mode"
@@ -147,6 +154,7 @@ export default function DeviceCountModeForm() {
                     </FormLabel>
                     <FormControl>
                       <Select
+                        disabled={!admissionEnabled}
                         onValueChange={field.onChange}
                         value={field.value}
                       >
@@ -198,7 +206,7 @@ export default function DeviceCountModeForm() {
             {t("common.cancel", "Cancel")}
           </Button>
           <Button
-            disabled={loading}
+            disabled={loading || !admissionEnabled}
             form="device-count-mode-form"
             type="submit"
           >
