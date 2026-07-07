@@ -1,0 +1,9 @@
+# Cloudflare Pages SPA 路由支持
+# 所有客户端路由回退到 index.html
+/* /index.html 200
+
+# /api 请求代理到后端（根据实际情况修改 target）
+# /api/* https://your-api-domain.com/:splat 200
+
+# /static/* 资源不存在时返回 404，避免 SPA 回退错误加载 chunk
+/static/* /index.html 404

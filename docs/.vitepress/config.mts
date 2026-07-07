@@ -99,6 +99,15 @@ export default defineConfig({
               ],
             },
             {
+              text: "Cloudflare Pages",
+              items: [
+                {
+                  text: "Admin Deployment",
+                  link: "/guide/deployment/cloudflare-pages",
+                },
+              ],
+            },
+            {
               text: "Node Agent",
               items: [
                 {
@@ -291,6 +300,15 @@ export default defineConfig({
                 {
                   text: "前端部署",
                   link: "/zh/guide/separation/frontend",
+                },
+              ],
+            },
+            {
+              text: "Cloudflare Pages",
+              items: [
+                {
+                  text: "管理后台部署",
+                  link: "/zh/guide/deployment/cloudflare-pages",
                 },
               ],
             },
